@@ -56,6 +56,7 @@ Mentre, l'ultima preview mostrata è stata quella del C++23.}\\
 % -------------------------- SECTION: C VS C++ ---------------------------------------
 
 \section{C vs C++}
+
 \begin{comment}
 \begin{tabular}{|c|c|}
 	\hline
@@ -2643,7 +2644,7 @@ int main(){
 	\item \textsf{\small I files dovrebbero essere chiamati nel modo (case) lower\_snake\_case.}
 \end{itemize}
 
-\subsubsection{Types}
+\subsection{Types}
 
 \begin{itemize}
 	\item \textsf{\small Preferire \emph{using} a \emph{typedef}.}
@@ -2655,11 +2656,11 @@ int main(){
 	%\item \textsf{\small }
 \end{itemize}
 
-\subsubsection{Variabili}
+\subsection{Variabili}
 
 \textsf{\small Le variabili dovrebbero tutte essere lowerCamelCase, inclusi i membri delle classi, senza underscore (trattini bassi).} \\
 
-\subsubsection{Funzioni}
+\subsection{Funzioni}
 
 \begin{itemize}
 	\item \textsf{\small Le funzioni dovrebbero essere lowerCamelCase.}
@@ -2667,13 +2668,13 @@ int main(){
 	%\item \textsf{\small }
 \end{itemize}
 
-\subsubsection{Costanti}
+\subsection{Costanti}
 
 \begin{itemize}
 	\item \textsf{\small Costanti e i membri delle enums dovrebbero essere chiamati come le variabili in lowerCamelCase.}
 \end{itemize}
 
-\subsubsection{Namespaces}
+\subsection{Namespaces}
 
 \begin{itemize}
 	\item \textsf{\small I namespaces dovrebbero essere lower\_snake\_case.}
@@ -2681,11 +2682,11 @@ int main(){
 	\item \textsf{\small Favorisci un namespace chiamato 'details' o 'internal' per indicare l'equivalente di un namespace 'private' in un header file e namespaces anonimi in un file C++.}
 \end{itemize}
 
-\subsubsection{Header Guards}
+\subsection{Header Guards}
 
 \textsf{\small Preferire \textbf{\#pragma} allo stile \textbf{\#ifndef}.}\\
 
-\subsubsection{Spazi bianchi addizionali}
+\subsection{Spazi bianchi addizionali}
 
 \begin{itemize}
 	\item \textsf{\small Segui lo stile di dichiarazione del C++}
@@ -2774,7 +2775,7 @@ int main(){
 	baz); // Incorrect.
 \end{lstlisting}
 
-\subsubsection{Linee Guida Miste}
+\subsection{Linee Guida Miste}
 
 \begin{itemize}
 	\item \textsf{\small  Usare sempre size\_t o ssize\_t per cose come contatori, pesi, ecc.. C'è bisogno di un forte motivo razionale per usare un tipo come uint8\_t quando size\_t può fare lo stesso lavoro.}
