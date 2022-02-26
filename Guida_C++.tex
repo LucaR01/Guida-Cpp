@@ -1,0 +1,331 @@
+% ---------------------------------- GUIDA C++ ---------------------------------------
+
+\documentclass[a4paper,12pt]{memoir}
+
+% ----------------------------- BEGIN PREAMBLE ---------------------------------------
+
+\usepackage{lmodern}
+\usepackage{alltt, fancyvrb, url}
+\usepackage{float}
+\usepackage{graphicx}
+\usepackage[utf8]{inputenc}
+\usepackage{hyperref}
+\usepackage{amsmath,amssymb,amsthm}
+
+\usepackage[italian]{babel}
+
+\usepackage[italian]{cleveref}
+
+\usepackage{comment}
+\usepackage{microtype}
+\usepackage{fancyhdr}
+
+\usepackage[scaled=.92]{helvet}
+\usepackage[T1]{fontenc}
+
+\usepackage{lscape}
+
+\usepackage{subcaption}
+
+% ------ title -------------------
+\usepackage[svgnames]{xcolor}
+\ifpdf
+\usepackage{pdfcolmk}
+\fi
+%% check if using xelatex rather than pdflatex
+\ifxetex
+\usepackage{fontspec}
+\fi
+%% drawing package
+\usepackage{tikz}
+%% for dingbats
+\usepackage{pifont}
+\providecommand{\HUGE}{\Huge}% if not using memoir
+\newlength{\drop}
+% ------ end title -------------------
+
+% ------ chapter style -----------
+\usepackage{kpfonts}
+\usepackage{xcolor,calc, blindtext}
+\definecolor{chaptercolor}{gray}{0.8}
+% ------ end chapter style -----------
+
+% ----- font family ------------------
+
+%\usepackage{tgbonum}
+%\fontfamily{cmss}\selectfont
+
+\fontencoding{T1}
+\fontfamily{garamond}
+\fontseries{m}
+%\fontshape{it}
+%\fontsize{12}{15}
+\selectfont
+
+%\usepackage{utopia} %utopia è obsoleto; usare fourier al posto.
+% ----- end font family ------------------
+
+% ------ section ---------
+
+\usepackage{titlesec}
+
+% ------ end section ---------
+
+% ----- code ----------------
+
+\usepackage{listingsutf8}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+\definecolor{myblue}{rgb}{0.3, 0.6, 0.8}
+\definecolor{myblue2}{rgb}{0.11, 0.19, 0.46}
+\definecolor{myblue3}{rgb}{0.27, 0.55, 0.81}
+
+% VS2017 C++ color scheme
+\definecolor{clr-background}{RGB}{255,255,255}
+\definecolor{clr-text}{RGB}{0,0,0}
+\definecolor{clr-string}{RGB}{163,21,21}
+\definecolor{clr-namespace}{RGB}{0,0,0}
+\definecolor{clr-preprocessor}{RGB}{128,128,128}
+\definecolor{clr-keyword}{RGB}{0,0,255}
+\definecolor{clr-type}{RGB}{43,145,175}
+\definecolor{clr-variable}{RGB}{0,0,0}
+\definecolor{clr-constant}{RGB}{111,0,138} % macro color
+\definecolor{clr-comment}{RGB}{0,128,0}
+
+\definecolor{weborange}{RGB}{255,165,0}
+
+\lstdefinestyle{VS2017}{
+	backgroundcolor=\color{clr-background}, % oppure darkgrey
+	basicstyle=\color{clr-text}, % any text
+	stringstyle=\color{clr-string},
+	identifierstyle=\color{clr-variable}, % just about anything that isn't a directive, comment, string or known type
+	commentstyle=\color{clr-comment},
+	directivestyle=\color{clr-preprocessor}, % preprocessor commands
+	% listings doesn't differentiate between types and keywords (e.g. int vs return)
+	% use the user types color
+	keywordstyle=\color{clr-type},
+	keywordstyle={[2]\color{clr-constant}}, % you'll need to define these or use a custom language
+	breaklines=true,
+	showspaces=false,
+	showstringspaces=false,
+	%otherkeywords={>,<,.,;,-,!,=,~},
+	morekeywords={\#, std, std::cout, cout, std::endl, endl, ::, ifndef, define, endif, pragma}, % \# non funziona.
+	%keywordstyle=\color{weborange},
+	tabsize=4
+}
+
+\lstdefinestyle{mystyle}{
+	backgroundcolor=\color{backcolour},   
+	commentstyle=\color{codegreen},
+	keywordstyle=\color{myblue2}, % prima era magenta
+	numberstyle=\tiny\color{codegray},
+	stringstyle=\color{codepurple},
+	basicstyle=\ttfamily\footnotesize,
+	breakatwhitespace=false,         
+	breaklines=true,                 
+	captionpos=b,                    
+	keepspaces=true,                 
+	numbers=left,                    
+	numbersep=5pt,                  
+	showspaces=false,                
+	showstringspaces=false,
+	showtabs=false,                  
+	tabsize=2
+	%classoffset=1, % starting new class
+	%otherkeywords={>,<,.,;,-,!,=,~},
+	%morekeywords={>,<,.,;,-,!,=,~},
+	%keywordstyle=\color{red},
+	%classoffset=0,
+}
+
+%\lstset{inputencoding=utf8/latin1} % Questo non andava.
+
+\lstset{language=C++,texcl=true} % questo mi ha fixato il problema delle lettere
+% accentate nei commenti, ma non nelle stringhe " " del codice.
+
+% Altrimenti sempre per il problema delle lettere accentat, si può usare questo:
+% Anzi questo mi aiuta per le stringhe nel codice " ".
+%\begin{comment}
+\lstset{
+	literate=%
+	{á}{{\'a}}1
+	{à}{{\`a}}1
+	{ã}{{\~a}}1
+	{é}{{\'e}}1
+	{è}{{\`e}}1
+	{ê}{{\^e}}1
+	{í}{{\'i}}1
+	{ó}{{\'o}}1
+	{õ}{{\~o}}1
+	{ú}{{\'u}}1
+	{ü}{{\"u}}1
+	{ç}{{\c{c}}}1
+}
+%\end{comment}
+
+\lstset{style=VS2017}
+
+% ------ end code -----------
+
+% hyperref settings
+\hypersetup{
+	colorlinks=true,
+	linkcolor=black, %blue
+	filecolor=magenta,      
+	urlcolor=cyan,
+	pdftitle={Sharelatex Example},
+	bookmarks=true,
+	pdfpagemode=FullScreen,
+}
+
+% ----------------------------- END PREAMBLE -----------------------------------------
+
+% ----------------------------- BEGIN CHAPTER STYLE ----------------------------------
+
+\newcommand\numlifter[1]{\raisebox{-2cm}[0pt][0pt]{\smash{#1}}}
+\newcommand\numindent{\kern37pt}
+\newlength\chaptertitleboxheight
+\makechapterstyle{hansen}{
+	\renewcommand\printchaptername{\raggedleft}
+	\renewcommand\printchapternum{%
+		\begingroup%
+		\leavevmode%
+		\chapnumfont%
+		\strut%
+		\numlifter{\thechapter}%
+		\numindent%
+		\endgroup%
+	}
+
+\renewcommand*{\printchapternonum}{%
+	\vphantom{\begingroup%
+		\leavevmode%
+		\chapnumfont%
+		\numlifter{\vphantom{9}}%
+		\numindent%
+		\endgroup}
+	\afterchapternum}
+\setlength\midchapskip{0pt}
+\setlength\beforechapskip{0.5\baselineskip}
+\setlength{\afterchapskip}{3\baselineskip}
+\renewcommand\chapnumfont{%
+	\fontsize{4cm}{0cm}%
+	\bfseries%
+	\sffamily%
+	\color{chaptercolor}%
+}
+\renewcommand\chaptitlefont{%
+	\normalfont%
+	\huge%
+	\bfseries%
+	\raggedleft%
+}%
+\settototalheight\chaptertitleboxheight{%
+	\parbox{\textwidth}{\chaptitlefont \strut bg\\bg\strut}}
+\renewcommand\printchaptertitle[1]{%
+	\parbox[t][\chaptertitleboxheight][t]{\textwidth}{%
+		%\microtypesetup{protrusion=false}% add this if you use microtype
+		\chaptitlefont\strut ##1\strut}%
+}}
+
+% ----------------------------- END CHAPTER STYLE ------------------------------------
+
+
+% ----------------------------- BEGIN SECTION STYLE ----------------------------------
+
+\titleformat
+{\section} % command
+[display] % shape
+{\bfseries\Large\itshape} % format
+{} % label
+{0.5ex} % sep
+{
+	\vspace{1ex}
+	\rule{\textwidth}{2pt} 
+	\centering
+} % before-code
+[
+\vspace{-2ex}%
+\rule{\textwidth}{1.5pt} % prima era 1.5 col font classico.
+] % after-code
+
+% ----------------------------- END SECTION STYLE ------------------------------------
+
+% ----------------------------- BEGIN SUBSECTION STYLE -------------------------------
+
+\titleformat{\subsection}{\centering\bfseries\Large\itshape}{}{}{}
+
+% ----------------------------- END SUBSECTION STYLE ---------------------------------
+
+% ----------------------------- BEGIN SUBSUBSECTION STYLE ----------------------------
+
+\titleformat{\subsubsection}{\bfseries\large\itshape}{}{}{}
+
+% ----------------------------- END SUBSUBSECTION STYLE ------------------------------
+
+% ----------------------------- BEGIN PARAGRAPH STYLE --------------------------------
+
+\titleformat{\paragraph}{\bfseries\normalsize}{}{}{}
+
+% ----------------------------- END PARAGRAPH STYLE ----------------------------------
+
+% ----------------------------- BEGIN TABLE OF CONTENTS ------------------------------
+
+\setcounter{tocdepth}{3}
+\setcounter{secnumdepth}{1}
+
+% ----------------------------- END TABLE OF CONTENTS --------------------------------
+
+\newcommand*{\titleGM}{\begingroup% Gentle Madness
+	%\drop = 0.1\textheight
+	%\vspace*{\baselineskip}
+	%\vfill
+	\hbox{%
+		\hspace*{0.2\textwidth}%
+		\rule{1pt}{\textheight}
+		\hspace*{0.05\textwidth}%
+		\parbox[b]{0.75\textwidth}{
+			\vbox{%
+				\vspace{\drop}
+				{\noindent\HUGE\bfseries A Simple Guide to\\ Modern C++}\\[2\baselineskip]
+				{\Large\itshape Beginner}\\[0.5\baselineskip]
+				{\Large\itshape Intermediate}\\[0.5\baselineskip]
+				{\Large\itshape Advanced}\\[4\baselineskip]
+				{\Large Luca Rengo}\par
+				\vspace{0.5\textheight}
+				{\noindent The Publisher}\\[\baselineskip]
+			}% end of vbox
+		}% end of parbox
+	}% end of hbox
+	\vfill
+	\null
+	\endgroup}
+
+% ----------------------------- END TITLE PAGE ---------------------------------------
+
+% ----------------------------- BEGIN DOCUMENT ---------------------------------------
+
+\begin{document}
+	
+	\titleGM
+	
+	\tableofcontents
+	
+	\chapterstyle{hansen}
+	
+	% \input: import the commands from filename.tex to target file.
+	
+	% \include: does a \clearpage and does an \input.
+	
+	\include{Basi_del_linguaggio}
+	
+	\include{Concetti_Intermedi} % oppure Le Classi, oppure boh.
+	
+	%\include{Concetti_Avanzati} % Concetti avanzati del linguaggio, C++20, concepts, ranges, ec..
+	
+\end{document}
+
+% ----------------------------- END DOCUMENT -----------------------------------------
