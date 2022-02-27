@@ -55,13 +55,16 @@ Mentre, l'ultima preview mostrata è stata quella del C++23.}\\
 
 % -------------------------- SECTION: C VS C++ ---------------------------------------
 
+\newpage
+
 \section{C vs C++}
 
-\begin{comment}
-\begin{tabular}{|c|c|}
+\begin{longtable}{|c|c|}
 	\hline
 	\textbf{C} & \textbf{C++} \\
 	\hline
+	\endhead
+	%\endfoot
 	\textsf{\small Sviluppato da Dennis Ritchie } & \textsf{\small Sviluppato da Bjarne Stroustrup } \\
 	\textsf{\small tra gli anni 1969 e 1973 agli AT\&T Bell Labs.} & \textsf{\small tra il 1979 ed il 1983.} \\
 	\hline
@@ -69,14 +72,66 @@ Mentre, l'ultima preview mostrata è stata quella del C++23.}\\
 	\textsf{\small ereditarietà il che significa che il C} & \textsf{\small ed ereditarietà il che significa} \\
 	\textsf{\small non supporta la} & \textsf{\small  che è un linguaggio} \\
 	\textsf{\small programmazione ad oggetti.} & \textsf{\small  di programmazione ad oggetti.} \\
-	\textsf{\small } & \textsf{\small } \\
-	\textsf{\small } & \textsf{\small } \\
-	\textsf{\small } & \textsf{\small } \\
-	\textsf{\small } & \textsf{\small } \\
-	\textsf{\small } & \textsf{\small } \\
 	\hline
-\end{tabular}
-\end{comment}
+	\textsf{\small C è un sottoinsieme del C++.} & \textsf{\small Il C++ è un sovrainsieme del C.} \\
+	\hline
+	\textsf{\small Il C contiene 32 keywords.} & \textsf{\small Il C++ 63 keywords.} \\
+	\hline
+	\textsf{\small Il C supporta  } & \textsf{\small Il C++ è un ibrido, } \\
+	\textsf{\small la programmazione } & \textsf{\small supporta sia la } \\
+	\textsf{\small procedurale.} & \textsf{\small programmazione procedurale} \\
+	\textsf{\small } & \textsf{\small sia i paradigmi della} \\
+	\textsf{\small } & \textsf{\small programmazione ad oggetti.} \\
+	\hline
+	\textsf{\small Dati e funzioni sono separati} & \textsf{\small Dati e funzioni sono} \\
+	\textsf{\small perché è un linguaggio} & \textsf{\small incapsulati in forma} \\
+	\textsf{\small di programmazione procedurale.} & \textsf{\small di un oggetto.} \\
+	\hline
+	\textsf{\small Non supporta } & \textsf{\small I dati sono incapsulati } \\
+	\textsf{\small l'information hiding.} & \textsf{\small per garantire che } \\
+	\textsf{\small } & \textsf{\small vengano usati come inteso.} \\
+	\hline
+	\textsf{\small Tipi incorporati sono supportati} & \textsf{\small Tipi incorporati e tipi definiti} \\
+	\textsf{\small dal C. (typedef).} & \textsf{\small dall'utente sono supportati.} \\
+	\hline
+	\textsf{\small Basata sulle funzioni perché} & \textsf{\small Basata sugli oggetti perché} \\
+	\textsf{\small è un linguaggio procedurale.} & \textsf{\small è un linguaggio ad oggetti.} \\
+	\hline
+	\textsf{\small L'overloading delle funzioni e} & \textsf{\small L'overloading delle funzioni e} \\
+	\textsf{\small degli operatori non è supportato.} & \textsf{\small degli operatori è supportato.} \\
+	\hline
+	\textsf{\small Non si possono definire funzioni} & \textsf{\small Si possono definire funzioni} \\
+	\textsf{\small dentro le strutture.} & \textsf{\small dentro le strutture.} \\
+	\hline
+	\textsf{\small Namespaces non esistono in C.} & \textsf{\small Namespace sono presenti in C++.} \\
+	\textsf{\small File header di input ed output} & \textsf{\small File header di input ed output} \\
+	\textsf{\small in C è stdio.h.} & \textsf{\small in C++ è iostream.} \\
+	\hline
+	\textsf{\small Le variabili di referenza non sono supportate.} & \textsf{\small Le variabili di referenza sono supportate.} \\
+	\hline
+	\textsf{\small Le funzioni virtual e} & \textsf{\small Le funzioni virtual e} \\
+	\textsf{\small friends non sono supportate.} & \textsf{\small friends sono supportate.} \\
+	\hline
+	\textsf{\small Non supporta l'ereditarietà.} & \textsf{\small Supporta l'ereditarietà.} \\
+	\hline
+	\textsf{\small Si concentra sulle funzioni} & \textsf{\small Si concentra sui dati} \\
+	\textsf{\small più che sui dati.} & \textsf{\small più che sulle funzioni.} \\
+	\hline
+	\textsf{\small Fornisce malloc(), calloc(), realloc()} & \textsf{\small Fornisce gli operatori new e delete (e altro)} \\
+	\textsf{\small e free() per } & \textsf{\small per  } \\
+	\textsf{\small l'allocazione/deallocazione dinamica} & \textsf{\small l'allocazione/deallocazione dinamica} \\
+	\textsf{\small  della memoria.} & \textsf{\small della memoria.} \\
+	\hline
+	\textsf{\small Supporto diretto per occuparsi} & \textsf{\small Supporto diretto per occuparsi} \\
+	\textsf{\small delle eccezioni non è supportato.} & \textsf{\small delle eccezioni è supportato.} \\
+	\hline
+	\textsf{\small scanf() e printf() sono usate} & \textsf{\small cin e cout sono usate} \\
+	\textsf{\small per l'input/output in C.} & \textsf{\small per l'input/output in C++.} \\
+	\hline
+	\textsf{\small Le strutture in C non hanno} & \textsf{\small Le strutture in C++ hanno} \\
+	\textsf{\small modificatori d'accesso.} & \textsf{\small modificatori d'accesso.} \\
+	\hline
+\end{longtable}
 
 % -------------------------- SECTION: TIPI DI DATI -----------------------------------
 
