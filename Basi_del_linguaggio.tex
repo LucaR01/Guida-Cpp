@@ -36,20 +36,38 @@ Mentre, l'ultima preview mostrata è stata quella del C++23.}\\
 
 \textsf{Il nome del linguaggio deriva dal C, ma con l'aggiunta dell'operatore ++ che nel C serve per incrementare di 1. Il che stava a significare che il C++ è come il C, ma migliore, ovvero come suo successore.}\\
 
+% -------------------------- SECTION: PREPROCESSOR -----------------------------------
+
+\newpage
+
+\section{Preprocessor}
+
+\textsf{\small Il \textbf{preprocessore} è composto da delle direttive che danno istruzioni al compilatore di preprocessare prima dell'effettiva compilazione.} \\
+
+\textsf{\small Per esempio di includere una libreria standard del linguaggio.} \\
+
+\textsf{\small Le direttive del preprocessore iniziano con il \textbf{\#}.} \\
+
+\begin{lstlisting}
+	// Con la direttiva \#include diciamo al preprocessore di includere questo file
+	// che in questo caso si tratta della libreria standard per l'input ed output
+	// del C++
+	#include <iostream> 
+\end{lstlisting}
+
 % -------------------------- SECTION: COMPILATORE ------------------------------------
 
 \section{Compilatore}
 
-\textsf{\small }
+\textsf{\small Il C++ è un linguaggio di programmazione, di solito, implementato tramite un \textbf{compilatore} (un \emph{traduttore} che converte il \emph{codice sorgente} in \emph{codice macchina} object byte code) invece di un \textbf{interprete} (che esegue il direttamente il codice sorgente).} \\
 
-%TODO: Compilatore che C++ è un linguaggio compilato, cosa vuol dire.
 %TODO: precompilatore, ecc..
 
 % -------------------------- SECTION: LINKER -----------------------------------------
 
 \section{Linker}
 
-\textsf{\small }
+\textsf{\small Se il compilatore traduce il codice sorgente, il \textbf{linker} si occupa di risolvere le referenze ad altri files, per esempio all'inclusione di librerie standard del linguaggio. Quindi il linker linka i files che servono al tuo codice per essere eseguito al tuo codice (che dopo la compilazione sarà probabilmente diventato un .OBJ)} \\
 
 %TODO: + immagini.
 
