@@ -4,12 +4,10 @@
 
 %TODO: allocazione dinamica della memoria? malloc, calloc, realloc? o in un altro capitolo?
 %TODO: aggiungere gli pseudo random generators?
-%TODO: volendo scrivere qualcosa riguardo il compilatore, il preprocessore, ecc..
-%TODO: parlare del linker + immagini.
-
-%TODO: C vs C++
 
 %TODO: includere #include <iostream> negli esempi che lo usano.
+
+%TODO: spiegare a run-time, a compile-time dopo la spiegazione del compilatore e linker,ecc..
 
 % -------------------------- SECTION: INTRODUZIONE -----------------------------------
 
@@ -70,6 +68,14 @@ Mentre, l'ultima preview mostrata è stata quella del C++23.}\\
 \textsf{\small Se il compilatore traduce il codice sorgente, il \textbf{linker} si occupa di risolvere le referenze ad altri files, per esempio all'inclusione di librerie standard del linguaggio. Quindi il linker linka i files che servono al tuo codice per essere eseguito al tuo codice (che dopo la compilazione sarà probabilmente diventato un .OBJ)} \\
 
 %TODO: + immagini.
+
+% -------------------------- SECTION: RUNTIME VS COMPILE TIME ------------------------
+
+\section{Runtime Vs Compile time}
+
+\textsf{\small \textbf{Runtime} sono le istruzioni di codice che vengono eseguite mentre il tuo programma si trova in esecuzione.} \\
+
+\textsf{\small \textbf{Compile time} sono le istruzioni che vengono tradotte dal compilatore nel momento della compilazione.} \\
 
 % -------------------------- SECTION: C VS C++ ---------------------------------------
 
@@ -1278,18 +1284,19 @@ Mentre, l'ultima preview mostrata è stata quella del C++23.}\\
 			return n * fattoriale(n - 1);
 	}
 
-	// Questa funzione si potrebbe anche scrivere //TODO: Scherzavo non funziona
+	// Questa funzione si potrebbe anche scrivere
 	int fattoriale(int n)
 	{
-		(n == 0) || (n == 1) ? return 1 : return n * fattoriale(n - 1);
+		// Le parentesi nella condizione non servirebbero, le lascio per chiarezza
+		return ((n == 0) || (n == 1)) ? 1 : n * fattoriale(n - 1);
 	}
 
 	// Fibonacci è una serie in cui i due primi elementi sono 1 e dove ogni elemento è uguale alla somma dei due termini precedenti. 
 	
-	//TODO: Scherzavo non funziona
 	int fibonacci(int x)
 	{
-		((x == 1) || (x == 0)) ? return(x) : return(fibonacci(x - 1) + fibonacci(x - 2));
+		// Le parentesi nella condizione non servirebbero, le lascio per chiarezza
+		return ((x == 1) || (x == 0)) ? x : fibonacci(x - 1) + fibonacci(x - 2);
 	}
 
 	int main()
@@ -2854,6 +2861,8 @@ int main(){
 	\item \textsf{\small  Usare sempre size\_t o ssize\_t per cose come contatori, pesi, ecc.. C'è bisogno di un forte motivo razionale per usare un tipo come uint8\_t quando size\_t può fare lo stesso lavoro.}
 	\item \textsf{\small Usa uint8\_t, int16\_t, uint32\_t, int64\_t quando è importante per l'interazione coll'hardware. Non usarli senza una buona motivazione, quando le interazioni coll'hardware non sono coinvolte; preferire size\_t o int piuttosto.}
 \end{itemize}
+
+% ------------------------------ FINE CAPITOLO ---------------------------------------
 
 % ------------------------- PER ALTRI CAPITOLI ---------------------------------------
 
