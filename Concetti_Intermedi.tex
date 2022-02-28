@@ -34,6 +34,8 @@
 % Random numbers? O nel beginner?
 % std::chrono?
 
+%TODO: inline functions.
+
 % -------------------------- SECTION: INTRODUZIONE -----------------------------------
 
 \section{Introduzione}
@@ -154,6 +156,12 @@
 \textsf{\small Inoltre, la classe vector mette a disposizione tante altre funzioni per la loro manipolazione.} \\
 
 \textsf{\small P.S.: Da non confondere con i vettori in matematica|fisica.} \break
+
+% -------------------------- SECTION: ITERATORI --------------------------------------
+
+\section{Iteratori}
+
+\textsf{\small \textbf{Definizione: } } \\
 
 % -------------------------- SECTION: VIRTUAL ----------------------------------------
 
@@ -331,9 +339,89 @@
 
 % -------------------------- SECTION: LAMBDAS ----------------------------------------
 
+%TODO: potrei mettere le lambbdas subito dopo gli iteratori.
+
 \section{Lambdas}
 
-\textsf{\small \textbf{Definizione:} } \\
+\textsf{\small \textbf{Definizione:} Dal C++11 sono presenti le \textbf{lambdas} che permettono di creare \textbf{funzioni anonime}.} \\
+
+\textsf{\small Servono per creare delle funzioni, dei piccoli frammenti di codice che non hanno bisogno di un nome e non verranno riutilizzati. } \\ % funzioni inline
+
+\textsf{\small Sono una parte centrale della \textbf{programmazione funzionale}.} \\
+
+\textsf{\small Questa è la struttura di una tipica espressione \textbf{lambda} :} \\
+
+\begin{lstlisting}
+	[ clausola di cattura ] ( lista di parametri che è opzionale) -> tipoDiRitorno
+	{
+		// Definizione della lambda.
+	}
+\end{lstlisting}
+
+\textsf{\small Se nella clausola della cattura è presente un \textbf{=} (uguale), vuol dire che la lambda può accedere a qualsiasi variabile, se c'è un \textbf{\&} vuol dire che stiamo accedendo alle variabili per reference, se la clausola [] è vuota allora può accedere soltanto alle variabili locali, altrimenti lì saranno presenti i nomi delle variabili che si vogliono utilizzare ("catturate" o per valore o per reference).} \\ %TODO: forse si potrebbe rimuovere questa parte e lasciare solo la tabella.
+
+\begin{tabular}{|c|c|}
+	\hline
+	\textbf{Cattura} & \textbf{Definizione} \\
+	\hline
+	\textsf{\small []} & \textsf{\small accedere solo alla variabili locali} \\
+	\hline
+	\textsf{\small [=]} & \textsf{\small accedere a tutte le variabili per valore.} \\
+	\hline
+	\textsf{\small [\&]} & \textsf{\small accedere a tutte le variabili per reference.} \\
+	\hline
+	\textsf{\small [nomeVariabile1, \&nomeVariabile2]} & \textsf{\small "cattura" nomeVariabile per valore } \\
+	\textsf{\small } & \textsf{\small e nomeVariabile2 per referenza.} \\
+	\hline
+\end{tabular} \\
+
+\begin{lstlisting}
+	#include <iostream>
+	#include <vector>
+	
+	std::vector<int> v1 = { 5, 8, 9, 1, 7};
+	std::vector<int> v2 = {12, 36, 27, 92};
+	
+	// Lambda.
+	auto pushinto = [&](int m)
+	{
+		v1.push_back(m);
+		v2.push_back(m);
+	}; // Da notare il ; alla fine.
+
+	// Pusha in entrambi v1 e v2 il numero 24
+	pushinto(24);
+	
+	// Lambda, accediamo a v1 per valore (quindi ne facciamo una copia).
+	[v1]()
+	{
+		for(auto p = v1.begin(); p != v1.end(); p++)
+		{
+			std::cout << *p << std::endl;
+		}
+	};
+
+	int n = 7;
+	// trova il primo numero maggiore di n.
+	// [n] significa che stiamo accedendo e possiamo soltanto accedere ad n (per valore, ovvero una copia di essa).
+	std::vector<int>:: iterator p = std::find_if(v1.begin(), v1.end(), [n](int i)
+	{
+		return i > n;
+	});
+
+	std::cout << "Il primo numero maggiore di n e\': " << *p << std::endl; // Output: Il primo numero maggiore di n e\': 8
+
+	// Qui [=] vuol dire che possiamo accedere a tutte le variabili.
+	int countN = std::count_if(v1.begin(), v1.end(), [=](int a) 
+	{
+		return a >= n;
+	});
+
+	std::cout << "Il numero di elementi piu' grandi o uguali ad n sono: " << countN << std::endl; // Output: Il numero di elementi più grandi o uguali ad n sono: 4 (perchè abbiamo inserito anche il 24 nell'operazione precedente).
+\end{lstlisting}
+
+%TODO: capture.
+%TODO: poi trattare anche dei functors.
 
 % -------------------------- SECTION: MEMORIA DINAMICA -------------------------------
 
@@ -346,8 +434,6 @@
 % -------------------------- SECTION: RAII -------------------------------------------
 
 % -------------------------- SECTION: CLASSI ASTRATTE --------------------------------
-
-% -------------------------- SECTION: ITERATORI --------------------------------------
 
 % -------------------------- SECTION: ECCEZIONI --------------------------------------
 
