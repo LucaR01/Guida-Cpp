@@ -23,7 +23,7 @@
 
 % Move semantics
 
-% Map, Set, HashTable
+% Map, Set, HashTable, Pair
 
 % #include type_traits
 
@@ -42,7 +42,7 @@
 
 \textsf{\small In questo capitolo, tratterò argomenti non necessariamente più complicati, ma che non considererei basi. } \\
 
-\textsf{\small In questo capitolo vedremo ulteriori concetti riguardo le classi, il polimorfismo, le varie tipologie di costruttori, la programmazione generale, le lambdas e molto altro ancora..} \break
+\textsf{\small In questo capitolo vedremo ulteriori concetti riguardo le classi, il polimorfismo, le varie tipologie di costruttori, la programmazione generale, le lambdas, la programmazione funzionale e molto altro ancora..} \break
 
 %TODO: std::vector
 %TODO: templates.
@@ -159,9 +159,102 @@
 
 % -------------------------- SECTION: ITERATORI --------------------------------------
 
+\newpage
+
 \section{Iteratori}
 
-\textsf{\small \textbf{Definizione: } } \\
+\textsf{\small \textbf{Definizione: } Gli \textbf{iteratori} sono degli oggetti (come puntatori) che puntano ad un elemento all'interno di un contenitore. Usiamo gli \textbf{iteratori} per muoverci nel contenitore } \break
+
+\textsf{\small Ci sono diversi tipi di iteratori: } \\
+
+\begin{itemize}
+	\item \textsf{\small \textbf{Input Iterators} : Sono i più deboli fra tutti per via delle loro limitate funzionalità. Può essere usato solo in algoritmi single-pass ovvero quelli che processano il contenitore in modo sequenziale.}
+	\item \textsf{\small \textbf{Output Iterators} : Anch'essi sono molto limitati. Possono essere usati negli algoritmi single-pass, ma non per accedere agli elementi, ma per essere assegnati agli elementi.}
+	\item \textsf{\small \textbf{Forward Iterator} : Sono più in alto nella gerarchia rispetto agli input ed output e possiedono tutte le funzionalità di questi ultimi due, ma possono anche muoversi in avanti ed anch'essi di una posizione alla volta.}
+	\item \textsf{\small \textbf{Bidirectional Iterators} : Possiedono tutte le funzionalità degli forward iterators, ma possono muoversi in entrambe le direzioni.}
+	\item \textsf{\small \textbf{Random-Access Iterators} : Sono gli iteratori più potenti. Non sono limitati dal solo poter muoversi in modo sequenziale, ma possono accedere in maniera casuale a qualsiasi elemento dentro ad un contenitore. Sono quelli che hanno le stesse funzionalità dei puntatori.}
+\end{itemize}
+
+\pagebreak
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1.2\textwidth, height=1.2\textheight, keepaspectratio]{./imgs/iterators.jpg}
+	%\caption{Iteratori}
+	\label{fig:iterators}
+\end{figure}
+
+\vspace{-3.69cm}
+
+\textsf{\small È sempre meglio usare gli \textbf{iteratori} per iterare tra i contenuti di un contenitore così da evitare di usare l'operatore \textbf{[]} per accedere agli elementi. Inoltre per ottenere la fine di un contenitore con gli \textbf{iteratori} possiamo semplicemente usare la funzione \textbf{end()} al posto di utilizzare lo spazio occupato. } \break
+
+\textsf{\small Possono essere utili per la riusabilità del codice, visto che anche se cambiamo vettore, il codice riguardante gli \textbf{iteratori} non dovrebbe cambiare.} \\
+
+\textsf{\small Gli \textbf{iteratori} ci permettono una manipolazione dinamica dei contenitori, permettendoci di aggiungere e rimuovere elementi in modo dinamico a nostro piacimento.} \break
+
+\textsf{\small Per poter usare gli iteratori è necessario includere \textbf{\#include <iterator>}.} \\
+
+\begin{itemize}
+	\item \textsf{\small \textbf{begin()} : Restituisce la posizione iniziale del contenitore.}
+	\item \textsf{\small \textbf{end()} : Restituisce la posizione finale del contenitore.}
+	%\item \textsf{\small \textbf{} :}
+\end{itemize}
+
+\begin{lstlisting}
+	#include <iostream>
+	#include <iterator>
+	
+	std::vector<int> v = { 9, 6, 3};
+	
+	// Dichiaro un iteratore.
+	std::vector<int>::iterator it;
+	for(it = v.begin(); it < v.end(); it++)
+	{
+		std::cout << "Elemento: " << *it << std::endl;
+	}
+
+	// Output: stampa uno ad uno gli elementi del vettore.
+\end{lstlisting}
+
+\begin{itemize}
+	\item \textsf{\small \textbf{advance()} : Incrementa la posizione dell'iteratore fino all'argomento passato come parametro.}
+	\item \textsf{\small \textbf{next()} : Restituisce un nuovo iteratore dopo aver avanzato di tot posizioni menzionate nell'argomento.}
+	\item \textsf{\small \textbf{prev()} : Restituisce un nuovo iteratore dopo essere retrocesso di tot posizioni menzionate nell'argomento.}
+	\item \textsf{\small \textbf{inserter()} : Per inserire elementi ad qualsiasi posizione nel contenitore. Prende due argomenti: il contenitore e l'iteratore alla posizione in cui l'elemento deve essere inserito.}
+\end{itemize}
+
+\begin{lstlisting}
+	#include <iostream>
+	#include <iterator>
+	
+	std::vector<int> v = { 9, 6, 3};
+	std::vector<int> v2(2, 5, 8);
+	
+	std::vector<int>::iterator it = v.begin();
+	
+	std::advance(it, 2);
+	
+	std::cout << "Elemento dell'iteratore dopo advance: " << *it << std::endl; // Output: Elemento dell'iteratore dopo advance: 3
+	
+	std::prev(it, 2);
+	std::cout << "Elemento dell'iteratore dopo prec: " << *it << std::endl; // Output: Elemento dell'iteratore dopo prec: 9
+	
+	std::next(it, 1);
+	std::cout << "Elemento dell'iteratore dopo next: " << *it << std::endl; // Output: Elemento dell'iteratore dopo next: 6
+	
+	// Copio gli elementi di 1 vettore nell'altro usando inserter
+	// Inserisco gli elementi di v2 in v alla posizione a cui puntava l'iteratore it.
+	std::copy(v2.begin(), v2.end(), std::inserter(v, it));
+	
+	for(int &x : v)
+	{
+		std::cout << "Elemento: " << x << std::endl;
+	}
+
+	// Output: Gli elementi del vettore con gli elementi aggiunti.
+\end{lstlisting}
+
+%TODO: Iterable Interface?
 
 % -------------------------- SECTION: VIRTUAL ----------------------------------------
 
