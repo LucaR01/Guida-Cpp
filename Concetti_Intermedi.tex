@@ -36,6 +36,8 @@
 
 %TODO: inline functions.
 
+%TODO: overloading vs override
+
 % -------------------------- SECTION: INTRODUZIONE -----------------------------------
 
 \section{Introduzione}
@@ -295,7 +297,7 @@
 
 	class Derived : public Base {
 		public:
-			void print()
+			void print() override // override non servirebbe, ma aiuta per la manutenzione del codice ed indica che la funzione è stata "overridata".
 			{
 				std::cout << "print in derived class" << std::endl;
 			}
@@ -419,13 +421,20 @@
 
 \textsf{\small La keyword \textbf{virtual} può essere posta sia prima che dopo \textbf{public}.} \\
 
-% -------------------------- SECTION: POLYMORPHISM -----------------------------------
+%TODO: Pure Virtual
 
-%TODO: = molte forme
+% -------------------------- SECTION: POLYMORPHISM -----------------------------------
 
 \section{Polimorfismo}
 
-\textsf{\small \textbf{Definizione:} } \\
+\textsf{\small \textbf{Definizione:} La parola \textbf{polimorfismo} significa \emph{avere molte forme}, questo occorre quando c'è una gerarchia di classi e queste sono correlate attraverso l'ereditarietà.} \\
+
+\textsf{\small Ci sono due tipi principali di polimorfismo: }
+
+\begin{itemize}
+	\item \textsf{\small \textbf{Compile time Polymorphism} : si ottiene dall'\emph{overloading} di funzioni o di operatori.}
+	\item \textsf{\small \textbf{Runtime Polymorphism} : si ottiene dall' \emph{overriding} delle funzioni (con la keyword \textbf{virtual}).}
+\end{itemize}
 
 \begin{figure}[H]
 	\centering
@@ -433,6 +442,152 @@
 	\caption{Polimorfismo}
 	\label{fig:polymorphism}
 \end{figure}
+
+% -------------------------- SECTION: OVERLOADING --------------------------
+
+\section{Overloading}
+
+\textsf{\small \textbf{Definizione:} L'\textbf{overloading} permette di ridefinire una funzione o un operatore con lo stesso nome e nello stesso scope, ma con una differente implementazione.} \\
+
+\subsection{Function Overloading}
+
+\textsf{\small Si può definire una funzione con lo stesso nome di un'altra purchè abbia argomenti diversi.} \\
+
+\begin{lstlisting}
+	void func(int x)
+	{
+		std::cout << "Valore di x: " << x << std::endl;
+	}
+
+	void func(double x)
+	{
+		std::cout << "Valore di x: " << x << std::endl;
+	}
+
+	void func(float x)
+	{
+		std::cout << "Valore di x: " << x << std::endl;
+	}
+\end{lstlisting}
+
+\subsection{Operator Overloading}
+
+\textsf{\small Possiamo ridefinire degli operatori per eseguire delle operazioni nel modo che vogliamo noi.} \\
+
+\textsf{\small Utilizziamo la keyword \textbf{operator} ed il simbolo dell'operatore per \emph{overloaddarlo}.} \\
+
+\begin{lstlisting}
+	class Vec {
+		public:
+			Vec(){}
+		
+			Vec(int x, int y)
+			{
+				this->x = x;
+				this->y = y;
+			}
+		
+			Vector operator+(const Vec& v)
+			{
+				Vec vec;
+				vec.x = this->x + v.x;
+				vec.y = this->y + v.y;
+				return vec;
+			}
+		
+			int getX()
+			{
+				return this->x;
+			}
+		
+			int getY()
+			{
+				return this->y;
+			}
+		
+		private:
+			int x;
+			int y;
+	};
+
+	int main()
+	{
+		Vec v1(3, 2);
+		Vec v2(1, 0);
+		
+		Vec v3 = v1 + v2;
+		
+		std::cout << "v3.x: " << v3.getX() << "; v3.getY(): " << v3.y << std::endl;
+		// Output: v3.x: 4; v3.y: 2
+		// perché facciamo la x di v1 che è 3 + la x di v2 che è 1 quindi 4 e 
+		// la y di v1, ovvero 2 + la y di v2, ovvero 0 quindi 2
+		// quindi v3 ha membri (4,2).
+		return 0;
+	}
+\end{lstlisting}
+
+\textsf{\small Non tutti gli operatori si possono \emph{overloaddare}.} \\
+
+\textsf{\small Gli operatori che non si possono \emph{overloaddare} sono: \textbf{.} (punto), \textbf{::}, \textbf{?:}(operatore ternario), \textbf{sizeof}.} \\
+
+\subsection{Overloading vs Overriding}
+
+\textsf{\small L'\textbf{overloading} è la creazione di molteplici definizioni di una funzione cambiando la \textbf{signature}: il numero di parametri, la tipologia dei parametri. Il tipo di ritorno non gioca alcun ruolo.} \\
+
+\textsf{\small Può essere fatta sia nelle classi basi che in quelle derivate.} \break
+
+\textsf{\small L'\textbf{overriding} è la ridefinizione di una funzione di una classe base in una classe derivata con la stessa \textbf{signature}, stesso tipo di ritorno e parametri.} \\
+
+\textsf{\small Può essere fatta solo nelle classi derivate.} \break
+
+\textsf{\small Differenza tra \textbf{function overloading} e \textbf{function overriding}: } \break
+
+\begin{tabular}{|c|c|} %TODO: questo è da riguardare, perché la fonte forse ha fatto degli errori.
+	\hline
+	\textbf{Overloading} & \textbf{Overriding} \\
+	\hline
+	\textsf{\small Nessuna keyword è usata.} & \textsf{\small Keyword \textbf{override}.} \\
+	\hline
+	\textsf{\small Il prototipo cambia } & \textsf{\small Il prototipo non cambia.} \\
+	\textsf{\small in base ai parametri.} & \textsf{\small } \\
+	\hline
+	\textsf{\small Occorre durante compile time.} & \textsf{\small Occorre durante runtime.} \\
+	\hline
+	\textsf{\small I costruttori possono } & \textsf{\small } \\
+	\textsf{\small essere "overloaddati".} & \textsf{\small } \\
+	\hline
+	\textsf{\small I distruttori non } & \textsf{\small I distruttori } \\
+	\textsf{\small possono essere "overloaddati".} & \textsf{\small possono essere "overridati".} \\
+	\hline
+	\textsf{\small } & \textsf{\small Le funzioni virtuali } \\
+	\textsf{\small } & \textsf{\small non possono essere "overridate".} \\
+	\hline
+	\textsf{\small Può essere usato per ottenere } & \textsf{\small Overriding è anche conosciuto come } \\
+	\textsf{\small \emph{early binding}.} & \textsf{\small \emph{late binding}.} \\
+	\hline
+	\textsf{\small La funzione chiamata viene } & \textsf{\small La funzione overriden} \\
+	\textsf{\small determinata dal numero} & \textsf{\small è preceduta} \\
+	\textsf{\small di parametri.} & \textsf{\small dalla keyword virtual nella classe base.} \\
+	\hline
+	\textsf{\small Le funzioni verrebbero} & \textsf{\small } \\
+	\textsf{\small ridefinite} & \textsf{\small } \\
+	\textsf{\small con lo stesso nome, ma} & \textsf{\small } \\
+	\textsf{\small differente numero o tipo} & \textsf{\small } \\
+	\textsf{\small di parametri.} & \textsf{\small } \\
+	\hline
+	\textsf{\small } & \textsf{\small L'indirizzo dell'oggetto} \\
+	\textsf{\small } & \textsf{\small della classe è assegnato al} \\
+	\textsf{\small } & \textsf{\small puntatore la cui funzione} \\
+	\textsf{\small } & \textsf{\small è chiamata dal puntatore.} \\
+	\hline
+	\textsf{\small } & \textsf{\small Quando la funzione è definita viene preceduta} \\
+	\textsf{\small } & \textsf{\small dalla keyword virtual nel main.} \\
+	%\textsf{\small } & \textsf{\small La stessa funzione è ridefinita } \\
+	%\textsf{\small } & \textsf{\small nella classe derivata usando} \\
+	%\textsf{\small } & \textsf{\small la keyword \textbf{out}.} \\
+	%\textsf{\small } & \textsf{\small } \\
+	\hline
+\end{tabular}
 
 % -------------------------- SECTION: TIPI DI CAST -----------------------------------
 
@@ -693,6 +848,8 @@
 % -------------------------- SECTION: RAII -------------------------------------------
 
 % -------------------------- SECTION: CLASSI ASTRATTE --------------------------------
+
+%TODO: Pure Virtual
 
 % -------------------------- SECTION: ECCEZIONI --------------------------------------
 
