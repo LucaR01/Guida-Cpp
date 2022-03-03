@@ -262,11 +262,177 @@
 
 \section{Virtual}
 
-\textsf{\small \textbf{Definizione:} } \\
+\subsection{Virtual functions}
+
+\textsf{\small \textbf{Definizione:} Una funzione \textbf{virtuale} è una funzione dichiarata in una classe base che può essere ri-definita (\emph{overridden}) da una classe derivata. Le funzioni \textbf{virtuali} ci assicurano che la corretta versione della funzione venga eseguita.} \\
+
+\textsf{\small Alcune regole per le \textbf{funzioni virtuali}: }
+
+\begin{itemize}
+	\item \textsf{\small Non possono essere statiche.}
+	\item \textsf{\small Può essere una \textbf{friend function} di un'altra classe.}
+	\item \textsf{\small Bisognerebbe accedergli attraverso un puntatore o referenza di un tipo alla classe base per ottenere \emph{runtime polymorphism}.}
+	\item \textsf{\small Il prototipo della funzione dovrebbe essere lo stesso sia nella classe base sia nella classe derivata.}
+	\item \textsf{\small Sono sempre definiti nella classe base e ridefiniti nella classe derivata. Non è obbligatorio che la classe derivata ri-definisca la funzione, può anche soltanto utilizzare quella della classe base.}
+	\item \textsf{\small Una classe può avere un \textbf{virtual destructor}, ma non un \textbf{virtual constructor}.}
+\end{itemize}
+
+\begin{lstlisting}
+	#include <iostream>
+	
+	class Base {
+		public:
+			virtual void print()
+			{
+				std::cout << "print in base class" << std::endl;
+			}
+		
+			void show()
+			{
+				std::cout << "show in base class" << std::endl;
+			}
+	};
+
+	class Derived : public Base {
+		public:
+			void print()
+			{
+				std::cout << "print in derived class" << std::endl;
+			}
+		
+			void show()
+			{
+				std::cout << "show in derived class" << std::endl;
+			}
+	};
+
+	int main()
+	{
+		Base* bPtr;
+		Derived d;
+		bPtr = &d;
+		
+		// Chiamo la funzione virtuale.
+		bPtr->print(); // Output: print in derived class
+		
+		// Chiamo la funzione non virtuale.
+		bPtr->show(); // Output: show in base class
+		
+		return 0;
+	}
+\end{lstlisting}
+
+\subsection{Virtual Destructors}
+
+\textsf{\small \textbf{Definizione:} Per rimuovere una classe derivata, la classe base dovrebbe essere definita con un \textbf{distruttore virtuale}. Cancellare una classe derivata usando un puntatore alla classe base senza un distruttore virtuale risulta in un comportamento indefinito (\emph{undefined behaviour}).} \\
+
+\begin{lstlisting}
+	#include <iostream>
+	
+	class A {
+		public:
+			A()
+			{
+				std::cout << "Constructor in base class" << std::endl;
+			}	
+		
+			virtual ~A()
+			{
+				std::cout << "Destructor in base class" << std::endl;
+			}
+	};
+
+	class B : public A {
+		public:
+			B()
+			{
+				std::cout << "Constructor in derived class" << std::endl;
+			}
+		
+			~B()
+			{
+				std::cout << "Destructor in derived class" << std::endl;
+			}
+	};
+
+	int main()
+	{
+		B* bPtr = new B();
+		A* aPtr = bPtr;
+		
+		delete aPtr;
+		
+		// Output: 
+		// Constructor in base class
+		// Constructor in derived class
+		// Destructor in derived class
+		// Destructor in base class
+		return 0;
+	}
+\end{lstlisting}
+
+\textsf{\small In linea di massima, se si ha una funzione virtuale, allora è da mettere anche il distruttore virtuale.} \break
 
 \subsection{Virtual Inheritance}
 
+\textsf{\small \textbf{Definizione:} La \textbf{Ereditarietà virtuale} è usata per risolvere il problema del \textbf{DDD} (\emph{Dreadful Diamond on Derivation}), ovvero quando una classe deriva molteplici classi che derivano dalla stessa classe.} \\
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\textwidth, height=1\textheight, keepaspectratio]{./imgs/diamond_problem2.png}
+	\caption{Problema del diamante}
+	\label{fig:diamond_problem}
+\end{figure}
+
+\textsf{\small Come possiamo notare i dati e le funzioni della \textbf{classe A} è ereditata due volte dalla \textbf{classe D}, una volta per via della \textbf{classe B} e una volta per via della \textbf{classe C}.} \\
+
+\textsf{\small Quando qualsiasi dato o funzione della \textbf{classe A} viene acceduto dalla \textbf{classe D}, nasce dell'ambiguità su quale dato/funzione chiamare. Quella ereditata da \textbf{B} o da \textbf{C}? Questo confonde i compilatori e mostrano errori.}
+
+\textsf{\small Per risolvere questa ambiguità quando la \textbf{classe A} è ereditata sia dalla \textbf{classe B} sia dalla \textbf{classe C}, è dichiarata come \textbf{classe base virtuale} (Fare riferimento all'immagine: \textbf{\ref{fig:diamond_problem}} a \textbf{pag.\pageref{fig:diamond_problem}}).}
+
+\begin{lstlisting}
+	#include <iostream>
+	
+	class A {
+		public:
+			void show()
+			{
+				std::cout << "Show from A" << std::endl;
+			}
+	};
+
+	class B : public virtual A {
+	};
+
+	class C : public virtual A {
+	};
+
+	class D : public B, public C {
+	};
+
+	int main()
+	{
+		D d;
+		d.show(); // Output: Show from A
+	}
+\end{lstlisting}
+
+\textsf{\small La keyword \textbf{virtual} può essere posta sia prima che dopo \textbf{public}.} \\
+
+% -------------------------- SECTION: POLYMORPHISM -----------------------------------
+
+%TODO: = molte forme
+
+\section{Polimorfismo}
+
 \textsf{\small \textbf{Definizione:} } \\
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\textwidth, height=1\textheight, keepaspectratio]{./imgs/polymorphism.png}
+	\caption{Polimorfismo}
+	\label{fig:polymorphism}
+\end{figure}
 
 % -------------------------- SECTION: TIPI DI CAST -----------------------------------
 
