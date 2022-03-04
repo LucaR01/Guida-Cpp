@@ -38,6 +38,12 @@
 
 %TODO: overloading vs override
 
+%TODO: NULL (o null) vs nullptr
+
+%TODO: perché non usare std::endl ed usare \n piuttosto.
+
+%TODO: steam, std::istream, std::ostream.
+
 % -------------------------- SECTION: INTRODUZIONE -----------------------------------
 
 \section{Introduzione}
@@ -839,7 +845,76 @@
 
 % -------------------------- SECTION: MEMORIA DINAMICA -------------------------------
 
-%TOOD: memoria dinamica, new, delete, ecc..
+\newpage
+
+\section{Memoria dinamica}
+
+\textsf{\small \textbf{Definizione: } Riguarda l'allocazione di memoria manualmente da parte del programmatore. La memoria allocata dinamicamente è allocata nell' \textbf{Heap} mentre le variabili locali e la memoria non statica viene allocata nello \textbf{Stack}.}
+
+\begin{itemize}
+	\item \textsf{\small \textbf{Heap} : memoria dinamica.}
+	\item \textsf{\small \textbf{Stack} : variabili locali e non-statiche.}
+\end{itemize}
+
+\subsection{Memoria Dinamica in C}
+
+\textsf{\small In C per l'allocazione dinamica della memoria usufruivamo di 4 diverse funzioni: \textbf{malloc()} (per allocare), \textbf{calloc()}, \textbf{realloc()} (per riallocare), \textbf{free()} (per liberare la memoria).} \\
+
+\textsf{\small Tutte questi funzioni del C, esistono anche nel C++, ma questo ha un suo modo per l'allocazione dinamica della memoria.} \break
+
+\subsection{new e delete}
+
+\subsubsection{new}
+
+\textsf{\small \textbf{Definizione: } L'operatore \textbf{new} denota una richiesta di allocazione di memoria nello spazio libero. Se sufficiente memoria è disponibile, l'operatore inizializza la memoria e restituisce l'indirizzo della nuova memoria allocata ed inizializzata al puntatore.} \\
+
+\begin{lstlisting}
+	// Esempio 1
+	int *ptr = nullptr;
+	ptr = new int;
+	
+	// Esempio 2
+	double *dPtr = new double;
+	
+	// Esempio 3
+	int *p = new int(22);
+	
+	// Esempio 4
+	int *pArray = new int[12];
+\end{lstlisting}
+
+\subsubsection{array normali vs array con la new}
+
+\textsf{\small L'unica differenza è che gli array normali vengono deallocati dal compilatore, mentre quelli creati con la new devono essere deallocati dal programmatore.} \break
+
+\subsubsection{delete}
+
+\textsf{\small \textbf{Definizione: } Utilizziamo la keyword \textbf{delete} per deallocare la memoria precedentemente allocata.} \\
+
+\begin{lstlisting}
+	// Esempio 1
+	int *ptr = new int;
+	
+	delele ptr;
+	
+	// Esempio 2
+	int *p = new int[6];
+	
+	delete[] p;
+\end{lstlisting}
+
+\subsection{Evitare di usare new}
+
+\textsf{\small \textbf{Definizione: } Ci sono vari motivi per cui evitare o minimizzare gli utilizzi della keyword \textbf{new}: } \\
+
+\begin{itemize}
+	\item \textsf{\small Il C++ non ha un garbage collector, quindi per ogni \textbf{new} ci deve essere una corrispondente \textbf{delete}.}
+	\item \textsf{\small Se viene lanciata un'eccezione poi la memoria non viene mai liberata.}
+	\item \textsf{\small Dovrebbe essere tutto nel distruttore, concetto del \emph{RAII}.} %TODO: add ref quando ne parlerò.
+	\item \textsf{\small Se restituisci per esempio una stringa a qualcuno, ora sono loro a doverla cancellare (con la \textbf{delete}). E se a loro volta la passassero come argomento? Quando dovrebbe essere liberata? (con \textbf{delete}).}
+	\item \textsf{\small Può essere un problema nel multi-threading.}
+	\item \textsf{\small Potrebbe portare a dei \emph{memory leaks}.}
+\end{itemize}
 
 % -------------------------- SECTION: TIPI DI COSTRUTTORI | RULE OF 3 ----------------
 
