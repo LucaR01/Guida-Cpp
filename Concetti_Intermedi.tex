@@ -44,6 +44,8 @@
 
 %TODO: steam, std::istream, std::ostream.
 
+%TODO: explicit keyword, converting constructor.
+
 % -------------------------- SECTION: INTRODUZIONE -----------------------------------
 
 \section{Introduzione}
@@ -755,6 +757,13 @@
 	\hline
 \end{tabular}
 
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=1.2\textwidth, height=1.2\textheight, keepaspectratio]{./imgs/typecasting.png}
+	\caption{Typecasting}
+	\label{fig:typecasting}
+\end{figure}
+
 %TODO: typeid
 
 % -------------------------- SECTION: LAMBDAS ----------------------------------------
@@ -916,15 +925,299 @@
 	\item \textsf{\small Potrebbe portare a dei \emph{memory leaks}.}
 \end{itemize}
 
+% -------------------------- SECTION: RAII -------------------------------------------
+
+\section{RAII | Resource Acquisition is initialization}
+
+\textsf{\small \textbf{Definizione: } \textbf{RAII} (\emph{Resource Acquisition is Initialization}) è un idioma comune della programmazione e della gestione delle risorse. Ogni allocazione della risorsa è fatta alla creazione dell'oggetto da parte del \textbf{costruttore} mentre la deallocazione (rilascio della memoria) viene fatto dal \textbf{distruttore}. Quindi se non ci sono leaks all'oggetto, non ci sono leaks nemmeno alla risorse. } \\
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=1\textwidth, height=1\textheight, keepaspectratio]{./imgs/RAII.png}
+	\caption{RAII}
+	\label{fig:RAII}
+\end{figure}
+
+%TOOD: magari approfondire l'argomento.
+
 % -------------------------- SECTION: TIPI DI COSTRUTTORI | RULE OF 3 ----------------
 
-% -------------------------- SECTION: RULE OF 5 --------------------------------------
+\section{Constructor types | Rules of}
 
-% -------------------------- SECTION: RAII -------------------------------------------
+\subsection{Rule of Zero}
+
+\textsf{\small \textbf{Definizione: } La \textbf{regola dello zero} (è una regola generale/un'indicazione) afferma che se non hai bisogno di nessuno di questi, allora non ne devi implementare nessuno: } \\
+
+\begin{itemize}
+	\item \textsf{\small \textbf{Distruttore} : libera tutte le risorse precedentemente allocate.}
+	\item \textsf{\small \textbf{Copy Constructor} : Fa una copia di un oggetto.}
+	\item \textsf{\small \textbf{Copy assign} : overload dell'operatore di assegnamento.}
+\end{itemize}
+
+\subsection{Copy Constructor}
+
+\textsf{\small \textbf{Definizione: } Il \textbf{Copy Constructor} è un tipo di costruttore che inizializza un oggetto usando un altro oggetto della stessa classe.} \\
+
+\textsf{\small Un costruttore di copia ha la seguente struttura: } \\
+
+\begin{lstlisting}
+	// È un costruttore quindi si chiama con il nome della classe.
+	NomeDellaClasse(const NomeDellaClasse &vecchioOggetto);
+\end{lstlisting}
+
+\textsf{\small Un copy constructor potrebbe essere chiamato per:}
+
+\begin{enumerate}
+	\item \textsf{\small Quando un oggetto della classe è ritornato per valore.}
+	\item \textsf{\small Quando un oggetto della classe è passato come argomento ad una funzione per valore.}
+	\item \textsf{\small Quando un oggetto è costruito sulla base di un altro oggetto.}
+	\item \textsf{\small Quando il compilatore genera un oggetto temporaneo.}
+	%\item \textsf{\small }
+\end{enumerate}
+
+\begin{lstlisting}
+	class Point {
+		public:
+			// Costruttore normale
+			Point(int x, int y)
+			{
+				this->x = x;
+				this->y = y;
+			}
+			
+			// Copy Constructor
+			// Assiegnamo i valori di x ed y in base ai valori di un'istanza p della classe Point.
+			Point(const Point &p)
+			{
+				this->x = p.x;
+				this->y = p.y;
+			}
+		
+			int getX() { return this->x };
+			int getY() { return this->y };
+		
+		private:
+			int x;
+			int y;
+	};
+
+	int main()
+	{
+		Point p1(3, 5); // Il costruttore normale viene chiamato qui.
+		Point p2 = p1; // Il Copy Constructor viene chiamato qui.
+		
+		std::cout << "p1.x: " << p1.getX() << ", p1.y: " << p1.getY() << "\n"; // Output: p1.x: 3, p1.y: 5
+		std::cout << "p2.x: " << p2.getX() << ", p2.y: " << p2.getY() << "\n"; // Output: p2.x: 3, p2.y: 5
+		
+		return 0;
+	}
+\end{lstlisting}
+
+\subsection{Copy Assign}
+
+\textsf{\small \textbf{Definizione: } Il \textbf{copy assignment operator} è ciò che ti permette di assegnare, di copiare un'istanza e di portare i suoi dati in un' altra istanza.} \\
+
+\textsf{\small È usato per rimpiazzare i dati di un oggetto precedentemente inizializzato con i dati di qualche altro oggetto.} \\
+
+\textsf{\small Se non si dichiara un \textbf{assignment operator} allora il compilatore provvederà a fornirtene uno automaticamente.} \\
+
+\textsf{\small In linea di massima, se hai bisogno di un \textbf{copy constructor} allora avrai bisogno anche di un \textbf{copy assignment operator}.} \\
+
+%TODO: da riguardarsi il copy assignment operator nel codice.
+\begin{lstlisting}
+	class Point {
+		public:
+			// Normal Constructor
+			Point(int x, int y)
+			{
+				this->x = x;
+				this->y = y;
+			}
+		
+			// Copy Constructor
+			Point(const Point& p)
+			{
+				this->x = p.x;
+				this->y = p.y;
+			}
+		
+			// Copy Assignment
+			Point& operator=(const Point& p)
+			{
+				this->x = p.x;
+				this->y = p.y;
+				return *this;
+			}
+			
+			int getX() { return this->x };
+			int getY() { return this->y };
+			
+		private:
+			int x;
+			int y;
+	};
+\end{lstlisting}
+
+%TODO: copy constructor = delete, copy assignment = delete.
+
+\subsection{=default | Defaulted Functions}
+
+\textsf{\small \textbf{Definizione: } Le \textbf{defaulted functions} in modo esplicito permette di aggiungere \textbf{=default} alla fine di una funzione per dichiararla una \emph{funzione default esplicita}. Questi sono più efficienti.} \\
+
+\begin{lstlisting}
+	class A {
+		public:
+		A(int a)
+		{
+			this->a = a;
+			this->b = 0;
+		}
+	
+		A(int a, int b) = default
+		{
+			this->a = a;
+			this->b = b;
+		};
+	
+		// Non ci sarebbe bisogno di mettere =default al costruttore A(), perché questo è già il costruttore di default.
+		A(); 
+		
+		int a;
+	};
+
+	int main()
+	{
+		// Eseguito usando il default constructor
+		A a(2);
+		
+		// Eseguito usando il costruttore parametrizzato.
+		A b(5, 7);
+		return 0;
+	}
+\end{lstlisting}
+
+\subsection{=delete | Deleted Functions}
+
+\textsf{\small \textbf{Definizione: } Apparte, deallocare la memoria, dal C++11 la \textbf{delete} ha un nuovo significato: \emph{disabilitare l'utilizzo di una funzione membra}. Queste funzioni sono conosciute come \textbf{funzioni deleted esplicitamente}.} \\
+
+\begin{lstlisting}
+	class A {
+		public:
+			A(int a): x(a)
+			{
+				this->a = a;
+			}
+		
+			// Disabilitare il copy constructor.
+			A(const A& ) = delete;
+			
+			// Disabilitare il copy assignment operator.
+			A& operator=(const A& ) = delete;
+			
+			int x;
+	};
+
+	int main()
+	{
+		A a1(3), a2(6), a3(9);
+		
+		// Errore, l'utilizzo del copy assignment operator è disabilitato.
+		a1 = a2;
+		
+		// Errore, l'utilizzo del copy constructor è disabilitato.
+		a3 = A(a2);
+		return 0;
+	}
+\end{lstlisting}
+
+\textsf{\small \textbf{Ma qual è l'utilità di far ciò?}} \\
+
+\begin{enumerate}
+	\item \textsf{\small Previene il compilatore dal generare le \textbf{special member functions} (costruttori, distruttori, copy constructor, ecc..) che non vogliamo.} \\
+	\item \textsf{\small Il disabilitare le normali funzioni membro o non-membro previene problemi di promozioni di tipo dal causare una chiamata involontaria alla funzione.} \\
+	%\item \textsf{\small } \\
+\end{enumerate}
+
+\subsection{Copy Constructor vs Copy Assignment Operator}
+
+\begin{tabular}{|c|c|}
+	\hline
+	\textbf{Copy Constructor} & \textbf{Copy Assignment Operator} \\
+	\hline
+	\textsf{\small È chiamato quando una } & \textsf{\small È chiamato quando ad un oggetto } \\
+	\textsf{\small nuova istanza viene creata da } & \textsf{\small già inizializzato gli viene } \\
+	\textsf{\small un oggetto già esistente, } & \textsf{\small assegnato un nuovo valore } \\
+	\textsf{\small come copia di questo.} & \textsf{\small da un oggetto già esistente.} \\
+	\hline
+	\textsf{\small Crea un nuovo blocco di memoria} & \textsf{\small Non crea un nuovo blocco di memoria.} \\
+	\textsf{\small per il nuovo oggetto.} & \textsf{\small } \\
+	\hline
+	\textsf{\small È un costruttore overloaded.} & \textsf{\small È un operatore bitwise.} \\
+	\hline
+	\textsf{\small Il compilatore fornisce} & \textsf{\small Una copia bitwise viene creata} \\
+	\textsf{\small implicitamente un copy constructor} & \textsf{\small se l'assignment operator} \\
+	\textsf{\small se uno non ne esiste già.} & \textsf{\small non viene overloaded.} \\
+	%\textsf{\small } & \textsf{\small } \\
+	\hline
+\end{tabular}
+
+\subsection{Rule of Three}
+
+\textsf{\small \textbf{Definizione: } La \textbf{regola dei tre}, essenzialmente, afferma che se uno (o anche più) tra questi è definito, allora tutti e tre dovrebbero essere definiti: } \\
+
+\begin{itemize}
+	\item \textsf{\small \textbf{Distruttore} : libera tutte le risorse precedentemente allocate.}
+	\item \textsf{\small \textbf{Copy Constructor} : Fa una copia di un oggetto.}
+	\item \textsf{\small \textbf{Copy assignment operator} : overload dell'operatore di assegnamento.}
+\end{itemize}
+
+\textsf{\small I costruttori e gli assignment operator generati implicitamente fanno una \textbf{shallow copy} (copia dei dati di tutte le variabili dell'oggetto originale. Ha problemi se i dati son allocati con memoria dinamica, in quel caso faranno referenza alla stessa locazione di memoria) dei dati membri. Noi abbiamo bisogno di una \textbf{deep copy} (copia dei dati di tutte le variabili e alloca simili risorse di memoria con lo stesso oggetto) quando la classe contiene puntatori che puntano a risorse di memoria allocate dinamicamente.} \\
+
+\subsection{Move Constructor}
+
+\textsf{\small \textbf{Definizione: } } \\
+
+\subsection{Move Assignment Operator}
+
+\textsf{\small \textbf{Definizione: } } \\
+
+\subsection{Rule of Five}
+
+\textsf{\small \textbf{Definizione: } La \textbf{regola dei cinque} è applicata per la gestione delle risorse. Se uno (o più) fra questi 5 viene implementato e le \textbf{move semantics} sono desiderate allora vanno implementate tutte e 5. } \\
+
+\begin{itemize}
+	\item \textsf{\small \textbf{Distruttore} : libera tutte le risorse precedentemente allocate.}
+	\item \textsf{\small \textbf{Copy Constructor} : Fa una copia di un oggetto.}
+	\item \textsf{\small \textbf{Copy assignment operator} : overload dell'operatore di assegnamento.}
+	\item \textsf{\small \textbf{Move Constructor} : Al posto di copiare come il copy constructor, trasferisce le risorse e pone a null i puntatori degli oggetti temporanei.}
+	\item \textsf{\small \textbf{Move Assignment Operator} : Si può usare un move assignment operator per trasferire la proprietà da un oggetto ad un altro.}
+\end{itemize}
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=1\textwidth, height=1\textheight, keepaspectratio]{./imgs/rule_of_five.png}
+	\caption{Rule of Five}
+	\label{fig:rule_of_five}
+\end{figure}
+
+%TODO: codice
+
+%TODO: explicit keyword?
+
+% -------------------------- SECTION: MOVE SEMANTICS ---------------------------------
+
+\section{Move Semantics}
+
+\textsf{\small \textbf{Definizione: } } \\
 
 % -------------------------- SECTION: CLASSI ASTRATTE --------------------------------
 
+%TODO: abstract
 %TODO: Pure Virtual
+
+\section{Classi Astratte}
+
+\textsf{\small \textbf{Definizione: } } \\
 
 % -------------------------- SECTION: ECCEZIONI --------------------------------------
 
@@ -933,9 +1226,15 @@
 %TODO: throw.
 %TODO: std::throw exception
 
+\section{Eccezioni}
+
+\textsf{\small \textbf{Definizione: } } \\
+
 % -------------------------- SECTION: OPERAZIONI SU FILE -----------------------------
 
 %TODO: numeri pseudo-random?
 %TODO: std::chrono
 
-% -------------------------- SECTION: MOVE SEMANTICS ---------------------------------
+\section{Operazioni su file}
+
+\textsf{\small \textbf{Definizione: } } \\
