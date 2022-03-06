@@ -2187,6 +2187,48 @@ Mentre, l'ultima preview mostrata è stata quella del C++23.}\\
 
 \textsf{\small Se non specifichiamo un \textbf{costruttore}, uno di default verrà creato dal compilatore (senza parametri e con il corpo della funzione vuoto).} \\
 
+\subsubsection{Initialization List}
+
+\textsf{\small \textbf{Definizione: } La \textbf{Initialization List} è usata per inizializzare i dati membri della classe. Per fare questo aggiungiamo un \textbf{:} (due punti) dopo il costruttore e inizializziamo le variabili e le separiamo da delle virgole.} \\
+
+\textsf{\small Può essere utile per:}
+
+\begin{itemize}
+	\item \textsf{\small Chiamare il costruttore della classe base.}
+	\item \textsf{\small Inizializzare i membri prima che il costruttore venga eseguito.}
+	\item \textsf{\small Per inizializzare i membri const non statici.}
+	\item \textsf{\small Per inizializzare dei membri referenze}
+	\item \textsf{\small Per inizializzare gli oggetti membri che non hanno un default constructor.}
+	\item \textsf{\small Per inizializzare i membri della classe base.}
+	\item \textsf{\small Quando il nome del costruttore è lo stesso del dato.}
+	\item \textsf{\small Per questioni di performance.}
+	%\item \textsf{\small }
+\end{itemize}
+
+\begin{lstlisting}
+	// Questo codice non andrebbe, perché mVal è const. Non possiamo cambiare il valore di una const nel costruttore perché è segnato come const.
+	class Demo {
+			// Costruttore
+			Demo(int& val)
+			{
+				mVal = val;
+			}
+		
+			const int& mVal;
+	};
+
+	// Questo invece è possibile:
+	class Demo {
+			// Quindi puoi usare la lista di inizializzazione per fare questo.
+			// Costruttore : inizialization list
+			Demo(int& val) : mVal(val)
+			{
+			}
+		
+			const int& mVal;	
+	};
+\end{lstlisting}
+
 \subsubsection{Distruttori}
 
 \textsf{\small \textbf{Definizione: } Il \textbf{distruttore}, come dice la parola, è una funzione membro della classe che viene invocata automaticamente quando un oggetto (istanza della classe) viene distrutto/eliminato. Il che significa che il distruttore è l'ultima funzione ad essere chiamata. } \\
