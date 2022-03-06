@@ -1175,11 +1175,175 @@
 
 \subsection{Move Constructor}
 
-\textsf{\small \textbf{Definizione: } } \\
+\textsf{\small \textbf{Definizione: } I \textbf{Move Constructor} lavorano con le referenze \textbf{rvalue} e le \textbf{move semantics}(le move semantics riguardano il puntare ad un oggetto già esistente in memoria). Fa puntare il puntatore del nuovo oggetto ai dati dell'oggetto temporaneo e pone a null il puntatore degli oggetti temporanei.} \\
+
+\textsf{\small I \textbf{Move Constructors} spostano le risorse nell'\emph{heap} e l'assegnano al nuovo oggetto. A differenza dei \textbf{copy constructors} i \textbf{move constructors} prevengono dall'inutile copiatura di dati di memoria.} \\
+
+\begin{lstlisting}
+	#include <iostream>
+	#include <vector>
+	
+	class A {
+		public:
+			// Costruttore
+			A(int x)
+			{
+				data = new int;
+				*data = x;
+				std::cout << "Costruttore chiamato per " << x << std::endl;
+			}
+		
+			// Copy Constructor
+			A(const A& source) 
+			: A { *source.data }
+			{
+				std::cout << "Copy constructor in deep copy chiamato per " << *source.data << std::endl;
+			}
+		
+			// Move Constructor
+			A(A&& source) : data {source.data}
+			{
+				std::cout << "Move Constructor chiamato per " << *source.data << std::endl;
+				source.data = nullptr;
+			}
+		
+			// Distruttore
+			~A()
+			{
+				if( data != nullptr)
+				{
+					std::cout << "Distruttore chiamato per " << *data << std::endl;
+				} else {
+					std::cout << "Distruttore chiamato per nullptr " << std::endl;
+				}
+				
+				// Liberiamo la memoria assegnata all'oggetto.
+				delete data;
+			}
+	};
+
+	int main()
+	{
+		// Vector della classe A.
+		std::vector<A> vec;
+		
+		// Inseriamo oggetti della classe A.
+		vec.push_back(A {9} );
+		vec.push_back(A {18} );
+		
+		// Output:
+		// Costruttore chiamato per 9
+		// Move Constructor chiamato per 9
+		// Distruttore chiamato per nullptr 
+		// Costruttore chiamato per 18
+		// Move Constructor chiamato per 18
+		// Costruttore chiamato per 9
+		// Copy constructor in deep copy chiamato per 9
+		// Distruttore chiamato per 9
+		// Distruttore chiamato per nullptr 
+		// Distruttore chiamato per 9
+		// Distruttore chiamato per 18
+		
+		return 0;
+	}
+\end{lstlisting}
+
+\subsubsection{lvalues references \& rvalues references}
+
+\textsf{\small \textbf{Definizione: } Gli \textbf{l-values} fanno riferimento alla locazione di memoria che definisce l'oggetto. Gli \textbf{r-values} fanno riferimento al valore che è memorizzato in qualche indirizzo di memoria.} \\
+
+\textsf{\small Proprietà degli \textbf{r-values}:} \\
+
+\begin{itemize}
+	\item \textsf{\small Estendono la durata di vita degli oggetti temporanei a cui sono assegnati.}
+	\item \textsf{\small Gli \textbf{r-values} non costanti permettono di modificare l'\textbf{rvalue}.}
+	%\item \textsf{\small }
+\end{itemize}
+
+\textsf{\small \textbf{Importante: } Le referenze \textbf{lvalues} possono essere assegnate con le \textbf{rvalues}, ma le referenze \textbf{rvalues} non possono essere assegnate con le \textbf{lvalues}.} \\
+
+\begin{lstlisting}
+	#include <iostream>
+	
+	int main()
+	{
+		int a = 7;
+		
+		// Dichiariamo una lvalue reference
+		int& lref = a;
+		
+		// Dichiariamo una rvalue reference
+		int&& rref = 15;
+		
+		std::cout << "lref: " << lref << "\n"; // Output: lref: 7
+		std::cout << "rref: " << lref << "\n"; // Output: rref: 15
+		
+		// Sia il valore di a che della lref vengono cambiati così
+		lref = 18;
+		
+		// Valore della rref cambia
+		rref = 24;
+		
+		std::cout << "lref: " << lref << "\n"; // Output: lref: 18
+		std::cout << "rref: " << lref << "\n"; // Output: rref: 24
+		
+		// Questa riga genererà un erorre perché l-value non può
+		// essere assegnata al r-value 
+		// int \&\&ref = a;
+		return 0;
+	}
+\end{lstlisting}
+
+\textsf{\small Usi delle referenze \textbf{lvalues}: } \\
+
+\begin{itemize}
+	\item \textsf{\small Possono essere usate come alias di un oggetto già esistente.}
+	\item \textsf{\small Possono essere usati per implementare le semantiche \emph{pass-by-reference}.}
+	%\item \textsf{\small }
+\end{itemize}
+
+\textsf{\small Usi delle referenze \textbf{rvalues}: } \\
+
+\begin{itemize}
+	\item \textsf{\small Sono usati per lavorare con il \textbf{move constructor} ed il \textbf{move assignment}.}
+	\item \textsf{\small Non possono congiungere delle referenze lvalue non costanti di tipo '\textbf{int\&}' con un rvalue di tipo '\textbf{int}'.}
+	\item \textsf{\small Non possono mettere assieme delle referenze rvalue di tipo '\textbf{int\&\&}' con dei lvalues di tipo '\textbf{int}'.}
+\end{itemize}
 
 \subsection{Move Assignment Operator}
 
-\textsf{\small \textbf{Definizione: } } \\
+\textsf{\small \textbf{Definizione: } Similmente al copy assignment in cui possiamo copiare un lvalue, possiamo anche muovere valori da un oggetto ad un altro senza costruirne uno nuovo. Chiamiamo questo: \textbf{Move Assignment}. Muoviamo i valori da un oggetto ad un altro oggetto esistente.} \\
+
+\textsf{\small Per fare questo overloaddiamo l'operatore \textbf{=}, non che prenda un \textbf{lvalue} come nei \textbf{copy constructors}, ma un \textbf{rvalue}.} \\
+
+\begin{lstlisting}
+	#include <iostream>
+	
+	class A {
+		public:
+			int a;
+			// Move Assignment
+			A& operator=(A&& other)
+			{
+				this->a = other.a;
+				other.a = 0;
+				return *this;
+			}
+	};
+
+	int main()
+	{
+		A a;
+		a.a = 1;
+		
+		A b;
+		b = std::move(a); // Chiamiamo l'operatore overloaddato. 
+		
+		std::cout << a.a << std::endl; // Output: 0
+		std::cout << b.a << std::endl; // Output: 1
+		return 0;
+	}
+\end{lstlisting}
 
 \subsection{Rule of Five}
 
@@ -1208,9 +1372,103 @@
 
 \section{Move Semantics}
 
-\textsf{\small \textbf{Definizione: } } \\
+\textsf{\small \textbf{Definizione: } Le \textbf{move semantics} permettono, sotto certe condizioni, di trasferire la proprietà delle risorse esterne di qualche oggetto. Questo è importante per due motivi: } \\
+
+\begin{enumerate}
+	\item \textsf{\small Trasformare delle costose copie in delle move economiche.}
+	\item \textsf{\small Implementare dei tipi di "move-only" sicure; ovvero tipi che per le copie non hanno senso, ma hanno senso per le move.}
+	%\item \textsf{\small }
+\end{enumerate}
+
+\textsf{\small Per queste è molto importante il concetto di \textbf{lvalue} e di \textbf{rvalue}: } \\
+
+\begin{itemize}
+	\item \textsf{\small \textbf{lvalue T\&} : riguardano il copiare.}
+	\item \textsf{\small \textbf{rvalue T\&\&} : riguardano il trasferire.}
+\end{itemize}
+
+\textsf{\small Per muovere un oggetto useremo \textbf{std::move(oggetto)}. Questa funzione restituisce un \textbf{rvalue} all'oggetto, così che possiamo rubare i dati dall'oggetto in quello nuovo.} \\
+
+\textsf{\small \textbf{std::move(obj)} non cambia il contenuto dell'oggetto, ma \textbf{auto obj2 = std::move(obj)} possibilmente sì.} \\
+
+\subsection{Fallbacks of move semantics}
+
+\begin{enumerate}
+	\item \textsf{\small Chiamare la \textbf{std::move()} su un oggetto costante, di solito, non produce effetti.}
+	\begin{enumerate}
+		\item \textsf{\small Non ha senso rimuovere o muovere/trasferire le risorse di un oggetto costante.}
+		%\item \textsf{\small }
+	\end{enumerate}
+	\item \textsf{\small La semantica della copiatura è un ripiego soltanto se la semantica della copiatura è supportata.}
+	\item \textsf{\small Se non c'è implementazione che prenda l'\textbf{rvalue} come argomento allora ci sarà l'ordinario e costante \textbf{lvalue} che verrà usato.}
+	\item \textsf{\small Se una funzione non prende un \textbf{rvalue} e \textbf{lvalue} allora un errore a compile-time verrà generato.}
+	\item \textsf{\small }
+\end{enumerate}
+
+\subsection{syntax vs semantics}
+
+\textsf{\small \textbf{Syntax (Sintassi)}: } \\
+
+\begin{itemize}
+	\item \textsf{\small Riguarda le regole per scrivere qualsiasi cosa in un linguaggio di programmazione.}
+	\item \textsf{\small Non ha niente a che fare con il significato di ciò che si è scritto.}
+	\item \textsf{\small Una dichiarazione è sintatticamente valida se segue tutte le regole.}
+	\item \textsf{\small È legata alla grammatica e alla struttura della lingua.}
+	\item \textsf{\small Gli errori di sintassi si trovano dopo che il programma è stato eseguito.}
+	\item \textsf{\small Alcuni esempi: un punto e virgola mancante. Sono errori semplice da trovare.}
+\end{itemize}
+
+\textsf{\small \textbf{Semantics (Semantica)}: } \\
+
+\begin{itemize}
+	\item \textsf{\small Riguarda il significato associato alla dichiarazione in una lingua di programmazione.}
+	\item \textsf{\small È tutto riguardante il significato della dichiarazione che interpreta il programma.}
+	\item \textsf{\small Gli errori sono gestiti a runtime.}
+	\item \textsf{\small Si riferisce al significato delle linee di codice associate al linguaggio.}
+	\item \textsf{\small Anche se un pezzo di codice ha la sintassi corretta, potrebbe comunque non fare ciò che voleva che facesse. Sono errori un po' più complicati da trovare.}
+\end{itemize}
+
+\begin{lstlisting}
+	// Codice per dimostrare un errore semantico
+	#include <iostream>
+	
+	int main()
+	{
+		// Dichiarazione di ritorno prima del cout
+		return 0;
+		
+		std::cout << "Hello World!" << std::endl; // Output: nessun output perché è dopo il return statement.
+	}
+\end{lstlisting}
+
+\begin{tabular}{|c|c|}
+	\hline
+	\textbf{Sintassi} & \textbf{Semantica} \\
+	\hline
+	\textsf{\small Si riferisce alle regole di } & \textsf{\small Si riferisce al significato associato } \\
+	\textsf{\small qualsiasi riga di codice.} & \textsf{\small a qualsiasi riga di codice.} \\
+	\hline
+	\textsf{\small Errori di sintassi. Occorrono a compile time} & \textsf{\small Si riferisce ad un errore semantico. } \\
+	\textsf{\small Alcuni esempi: } & \textsf{\small Occorre quando delle righe di codice } \\
+	\textsf{\small mancanza di un punto e virgola.} & \textsf{\small sono valide sintatticamente,} \\
+	\textsf{\small } & \textsf{\small ma non fanno quello che } \\
+	\textsf{\small } & \textsf{\small il programmatore volesse che facessero.} \\
+	\hline
+\end{tabular}
+
+\subsubsection{Ricapitolando le Move Semantics}
+
+\textsf{\small Ricapitolando: } \\
+
+\begin{itemize}
+	\item \textsf{\small Le \textbf{Move Semantics} ci permettono di ottimizzare la copiatura di oggetti. È usato spesso implicitamente (per gli oggetti temporanei) o esplicitamente con \textbf{std::move()}.}
+	\item \textsf{\small \textbf{std::move()} significa \emph{non ho più bisogno di questo valore}.}
+	\item \textsf{\small Un oggetto segnato con \textbf{std::move()} non è mai parzialmente distrutto. Il distruttore verrà chiamato per distruggere l'oggetto appropriatamente.}
+\end{itemize}
 
 % -------------------------- SECTION: CLASSI ASTRATTE --------------------------------
+
+\newpage
 
 %TODO: abstract
 %TODO: Pure Virtual
