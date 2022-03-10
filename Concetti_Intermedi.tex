@@ -46,6 +46,18 @@
 
 %TODO: explicit keyword, converting constructor.
 
+%TODO: Private Destructor.
+
+%TODO: malloc() vs new; delete() vs free()
+
+%TODO: copy elision.
+
+%TODO: pure virtual destructors.
+
+%TODO: typeid. type_traits
+
+%TODO: SFINAE (Substitution Failure is Not An Error).
+
 % -------------------------- SECTION: INTRODUZIONE -----------------------------------
 
 \section{Introduzione}
@@ -429,7 +441,8 @@
 
 \textsf{\small La keyword \textbf{virtual} può essere posta sia prima che dopo \textbf{public}.} \\
 
-%TODO: Pure Virtual
+%TODO: Aggiungere immagini: "virtual_functions_recap_terminology_and_concepts".
+%TODO: Aggiungere immagini: "virtual_functions_implementation".
 
 % -------------------------- SECTION: POLYMORPHISM -----------------------------------
 
@@ -451,7 +464,7 @@
 	\label{fig:polymorphism}
 \end{figure}
 
-% -------------------------- SECTION: OVERLOADING --------------------------
+% -------------------------- SECTION: OVERLOADING ------------------------------------
 
 \section{Overloading}
 
@@ -598,9 +611,6 @@
 \end{tabular}
 
 % -------------------------- SECTION: TIPI DI CAST -----------------------------------
-
-%TODO: Prima di spiegare questi dovrei spiegare i templates, altrimenti uno non capisce i <>.
-%TODO: Inoltre dovrei parlare anche della keyword virtual e virtual inheritance.
 
 \newpage
 
@@ -763,6 +773,8 @@
 	\caption{Typecasting}
 	\label{fig:typecasting}
 \end{figure}
+
+%TODO: Aggiungere immagine "cast_types_recap_static_dynamic_reinterpret_const_c-style".
 
 %TODO: typeid
 
@@ -1475,7 +1487,98 @@
 
 \section{Classi Astratte}
 
-\textsf{\small \textbf{Definizione: } } \\
+\textsf{\small \textbf{Definizione: } Una \textbf{classe astratta} è una classe generica dove non siamo in grado di implementare tutte le funzioni e che il suo unico scopo è quello di essere ereditata da altre classe che implementeranno le sue funzioni.} \\
+
+\textsf{\small Una classe \textbf{astratta} per essere ritenuta tale deve, almeno, implementare una \textbf{pure virtual function}.} \\
+
+\subsection{Pure Virtual Functions}
+
+\textsf{\small \textbf{Definizione: } Una \textbf{pure virtual function} o \textbf{abstract function} è una funzione virtuale per cui non abbiamo bisogno di scrivere l'implementazione. Le implementazioni verranno poi implementate nelle classe derivate.} \\
+
+\textsf{\small Si dichiara una \textbf{pure virtual function} assegnando 0 alla dichiarazione.} \\
+
+\begin{lstlisting}
+	class Test {
+		public:
+			// Pure Virtual Function
+			virtual void show() = 0;
+	};
+\end{lstlisting}
+
+\subsection{Abstract Class}
+
+\textsf{\small \textbf{Definizione: } Proprietà di una \textbf{classe astratta}: } \\
+
+\begin{itemize}
+	\item \textsf{\small Possono avere funzioni normali e allo stesso tempo \textbf{pure virtual functions}.}
+	\item \textsf{\small Non può essere instanziata, ma si possono creare puntatori e referenze della classe astratta.}
+	\item \textsf{\small Le classi astratte sono usate principalmente per \textbf{Upcasting} così che la classe derivata possa usare la sua interfaccia.}
+	\item \textsf{\small Se una \textbf{classe astratta} ha una classe derivata, essa deve implementare tutte le \textbf{pure virtual functions} altrimenti diventeranno anch'essi una classe \textbf{astratta}.}
+	\item \textsf{\small }
+	\item \textsf{\small }
+\end{itemize}
+
+\begin{lstlisting}
+	#include <iostream>
+	
+	class Shape {
+		public:
+			virtual int getArea() = 0;
+			void setWidth(int w)
+			{
+				width = w;
+			}
+		
+			void setHeight(int h)
+			{
+				height = h;
+			}
+		
+		protected:
+			int width;
+			int height;
+			
+	};
+
+	class Rectangle : public Shape {
+		public:
+			int getArea()
+			{
+				return width * height;
+			}
+	};
+
+	class Triangle : public Shape {
+		public:
+			int getArea()
+			{
+				return (width * height) / 2;
+			}
+	};
+
+	int main()
+	{
+		Rectangle rect;
+		Triangle tri;
+		
+		rect.setWidth(5);
+		rect.setHeight(4);
+		
+		std::cout << "Area rettangolo: " << rect.getArea() << std::endl; // Output: Area Rettangolo: 20
+		
+		tri.setWidth(5);
+		tri.setHeight(4);
+		
+		std::cout << "Area triangolo: " << tri.getArea() << std::endl; // Output: Area Triangolo: 10
+		return 0;
+	}
+\end{lstlisting}
+
+\subsection{Abstract class vs Interface}
+
+\textsf{\small In un certo senso, possono quasi essere definite come, quelle che in altri linguaggi, si chiamano \textbf{Interfacce}, ovvero un'interfaccia mette semplicemente a disposizione le funzioni, ovvero le loro dichiarazioni e lascia a chi \textbf{implementa} l'interfaccia implementare queste funzioni. Il C++ non ha \textbf{Interfacce}, ma possiamo quasi dire che le \textbf{classi astratte} sono le \textbf{interfacce} del C++.} \break
+
+\textsf{\small Quindi si può simulare un'interfaccia in C++ ponendo tutte le funzioni della classe \textbf{astratta} come \textbf{pure virtual functions}.} \\
 
 % -------------------------- SECTION: ECCEZIONI --------------------------------------
 
@@ -1484,15 +1587,114 @@
 %TODO: throw.
 %TODO: std::throw exception
 
+\newpage
+
 \section{Eccezioni}
 
-\textsf{\small \textbf{Definizione: } } \\
+\textsf{\small \textbf{Definizione: } Cosa sono le \textbf{eccezioni} (in inglese \emph{exceptions})? Le \textbf{eccezioni} sono delle anomalie o condizioni anormali incontrate durante l'esecuzione del programma.} \\
+
+\textsf{\small Il C++ a differenza del C mette a disposizione delle keywords per occuparsi del codice che potrebbe lanciare un'eccezione.} \break
+
+\textsf{\small Durante l'esecuzione del codice diversi errori potrebbero capitare: } \\
+
+\begin{itemize}
+	\item \textsf{\small errori nel codice.}
+	\item \textsf{\small errori nell'input.}
+	\item \textsf{\small altri tipi di errori.}
+\end{itemize}
+
+\textsf{\small Quando un errore occorre, C++, di solito, si fermerà e genererà un errore (lancerà un'eccezione).} \\
+
+\subsection{try|catch|throw}
+
+\textsf{\small \textbf{try, catch, throw}: Queste sono le keywords per \emph{Exception Handling} (Gestione delle eccezioni):}
+
+\subsubsection{try}
+
+\textsf{\small Il \textbf{try} ti permette di definire una porzione di codice che verrà testata durante la sua esecuzione. Ovvero se il blocco di codice nel try non lancerà alcuna eccezione allora verrà eseguito il try e poi il codice seguente ad esso, altrimenti verrà eseguito il codice nella clausola \textbf{catch}.} \\
+
+\subsubsection{catch}
+
+\textsf{\small Il \textbf{catch} ti permette di definire un blocco di codice che verrà eseguito se un errore sarà accorso nel \textbf{try}.} \\
+
+\begin{lstlisting}
+	try {
+		// Blocco di codice del try.
+	}catch(NomeEccezione e){
+		// Blocco di codice del catch.
+	}
+\end{lstlisting}
+
+\textsf{\small C'è uno special catch chiamato \emph{catch all} che permette di "catturare" tutte le eccezioni. Si fa in questo modo: \textbf{catch(...) (quindi un catch con l'ellissi, ovvero i tre puntini).}}
+
+\subsubsection{std::throw exception}
+
+\textsf{\small Il \textbf{throw} ti permette di lanciare un'eccezione quando un problema è stato rilevato.} \\
+
+\begin{lstlisting}
+	double division(int a, int b)
+	{
+		if(b == 0)
+		{
+			std::throw "Divisione per zero!";
+		}
+		return a/b;
+	}
+
+	int main()
+	{
+		int x = 22;
+		int y = 0;
+		double z = 0;
+		
+		try {
+			z = division(x,y);
+		}catch(const char* msg){
+			//std::cerr è lo standard error, lo si può usare per mostrare errori sullo schermo.
+			std::cerr << msg << std::endl; //Output: Divisione per zero!
+		}
+	
+		return 0;
+	}
+\end{lstlisting}
+
+\subsection{Errori a compile time ed errori a runtime}
+
+\textsf{\small Gli errori a \textbf{compile time} sono degli errori che occorrono quando si violano le regole di sintassi del linguaggio, come per esempio: } \\
+
+\begin{itemize}
+	\item \textsf{\small Mancanza di una parentesi.}
+	\item \textsf{\small Stampare il valore di una variabile senza dichiararla.}
+	\item \textsf{\small Mancanza di un punto e virgola.}
+\end{itemize}
+
+\textsf{\small Gli errori a \textbf{runtime} sono quegli errori che occorrono durante l'esecuzione del programma dopo che la compilazione sia avvenuta con successo.} \break
+
+\begin{tabular}{|c|c|}
+	\hline
+	\textbf{Compile-Time Errors} & \textbf{Runtime-Errors} \\
+	\hline
+	\textsf{\small Errori di sintassi.} & \textsf{\small Non sono rilevati dal compilatore.} \\
+	\textsf{\small Prevengono l'esecuzione del codice.} & \textsf{\small Prevengono il codice dalla completa esecuzione.} \\
+	\textsf{\small Vengono rilevati dal compilatore } & \textsf{\small Vengono fixati (sistemati) solo dopo} \\
+	\textsf{\small e possono essere corretti} & \textsf{\small che il codice viene} \\
+	\textsf{\small nel momento della programmazione.} & \textsf{\small eseguito.} \\
+	\hline
+\end{tabular}
+
+%TODO: Volendo aggiungere immagine "exceptions_recap".
+
+%TODO: assert
 
 % -------------------------- SECTION: OPERAZIONI SU FILE -----------------------------
 
-%TODO: numeri pseudo-random?
-%TODO: std::chrono
+\newpage
 
 \section{Operazioni su file}
 
 \textsf{\small \textbf{Definizione: } } \\
+
+% ------------------------------------------------------------------------------------
+
+%TODO: numeri pseudo-random?
+%TODO: std::chrono
