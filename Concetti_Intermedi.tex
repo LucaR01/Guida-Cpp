@@ -1683,14 +1683,146 @@
 \end{tabular}
 
 %TODO: Volendo aggiungere immagine "exceptions_recap".
+\subsection{Assertions}
 
-%TODO: assert
+\textsf{\small \textbf{Definizione: } Le \textbf{assertions} sono delle dichiarazioni usate per testare delle assunzioni fatte dal programmatore.} \\
 
-% -------------------------- SECTION: OPERAZIONI SU FILE -----------------------------
+\textsf{\small Se la condizione nell'\textbf{assert} fosse valutata falsa, allora il programma fermerebbe l'esecuzione.} \\
+
+\begin{lstlisting}
+	#include <assert.h>
+	
+	int length = 7;
+	
+	// Un assert per controllare che la variabile length sia maggiore o uguale a 0.
+	assert(length >= 0);
+	
+	// Se l'assert fosse valutato 'false' il programma si fermerebbe e verrebbe mostrato quel messaggio.
+	assert(length >= 0 && "La lunghezza non puo' essere negativa");
+	
+	int x = 0;
+	
+	// In questo caso verrebbe fermato il programma e verrebbe mostrato il messaggio "x deve essere maggiore di 0"
+	assert(x > 0 && "x deve essere maggiore di 0"); 
+\end{lstlisting}
+
+% -------------------------- SECTION: OPERAZIONI DI I/O ------------------------------
 
 \newpage
 
-\section{Operazioni su file}
+\section{Operazioni di Input/Output}
+
+\textsf{\small \textbf{Definizione: } La libreria standard del C++ mette a disposizioni diverse funzioni per le operazioni di input ed output di dati in streams (flussi di dati), in files, ecc...} \\
+
+\subsection{Input-Output stream}
+
+\textsf{\small \textbf{Definizione: } Le \textbf{stream} sono sequenze, flussi di dati. Quando i dati provengono da dispositivi come tastiere, hard disk, connessioni network sono delle operazioni di \textbf{input}. Quando, invece i dati provengono da dispositivi come schermi, stampanti, disco rigido o una connessione network sono chiamati operazioni di \textbf{output}.} \break
+
+\textsf{\small Il file di intestazione \textbf{<iostream>} definisce le funzioni come \textbf{cin, cout, cerr e clog} che corrispondono allo \emph{standard input}, \emph{standard output}, \emph{un-buffered standard error} e \emph{buffered standard error stream}.} \\
+
+\textsf{\small Per quanto riguarda lo \emph{standard output} i dati vengono inseriti in esso attraverso l'operatore d'inserimento \textbf{<<}.} \break
+
+\textsf{\small È possibile fare questo \emph{chaining} di \textbf{<<} perché l'operatore d'inserzione ritorna una referenza a cout (cout\&).} \\
+
+\begin{lstlisting}
+	#include <iostream>
+	
+	int main()
+	{
+		int x = 5;
+		int y = 8;
+		std::cout << "Valore di x: " << x << ", valore di y: " << y << std::endl; // Output: Valore di x: 5, valore di y: 8
+		return 0;
+	}
+\end{lstlisting}
+
+\textsf{\small Tramite \textbf{cin} chiediamo l'input dall'utente. In questa caso usiamo l'operatore di estrazione \textbf{>>}.} \\
+
+\begin{lstlisting}
+	#include <iostream>
+	
+	int main()
+	{
+		int age;
+		
+		std::cout << "Inserisci l'età: ";
+		std::cin >> age;
+		std::cout << "\n La tua età è: " << age << std::endl;
+		return 0;
+	}
+\end{lstlisting}
+
+\textsf{\small \textbf{cerr} è usato per mostrare degli errori sullo schermo. Un-buffered vuol dire che il messaggio non può essere immagazzinato, viene immediatamente mostrato sullo schermo.} \\
+
+\begin{lstlisting}
+	#include <iostream>
+	
+	int main()
+	{
+		std::cerr << "Si è verificato un errore!";
+		return 0;
+	}
+\end{lstlisting}
+
+\textsf{\small Anche \textbf{clog} come \textbf{cerr} mostra un errore, ma prima lo immagazzina all'interno di un buffer finché non è pieno o viene liberato (usando flush()) e poi verrà mostrato sullo schermo.} \\
+
+\begin{lstlisting}
+	#include <iostream>
+	
+	int main()
+	{
+		std::clog << "Si è verificato un errore";
+		return 0;
+	}
+\end{lstlisting}
+
+\subsubsection{std::endl vs newline}
+
+\textsf{\small Qual è la differenza tra \textbf{std::endl} ed il carattere di escape newline \textbf{$\backslash$n}?} \\
+
+\textsf{\small \textbf{$\backslash$n} va a capo, mentre \textbf{std::endl} va anch'esso a capo, ma in più ripulisce il buffer, di solito non hai sempre bisogno di farlo e questo ti costerà in termini di \emph{performance}.} \break
+
+\begin{lstlisting}
+	#include <iostream>
+	
+	std::cout << std::endl;
+	// std::cout << std::endl è equivalente a:
+	std::cout << '\n' << std::flush;
+	// Mentre "$\backslash$n" inserisce semplicemente una nuova riga.
+	std::cout << "\n";
+\end{lstlisting} 
+
+\begin{tabular}{|c|c|}
+	\hline
+	\textbf{std::endl} & \textbf{\small $\backslash$n} \\
+	\hline
+	\textsf{\small È un manipolatore.} & \textsf{\small È un carattere.} \\
+	\hline
+	\textsf{\small Non occupa spazio in memoria.} & \textsf{\small Occupa un byte visto che è un carattere.} \\
+	\hline
+	\textsf{\small È una keyword e non ha significato } & \textsf{\small Può essere memorizzata } \\
+	\textsf{\small se la si memorizza in una stringa.} & \textsf{\small in una stringa e conserva il suo significato.} \\
+	\hline
+	\textsf{\small Non possiamo scrivere 'endl' in apici.} & \textsf{\small Possiamo scrivere sia '$\backslash$n' sia "$\backslash$n".} \\
+	\hline
+	\textsf{\small È supportata solo in C++.} & \textsf{\small È supportata sia in C che in C++.} \\
+	\hline
+	\textsf{\small Continua a ripulire il buffer.} & \textsf{\small Ripulisce il buffer solo alla fine del programma.} \\
+	%\textsf{\small } & \textsf{\small } \\
+	\hline
+\end{tabular}
+
+\textsf{\small Quindi, in conclusione, usare \textbf{$\backslash$n} sembra migliore in termini di prestazioni rispetto \textbf{std::endl} a meno che non sia necessario ripulire il buffer dello stream.} \break
+
+\subsection{Manipolazione degli stream}
+
+%TODO: <iomanip>
+
+\textsf{\small \textbf{Definizione: } } \\
+
+\subsection{Operazioni su file}
+
+%TODO: <fstream>
 
 \textsf{\small \textbf{Definizione: } } \\
 
