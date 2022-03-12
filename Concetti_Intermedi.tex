@@ -1818,13 +1818,219 @@
 
 %TODO: <iomanip>
 
-\textsf{\small \textbf{Definizione: } } \\
+\textsf{\small \textbf{Definizione: } I \textbf{manipolatori} sono funzioni che permettono di manipolare \textbf{l'input/output} dello stream. Non vuol dire che modifichiamo la variabile, modifica soltanto lo stream.} \\
+
+\textsf{\small Ci sono diversi tipi di manipolatori: } \\
+
+\begin{enumerate}
+	\item \textsf{\small \textbf{Manipolatori senza argomenti}: }
+	\begin{itemize}
+		\item \textsf{\small \textbf{endl} : serve per andare a capo e dopo averlo fatto ripulisce il buffer dello stream.}
+		\item \textsf{\small \textbf{ws} : definito nell'\textbf{istream} e usato per ignorare gli spazi bianchi nella stringa dello stream.}
+		\item \textsf{\small \textbf{ends} : inserisce un \emph{null character} nello stream.}
+		\item \textsf{\small \textbf{flush} : definito nell'\textbf{ostream} e serve per ripulire l'output stream.}
+	\end{itemize}
+\end{enumerate}
+
+\begin{lstlisting}
+	#include <iostream>
+	#include <istream>
+	#include <sstream>
+	#include <string>
+	
+	int main()
+	{
+		// istringstream da <sstream>
+		std::istringstream str("   Hello World!");
+		
+		std::string line;
+		
+		// Ignora tutti gli spazi bianchi (con std::ws) prima della prima parola.
+		std::getline( str >> std::ws, line);
+		
+		std::cout << line << std::endl;
+		
+		std::cout << "Test" << std::flush;
+		
+		std::cout << "A" << "\n";
+		std::cout << "B" << std::ends;
+		std::cout << "C" << std::endl;
+		return 0;
+	}
+\end{lstlisting}
+
+\begin{enumerate}
+	\item \textsf{\small \textbf{Manipolatori con argomenti}: }
+	\begin{enumerate}
+		\item \textsf{\small \textbf{Alcuni importanti manipolatori in <iomanip>}: }
+	\end{enumerate}
+		\begin{itemize}
+			\item \textsf{\small \textbf{setw(val)} : usato per impostare la larghezza dello spazio negli operatori di output.}
+			\item \textsf{\small \textbf{setfill(c)} : usato per riempire lo stream di output con il carattere 'c'.}
+			\item \textsf{\small \textbf{setprecision(val)} : Imposta val come nuovo valore di precisione dei valori floating-point.}
+			\item \textsf{\small \textbf{setbase(val)} : Per impostare la base dei valori numerici. (es: base 2 (binario), base 16, esadecimale, base 8, ottale, ecc...)}
+			\item \textsf{\small \textbf{setioflags(flag)} : Usato per impostare i flag di formato specificati dal parametro di maschera.}
+			\item \textsf{\small \textbf{resetiosflags(m)} : Usato per resettare i flags di formato specificati dal parametro di maschera.}
+		\end{itemize}
+	\begin{enumerate}
+		\item[b)] \textsf{\small \textbf{Alcuni manipolatori in <ios>} : }
+	\end{enumerate}
+		\begin{itemize}
+			\item \textsf{\small \textbf{showpos} : Mostra il segno + nei numeri positivi.}
+			\item \textsf{\small \textbf{noshowpos} : Non mostra il segno + nei numeri positivi.}
+			\item \textsf{\small \textbf{showbase} : Indica la base numerica usati per i valori numerici.}
+			\item \textsf{\small \textbf{uppercase} : Mostra le lettere in maiuscolo.}
+			\item \textsf{\small \textbf{nouppercase} : Mostra le lettere in minuscolo.}
+			\item \textsf{\small \textbf{fixed} : Usa la notazione decimale per i valori floating-point.}
+			\item \textsf{\small \textbf{scientific} : Usa la notazione scientifica per i numeri in virgola mobile (floating-point).}
+			\item \textsf{\small \textbf{hex} : Legge e scrive valori in esadecimale per i numeri interi e funziona come \emph{setbase(16)}.}
+			\item \textsf{\small \textbf{dec} : Legge e scrive valori in decimale per i numeri interi, funziona come \emph{setbase(10)}.}
+			\item \textsf{\small \textbf{oct} : Legge e scrive i valori in ottale per i numeri interi, funziona come \emph{setbase(8)}.}
+			\item \textsf{\small \textbf{left} : Aggiusta l'output verso sinistra.}
+			\item \textsf{\small \textbf{right} : Aggiusta l'output verso destra.}
+			%\item \textsf{\small \textbf{} : }
+		\end{itemize}
+\end{enumerate}
+
+\begin{lstlisting}
+	#include <iostream>
+	#include <iomanip>
+	
+	int main()
+	{
+		int a = 100;
+		// Imposto la formattazione.
+		std::cout << std::hex << std::left << std::showbase << std::nouppercase;
+		
+		std::cout << a << std::endl; // Output: 0x64 (esadecimale per 100)
+		
+		double b = 2001.5251;
+		
+		// Imposto la formattazione dello stream.
+		std::cout << std::setbase(10) << std::right << std::setw(15)
+		<< std::setfill('_') << std::showpos
+		<< std::fixed << std::setprecision(2);
+		
+		// Mostro la variabile b
+		std::cout << b << std::endl; // Output: \_\_\_\_\_\_\_+2001.53
+		
+		// Formattazione.
+		std::cout << std::scientific << std::uppercase
+		<< std::noshowpos << std::setprecision(9);
+		
+		double c = 201455.2646;
+		
+		// Stampo la variabile c.
+		std::cout << c << std::endl; // Output: 2.014552646E+05
+		
+		return 0;
+	}
+\end{lstlisting}
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=1.2\textwidth, height=1.2\textheight, keepaspectratio]{./imgs/Stream_iomanip_setw.png}
+	\caption{Stream iomanip}
+	\label{fig:Stream_iomanip_setw}
+\end{figure}
 
 \subsection{Operazioni su file}
 
-%TODO: <fstream>
+\textsf{\small \textbf{Definizione: } Per le operazioni di Input/Output sui files avremo bisogno di includere \textbf{fstream}.} \\
 
-\textsf{\small \textbf{Definizione: } } \\
+\textsf{\small Ci sono diverse modalità di apertura di un file: } \\
+
+\begin{tabular}{|c|c|c|}
+	\hline
+	\textbf{Costante membra} & \textbf{Significato} & \textbf{Accesso} \\
+	\hline
+	\textsf{\small \textbf{in*}} & \textsf{\small input} & \textsf{\small File aperto per la lettura: } \\
+	\textsf{\small \textbf{}} & \textsf{\small } & \textsf{\small il buffer interno supporta } \\
+	\textsf{\small \textbf{}} & \textsf{\small } & \textsf{\small le operazioni di input.} \\
+	\hline
+	\textsf{\small \textbf{out}} & \textsf{\small output} & \textsf{\small File aperto per la scrittura.} \\
+	\hline
+	\textsf{\small \textbf{binary}} & \textsf{\small binary} & \textsf{\small Le operazioni vengono eseguite} \\
+	\hline
+	\textsf{\small \textbf{ate}} & \textsf{\small at end} & \textsf{\small La posizione di output parte dalla fine.} \\
+	\hline
+	\textsf{\small \textbf{app}} & \textsf{\small append} & \textsf{\small Parte dalla fine e aggiunge contenuti } \\
+	\textsf{\small \textbf{}} & \textsf{\small } & \textsf{\small a quelli già presenti.} \\
+	\hline
+	\textsf{\small \textbf{trunc}} & \textsf{\small truncate} & \textsf{\small Tutti i contenuti } \\
+	\textsf{\small \textbf{}} & \textsf{\small } & \textsf{\small che esistevano prima } \\
+	\textsf{\small \textbf{}} & \textsf{\small } & \textsf{\small di essere aperto vengono scartati.} \\
+	\hline
+\end{tabular} \break
+
+\textsf{\small Modalità di apertura di default: } \\
+
+\begin{tabular}{|c|c|}
+	\hline
+	\textbf{Modalità di apertura di default} & \textbf{} \\
+	\hline
+	\textsf{\small ifstream} & \textsf{\small ios::in} \\
+	\textsf{\small ofstream} & \textsf{\small ios::out} \\
+	\textsf{\small fstream} & \textsf{\small ios::in | ios::out} \\
+	\hline
+\end{tabular}
+
+\begin{lstlisting}
+	// Esempio 1
+	#include <iostream>
+	#include <fstream>
+	
+	int main()
+	{
+		std::ofstream myfile;
+		myfile.open("nomefile.txt");
+		myfile << "Scrivere questa stringa nel file.\n";
+		myfile.close();
+		return 0;
+	}
+\end{lstlisting}
+
+\begin{lstlisting}
+	// Esempio 2
+	#include <iostream>
+	#include <fstream>
+	
+	int main()
+	{
+		std::string line;
+		std::ifstream myfile("nomefile.txt");
+		
+		if(myfile.is_open())
+		{
+			while(std::getline(myfile, line))
+			{
+				std::cout << line << '\n';
+			}
+		myfile.close();
+		} else {
+			std::cout << "Impossibile aprire il file" << '\n';
+		}
+		return 0;
+	}
+\end{lstlisting}
+
+\textsf{\small P.S. Ricordatevi di chiudere il file una volta che avete finito di utilizzarlo.} \\
+
+\textsf{\small Uno dei modi per ottenere lo spazio occupato da un file: } \\
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=1.2\textwidth, height=1.2\textheight, keepaspectratio]{./imgs/fstream_file_size.png}
+	\caption{Ottenere il file size}
+	\label{fig:fstream_file_size}
+\end{figure}
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=1.2\textwidth, height=1.2\textheight, keepaspectratio]{./imgs/fstream_file_size2.png}
+	\caption{Ottenere il file size}
+	\label{fig:fstream_file_size2}
+\end{figure}
 
 % ------------------------------------------------------------------------------------
 
