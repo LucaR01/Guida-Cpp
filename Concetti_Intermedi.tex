@@ -2,32 +2,11 @@
 
 \chapter{Concetti Intermedi}
 
-%Argomenti di questo capitolo: 
-
-% Vari tipi di reinterpret_cast<>, dynamic_cast<>, static_cast<>, const_cast<>
-% Lambdas
-% Virtual keyword
-% Template keyword
-% Friend keyword? NO.
-% Allocazione dinamica
-% Rule of 3 e Rule of 5, Special Member Functions: Copy Constructor, Move Constructor.
-% Classi Astratte
-% Polimorfismo
-% Operazioni su File?
-% Exceptions
-% RAII
-% std::vector<>, dopo questo faccio i templates.
-
-% Operators overload
-% Iteratori
-
-% Move semantics
+%Possibili argomenti aggiuntivi di questo capitolo: 
 
 % Map, Set, HashTable, Pair
 
 % #include type_traits
-
-% new e delete
 
 %TODO: decltype.
 
@@ -36,19 +15,11 @@
 
 %TODO: inline functions.
 
-%TODO: overloading vs override
-
 %TODO: NULL (o null) vs nullptr
-
-%TODO: perché non usare std::endl ed usare \n piuttosto.
-
-%TODO: steam, std::istream, std::ostream.
 
 %TODO: explicit keyword, converting constructor.
 
 %TODO: Private Destructor.
-
-%TODO: malloc() vs new; delete() vs free()
 
 %TODO: copy elision.
 
@@ -58,6 +29,10 @@
 
 %TODO: SFINAE (Substitution Failure is Not An Error).
 
+%TODO: cos'è la STL (Standard Template Library), questo dopo l'introduzione. (stl è un termine un po' vecchio).
+
+%TODO: #include <bits/stdc++.h> è un header file che include tutti gli header files della STL. Non dovrebbe essere usato perché è lazy ed è un header del GCC che quindi potrebbe non andare in altri e non sai cosa fa perché i suoi contenuti non sono standard e ogni header file dovrebbe essere parsato il che renderebbe il tutto lento.
+
 % -------------------------- SECTION: INTRODUZIONE -----------------------------------
 
 \section{Introduzione}
@@ -66,8 +41,17 @@
 
 \textsf{\small In questo capitolo vedremo ulteriori concetti riguardo le classi, il polimorfismo, le varie tipologie di costruttori, la programmazione generale, le lambdas, la programmazione funzionale e molto altro ancora..} \break
 
-%TODO: std::vector
-%TODO: templates.
+% -------------------------- SECTION: STL --------------------------------------------
+
+\section{STL | Standard Template Library}
+
+%TODO: cos'è e a cosa serve.
+
+\subsection{Che cos'è \#include <bits/stdc++.h>?}
+
+%TODO: #include <bits/stdc++.h> è un header file che include tutti gli header files della STL. Non dovrebbe essere usato perché è lazy ed è un header del GCC che quindi potrebbe non andare in altri e non sai cosa fa perché i suoi contenuti non sono standard e ogni header file dovrebbe essere parsato il che renderebbe il tutto lento.
+
+% rende il codice non portabile.
 
 % -------------------------- SECTION: TEMPLATES --------------------------------------
 
@@ -2032,7 +2016,527 @@
 	\label{fig:fstream_file_size2}
 \end{figure}
 
+% -------------------------- SECTION: STD::CHRONO ------------------------------------
+
+\newpage
+
+\section{std::chrono}
+
+\textsf{\small \textbf{Definizione: } La libreria \textbf{chrono} è usata per occuparsi delle date e del tempo. Questa libreria è progettata col fatto che i timers e gli orologi potrebbero essere diversi su sistemi operativi differenti.} \\
+
+\textsf{\small Fornisce una \emph{precisione neutrale}, attraverso la separazione le durate e il tempo.} \\
+
+\textsf{\small Tutti gli elementi di questo header non sono definiti sotto il namespace std, ma sotto il \textbf{std::chrono namespace}.} \break
+
+\textsf{\small Si occupa del tempo attraverso principalmente 3 concetti: } \\
+
+\begin{itemize}
+	\item \textsf{\small \textbf{Duration (Durata)} : Un oggetto durata esprime un intervallo di tempo come 3 minuti, 3 ore, 3 millisecondi, ecc.. Per esempio 33 secondi potrebbe essere rappresentato dalla durata di 33 ticks ciascuno di 1 secondo.}
+	\item \textsf{\small \textbf{Clock (Orologio)} : Un orologio consiste in un punto di partenza (o epoch) e un tick rate.}
+	\item \textsf{\small \textbf{Time point (Punto nel tempo)} : Un oggetto di tipo \emph{time\_point} esprime un punto nel tempo relativo ad un epoch di un clock. Internamente, l'oggetto memorizza un oggetto di tipo durata (\emph{duration}) e usa il clock come referenza per via del suo epoch.}
+\end{itemize}
+
+\subsection{Duration}
+
+\begin{lstlisting}
+	#include <iostream>
+	#include <chrono>	
+	
+	int main ()
+	{
+		using namespace std::chrono;
+		
+		// std::chrono::milliseconds è una
+		// instanzione di std::chrono::duration: - 1 secondo
+		
+		milliseconds mil(1000);
+		
+		mil = mil*60;
+		
+		std::cout << "durata (in periodi): ";
+		std::cout << mil.count() << " millisecondi.\n"; // Output: durata (in periodi): 60000 millisecondi.
+		
+		std::cout << "durata (in secondi): ";
+		std::cout << (mil.count() * milliseconds::period::num /
+		milliseconds::period::den);
+		std::cout << " secondi.\n"; // Output: durata (in secondi): 60 secondi.
+		
+		return 0;
+	}
+\end{lstlisting}
+
+\subsection{Clock}
+
+\textsf{\small Ci sono 3 diversi tipi di clock (orologi): } \\
+
+\begin{itemize}
+	\item \textsf{\small \textbf{system\_clock} : È il tempo corrente in base al sistema operativo (quello che vediamo nella barra dei comandi). È scritto come \emph{std::chrono::system\_clock}.}
+	\item \textsf{\small \textbf{steady\_clock} : È un orologio monotonic (monotonico, uniforme) che non può essere aggiustato, regolato. Va ad un rate uniforme. È scritto come \emph{std::chrono::steady\_clock}.}
+	\item \textsf{\small \textbf{high\_resolution\_clock} : Fornisce il periodo di tick più piccolo possibile. È scritto come \emph{std::chrono::high\_resolution\_clock}.}
+\end{itemize}
+
+\subsection{Time point}
+
+\subsubsection{Calcolare il tempo di esecuzione di un blocco di codice}
+
+\begin{lstlisting}
+	// Esempio 1 Implementazione 1 per calcolare il tempo che un blocco di codice ci mette per essere eseguito.
+	#include <iostream>
+	#include <chrono>
+	#include <ctime>
+	
+	long fibonacci(unsigned n)
+	{
+		if (n < 2) return n;
+		return fibonacci(n-1) + fibonacci(n-2);
+	}
+	
+	int main()
+	{
+		// time point e system\_clock
+		std::chrono::time_point<std::chrono::system_clock> start, end;
+		
+		start = std::chrono::system_clock::now();
+		std::cout << "f(42) = " << fibonacci(42) << '\n'; // Output: f(42) = 267914296
+		end = std::chrono::system_clock::now();
+		
+		std::chrono::duration<double> elapsed_seconds = end - start;
+		std::time_t end_time = std::chrono::system_clock::to_time_t(end);
+		
+		std::cout << "Finito di eseguire il " << std::ctime(&end_time)
+		<< "tempo passato: " << elapsed_seconds.count() << "s\n"; // Output: Finito di eseguire il Sun Mar 13 22:53:59 2022 elapsed time: 2.71703s
+	}
+\end{lstlisting}
+
+\textsf{\small Esempio 2 Implementazione 2 per calcolare il tempo di esecuzione di un blocco di codice: } \\
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=1.2\textwidth, height=1.2\textheight, keepaspectratio]{./imgs/chrono_steady_clock_per_misurare_il_tempo_tra_una_operazione_e_l_altra_col_using.png}
+	\caption{Calcolo tempo trascorso per eseguire un blocco di codice}
+	\label{fig:chrono_steady_clock_per_misurare_il_tempo_tra_una_operazione_e_l_altra_col_using}
+\end{figure}
+
+% --------------------- SECTION: GENERATORI DI NUMERI CASUALI ------------------------
+
+\newpage
+
+\section{Generatori di numeri pseudo-casuali}
+
+\textsf{\small \textbf{Definizione: } I \textbf{generatori di numeri pseudo-casuali} ci permettono di generare dei numeri che sembrano casuali. } \\
+
+\subsection{Numeri casuali come in C}
+
+\textsf{\small In C e di conseguenza in C++ si può utilizzare \textbf{rand()} e \textbf{srand()} importando \textbf{stdlib.h} in C e \textbf{<cstdlib>} in C++.} \\
+
+\begin{lstlisting}
+	// Esempio 1
+	#include <iostream>
+	#include <cstdlib>
+	
+	// Questo programma genererà sempre la stessa sequenza di numeri ad ogni esecuzione.
+	int main()
+	{
+		int number;
+		for(int i = 0; i < 3; i++)
+		{
+			number = rand();
+			std::cout << number << std::endl;
+		}
+		return 0;
+	}
+\end{lstlisting}
+
+\textsf{\small Per generare un numero compreso in un range (raggio: tra due numeri) usiamo l'operatore modulo e il numero a cui può arrivare.} \\
+
+\begin{lstlisting}
+	// Esempio 2
+	#include <iostream>
+	#include <cstdlib>
+	
+	// Questo programma genererà un numero nel range 25 e 50.
+	int main()
+	{
+		int max = 50;
+		int min = 25;
+		int range = max - min + 1;
+		
+		int num = rand() % range + min;
+		return 0;
+	}
+\end{lstlisting}
+
+\textsf{\small \textbf{Definizione: } Il \textbf{seed} (seme) è il punto d'inizio della sequenza, può essere cambiato affinché la sequenza di numeri generati sia diversa.} \\
+
+\textsf{\small Nel prossimo esempio usiamo il tempo corrente per generare un \emph{seed} (un seme). Usiamo \textbf{srand} per impostare il seme. } \\
+
+\begin{lstlisting}
+	// Esempio 3
+	#include <iostream>
+	#include <cstdlib>
+	#include <time.h>
+	
+	// Questo programma genererà un numero nel range 25 e 50.
+	int main()
+	{
+		
+		constexpr int NUM_OF_NUMBERS = 3;
+		
+		int number;
+		
+		// Usiamo srand per settare il seed ed usiamo il tempo corrente in questo caso come parametro del seed.
+		std::srand(time(0));
+		
+		for(int i = 0; i < NUM_OF_NUMBERS; i++)
+		{
+			number = rand();
+			std::cout << number << std::endl;
+		}
+		return 0;
+	}
+\end{lstlisting}
+
+\subsection{Cosa vuol dire e perché pseudo-random?}
+
+\textsf{\small Gli \textbf{pseudorandom number generator} (\emph{PRNG}), anche chiamati \textbf{deterministic random bit generator} (\emph{DRBG}, ovvero generatori di bit casuali deterministici) sono degli algoritmi per generare sequenze di numeri le quali proprietà sono simili a quelle delle sequenze di numeri casuali.} \\
+
+\textsf{\small I \emph{PRNG} non generano vere sequenze casuali perché è completamente determinato da un numero di partenza chiamato \emph{seed} (seme).} \break
+
+\textsf{\small Quindi è chiamato "\emph{pseudo}" casuale perché l'algoritmo può ripetere la sequenza e quindi i numeri non sono propriamente casuali.} \\
+
+\subsection{I vari tipi di generatori}
+
+\textsf{\small \textbf{Definizione: } Nell'header \textbf{<random>} sono contenuti diversi generatori di numeri pseudo-casuali e diverse distribuzioni:} \\
+
+\begin{itemize}
+	\item \textsf{\small \textbf{Generatori} : oggetti che generano numeri distribuiti uniformemente.}
+	\item \textsf{\small \textbf{Distribuzioni} : oggetti che trasformano sequenze di numeri generati da un generatore in sequenze di numeri che seguono una specifica distribuzione variabili e casuale, come: uniforme, normale, binomiale.}
+\end{itemize}
+
+\begin{enumerate}[I]
+	\item \textsf{\small \textbf{Pseudo-random number engines} : usano un algoritmo per generare numeri casuali basati su un seme iniziale. Questi sono: }
+\end{enumerate}
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=1.2\textwidth, height=1.2\textheight, keepaspectratio]{./imgs/random-number-engines.png}
+	\caption{Motori di numeri pseudo-casuali}
+	\label{fig:random-number-engines}
+\end{figure}
+
+\begin{enumerate}
+	\item \textsf{\small \textbf{linear\_congruential\_engine} : è il più semplice nella \textbf{STL} (\emph{Standard Template Library}) che genera numeri interi senza segno.}
+\end{enumerate}
+
+\begin{lstlisting}
+	#include <iostream>
+	#include <chrono>
+	#include <random>
+	
+	int main()
+	{
+		// Trova il tempo tra il clock del sistema (tempo corrente) e l'epoch del clock (data e tempo relativi quando il timestamp di un clock di un computer sono determinati).
+		unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+		
+		std::minstd_rand0 generator(seed);
+		
+		std::cout << generator() << "è un numero casuale tra ";
+		std::cout << generator.min() << " e " << generator.max();
+		return 0;
+	}
+\end{lstlisting}
+
+\begin{enumerate}
+	\item[2.] \textsf{\small \textbf{mersenne\_twister\_engine} : È un motore di numeri casuali basati sull'algoritmo \emph{Mersenne Twister}. Produce dei numeri senza segno di alta qualità nell'intervallo [$0, (2^w)-1]$. dove \emph{w = size della parola (word)}.} \\
+\end{enumerate}
+
+\begin{lstlisting}
+	// Esempio 1
+	#include <iostream>
+	#include <chrono>
+	#include <random>
+	
+	int main()
+	{
+		unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+		
+		std::mt19937 generator(seed);
+		
+		std::cout << generator() << " è un numero casuale tra ";
+		
+		std::cout << generator.min() << " e " << generator.max();
+		return 0;
+	}
+\end{lstlisting}
+
+\begin{lstlisting}
+	// Esempio 2
+	#include <iostream>
+	#include <chrono>
+	#include <random>
+	
+	int randomNumberGenerator(int limit)
+	{
+		// generatore di numeri interi casuali con distribuzione uniforme che produce numeri casuali non deterministici.
+		std::random_device rd;
+		
+		// Generatore pseudo-random con l'algoritmo Mersenne Twister di numeri a 32 bit con uno spazio di stato di 19937 bits.
+		std::mt19937 rng(rd());
+		
+		// Distribuzione uniforme
+		std::uniform_int_distribution<> dis(1, limit);
+		return dis(rng);
+	}
+	
+	int main()
+	{
+		int limit = 100;
+		std::cout << randomNumberGenerator(limit) << std::endl;
+		return 0;
+	}
+\end{lstlisting}
+
+\begin{enumerate}
+	\item[3.] \textsf{\small \textbf{subtract\_with\_carry\_engine} : È un motore di generazione di numeri pseudo-casuali che produce numeri interi senza segno. L'algoritmo usato è il \emph{generatore di fibonacci} con una sequenza di stati di r elementi, più uno per il carry (il resto).} \\
+\end{enumerate}
+
+\begin{lstlisting}
+	#include <iostream>
+	#include <chrono>
+	#include <random>
+	
+	int main()
+	{
+		unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+		
+		std::subtract_with_carry_engine<unsigned, 24, 10, 24> generator(seed);
+		
+		std::cout << generator() << " è un numero casuale tra ";
+		
+		std::cout << generator.min() << " e " << generator.max();
+		return 0;
+	}
+\end{lstlisting}
+
+\begin{enumerate}[I]
+	\item[II] \textsf{\small \textbf{Random number generator} : È un generatore di numeri casuali che produce numeri casuali non deterministici.} \\
+\end{enumerate}
+
+\begin{lstlisting}
+	#include <iostream>
+	#include <random>
+	
+	int main ()
+	{
+		std::random_device rd;
+		
+		std::cout << "default random_device caratteristiche:" << std::endl;
+		
+		std::cout << "minimo: " << rd.min() << std::endl;
+		
+		std::cout << "massimo: " << rd.max() << std::endl;
+		
+		std::cout << "entropia: " << rd.entropy() << std::endl;
+		
+		std::cout << "un numero casuale: " << rd() << std::endl;
+		
+		return 0;
+	}
+\end{lstlisting}
+
+\begin{enumerate}[I]
+	\item[III] \textsf{\small \textbf{Pseudo-random number engines (instantions)} : Questi sono particolari instanzioni di motori di generatori e adattatori: } \\
+\end{enumerate}
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=1\textwidth, height=1\textheight, keepaspectratio]{./imgs/pseudo-random-number-engines.png}
+	\caption{Motori di numeri pseudo casuali}
+	\label{fig:pseudo-random-number-engines}
+\end{figure}
+
+\begin{enumerate}
+	\item \textsf{\small \textbf{default\_random\_engine} : Questo è una classe che genera numeri pseudo-casuali.} \\
+\end{enumerate}
+
+\begin{lstlisting}
+	#include <iostream>
+	#include <chrono>
+	#include <random>
+	
+	int main()
+	{
+		
+		unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+		
+		// minstd\_rand0 è un standard linear\_congruential\_engine
+		std::minstd_rand0 generator(seed);
+		
+		std::cout << generator() << " è un numero casuale tra ";
+		
+		std::cout << generator.min() << " e " << generator.max();
+		
+		return 0;
+	}
+\end{lstlisting}
+
+\begin{enumerate}
+	\item[2.] \textsf{\small \textbf{minstd\_rand} : Genera numeri pseudo casuali. È simile al linear congruential generator.} \\
+\end{enumerate}
+
+\begin{lstlisting}
+	#include <iostream>
+	#include <chrono>
+	#include <random>
+	
+	int main()
+	{
+		
+		unsigned seed = chrono::system_clock::now().time_since_epoch().count();
+		
+		// minstd\_rand0 è un standard
+		//linear\_congruential\_engine
+		std::minstd_rand0 generator(seed);
+		
+		std::cout << generator() << " è un numero casuale tra ";
+		
+		std::cout << generator.min() << " e " << generator.max();
+		
+		return 0;
+	}
+\end{lstlisting}
+
+\begin{enumerate}
+	\item[3.] \textsf{\small \textbf{mt19937} : È il generatore \emph{Mersenne Twister} 19937. È un generatore di numeri a 32 bit con uno spazio di stato di 19937 bits.} \\
+\end{enumerate}
+
+\begin{enumerate}
+	\item[4.] \textsf{\small \textbf{ranlux24\_base} : È un generatore \emph{Ranlux base 24}. È un generatore pseudo casuale che sottrae con il resto di numeri a 24-bit, generalmente usato come base per il generatore \emph{ranlux24}.} \\
+\end{enumerate}
+
+\begin{lstlisting}
+	#include <iostream>
+	#include <chrono>
+	#include <random>
+	
+	int main ()
+	{	
+		unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+		std::subtract_with_carry_engine<unsigned,24,10,24> generator(seed);
+		
+		std::cout << generator() << " è un numero casuale tra ";
+		
+		std::cout << generator.min() << " e " << generator.max();
+		
+		return 0;
+	}
+\end{lstlisting}
+
+\begin{enumerate}[I]
+	\item[IV] \textsf{\small \textbf{Engine Adaptors}} \\
+\end{enumerate}
+
+\begin{enumerate}
+	\item \textsf{\small \textbf{discard\_block\_engine} : È una classe template che adatta un motore di generatore di numeri pseudo-casuali attraverso il solo utilizzo di 'r' elementi di ogni blocco e 'p' elementi dalla sequenza che produce, scartando il resto. L'adattatore tiene un contatore interno per tenere traccia di quanti elementi sono stati prodotti nel blocco corrente.}
+\end{enumerate}
+
+\textsf{\small I generatori \textbf{ranlux24} e \textbf{ranlux48} adattano un \textbf{subtract\_with\_carry\_engine} usando questo adattatore.} \\
+
+\begin{lstlisting}
+	#include <iostream>
+	#include <chrono>
+	#include <random>
+	
+	int main ()
+	{
+		unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+		
+		// ranlux24 è un standard instantitation
+		// del discard\_block\_engine:
+		std::ranlux24 generator(seed);
+		
+		std::cout << generator() << " è un numero casuale tra ";
+		
+		std::cout << generator.min() << " e " << generator.max();
+		
+		return 0;
+	}
+\end{lstlisting}
+
+\begin{enumerate}
+	\item[2.] \textsf{\small \textbf{indipendent\_bits\_engine} : È un adattatore che adatta un motore di generatore di numeri casuali per produrre numeri con uno specifico numero di bits (w).}
+\end{enumerate}
+
+\begin{lstlisting}
+	#include <iostream>
+	#include <chrono>
+	#include <cstdint>
+	#include <random>
+	
+	int main ()
+	{
+		unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+		
+		// independent\_bits\_engine
+		std::independent_bits_engine<mt19937,64,uint_fast64_t> generator(seed);
+		
+		std::cout << generator() << " è un numero casuale tra ";
+		
+		std::cout << generator.min() << " e " << generator.max();
+		
+		return 0;
+	}
+\end{lstlisting}
+
+\begin{enumerate}
+	\item[3.] \textsf{\small \textbf{shuffle\_order\_engine} : È un adattatore che adatta un motore di generatore di numeri pseudo-casuali così che i numeri siano ottenuti in una sequenza differente.}
+\end{enumerate}
+
+\textsf{\small L'oggetto mantiene un buffer di k numeri generati internamente e quando richiesti restituisce alcuni selezionati casualmente nel buffer, rimpiazzandolo con un valore ottenuto dalla base del motore.} \\
+
+\begin{lstlisting}
+	#include <iostream>
+	#include <chrono>
+	#include <random>
+	
+	int main ()
+	{
+		unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+		
+		// ranlux24 è un standard instantitation
+		// del discard\_block\_engine:
+		ranlux24 generator (seed);
+		
+		std::cout << generator() << " è un numero casuale tra ";
+		
+		std::cout << generator.min() << " e " << generator.max();
+		
+		return 0;
+	}
+\end{lstlisting}
+
+% ------------------------ SECTION: MAP, SET, PAIR, HASH -----------------------------
+
+\newpage
+
+\section{Map | Set | Pair | Hash}
+
+\textsf{\small \textbf{Definizione: } } \\
+
+%TODO: map, hashmap, set, pair
+
+% -------------------------- SECTION: TYPE TRAITS ------------------------------------
+
+\newpage
+
+\section{Type Traits}
+
+\textsf{\small \textbf{Definizione: } } \\
+
+%TODO: include <type_traits>
+%TODO: typeid
+%TODO: decltype
+
 % ------------------------------------------------------------------------------------
 
-%TODO: numeri pseudo-random?
-%TODO: std::chrono
+%TODO: C++20 oppure in un capitolo a parte?
