@@ -1192,6 +1192,72 @@ Mentre, l'ultima preview mostrata è stata quella del C++23.}\\
 	\hline
 \end{tabular}
 
+\subsection{Escape characters}
+
+\textsf{\small \textbf{Definizione: } Le sequenze di fuga sono usate per rappresentare certi caratteri speciali nelle stringhe e nei caratteri. } \\
+
+\textbf{Caratteri di controllo: } \\
+
+\textsf{\small Compatibili con l'encoding ASCII.} \\
+
+%TODO: magari da tradurre in italiano il resto e o lasciare qui o all'inizio dopo il cast.
+
+\begin{tabular}{|c|c|}
+	\hline
+	\textbf{Escape sequence} & \textbf{Definizione} \\
+	\hline
+	\textsf{\small \textbf{$\backslash$a} : \textbf{$\backslash$x07}} & \textsf{\small alert (bell)} \\
+	\hline
+	\textsf{\small \textbf{$\backslash$b} : \textbf{$\backslash$x08}} & \textsf{\small backspace} \\
+	\hline
+	\textsf{\small \textbf{$\backslash$t} : \textbf{$\backslash$x09}} & \textsf{\small horizontal tab} \\
+	\hline
+	\textsf{\small \textbf{$\backslash$n} : \textbf{$\backslash$x0A}} & \textsf{\small newline (or line feed)} \\
+	\hline
+	\textsf{\small \textbf{$\backslash$v} : \textbf{$\backslash$x0B}} & \textsf{\small vertical tab} \\
+	\hline
+	\textsf{\small \textbf{$\backslash$f} : \textbf{$\backslash$x0C}} & \textsf{\small form feed} \\
+	\hline
+	\textsf{\small \textbf{$\backslash$r} : \textbf{$\backslash$x0D}} & \textsf{\small carriage return} \\
+	\hline
+	\textsf{\small \textbf{$\backslash$e} : \textbf{$\backslash$x1B}} & \textsf{\small escape (non-standard GCC extension)} \\
+	\hline
+\end{tabular} \break
+
+\textbf{Caratteri di punteggiatura: } \\
+
+\begin{tabular}{|c|c|}
+	\hline
+	\textbf{Escape sequence} & \textbf{Definizione} \\
+	\hline
+	\textsf{\small \textbf{$\backslash$"}} & \textsf{\small quotation mark} \\
+	\hline
+	\textsf{\small \textbf{$\backslash$'}} & \textsf{\small apostrophe} \\
+	\hline
+	\textsf{\small \textbf{$\backslash$?}} & \textsf{\small question mark (used to avoid trigraphs)} \\
+	\hline
+	\textsf{\small \textbf{$\backslash\backslash$}} & \textsf{\small backslash} \\
+	\hline
+\end{tabular} \break
+
+\textbf{Caratteri di referenze numeriche: } \\
+
+\begin{tabular}{|c|c|}
+	\hline
+	\textbf{Escape sequence} & \textbf{Definizione} \\
+	\hline
+	\textsf{\small \textbf{$\backslash$}} & \textsf{\small + 3 cifre in ottale} \\
+	\hline
+	\textsf{\small \textbf{$\backslash$x}} & \textsf{\small + qualsiasi cifra in esadecimale} \\
+	\hline
+	\textsf{\small \textbf{$\backslash$u}} & \textsf{\small + 4 cifre esadecimali} \\
+	\hline
+	\textsf{\small \textbf{$\backslash$U}} & \textsf{\small + 8 cifre esadecimali} \\
+	\hline
+	\textsf{\small \textbf{$\backslash$0} = \textbf{$\backslash$00} = $\backslash$000} & \textsf{\small octal escape for null character} \\
+	\hline
+\end{tabular}
+
 % -------------------------- SECTION: FUNZIONI ---------------------------------------
 
 \newpage
