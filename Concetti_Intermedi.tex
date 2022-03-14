@@ -33,6 +33,8 @@
 
 %TODO: #include <bits/stdc++.h> è un header file che include tutti gli header files della STL. Non dovrebbe essere usato perché è lazy ed è un header del GCC che quindi potrebbe non andare in altri e non sai cosa fa perché i suoi contenuti non sono standard e ogni header file dovrebbe essere parsato il che renderebbe il tutto lento.
 
+%TODO: sttrutture dati.
+
 % -------------------------- SECTION: INTRODUZIONE -----------------------------------
 
 \section{Introduzione}
@@ -2515,15 +2517,147 @@
 	}
 \end{lstlisting}
 
-% ------------------------ SECTION: MAP, SET, PAIR, HASH -----------------------------
+% ------------------------ SECTION: MAP, SET, PAIR, HASH TABLE -----------------------
 
 \newpage
 
-\section{Map | Set | Pair | Hash}
+\section{Map | Set | Pair | Hash Table}
+
+\textsf{\small \textbf{Definizione: } Ora tratteremo delle \textbf{map, set, pair, hash table} che sono contenitori molto utili per poter eseguire delle operazioni sui loro elementi.} \\
+
+\subsection{Map}
+
+\textsf{\small \textbf{Definizione: } Le \textbf{mappe} sono dei contenitori associativi, ovvero che ogni elemento ha una chiave e un valore mappato. Non ci possono essere due valori con la stessa chiave.} \\
+
+\textsf{\small Per poter utilizzare le \textbf{mappe} includiamo l'header \textbf{<map>}.} \\
+
+\textsf{\small Quindi ricapitolando in una mappa ci sono una sequenza di (chiave, valore) \{\{\textbf{chiave}:\textbf{valore}\}, \{\textbf{chiave}:\textbf{valore}\}, \{\textbf{chiave}:\textbf{valore}\}, \{\textbf{chiave}:\textbf{valore}.\}\}} \\
+
+\begin{lstlisting}
+	#include <iostream>
+	#include <map>
+	
+	int main()
+	{
+		std::map<char, int> map;
+		
+		map.insert('a', 0);
+		map.insert('b', 1);
+		map.insert('c', 2);
+		
+		std::cout << "map size: " << map.size() << std::endl; // Output: map size: 3
+		
+		map.clear();
+		
+		std::cout << "map size dopo clear: " << map.size() << std::endl; // Output: map size dopo clear: 0
+		
+		std::map<std::string, int> myMap = {
+			{"one", 1}, {"two", 2}, {"three", 3}
+		};
+	
+		for(auto& i : myMap)
+		{
+			std::cout << i.first << ": " << i.second << std::endl;
+			// Output: one: 1
+			// Output: two: 2
+			// Output: three: 3
+		}
+		
+		return 0;
+	}
+\end{lstlisting}
+
+\subsubsection{unordered\_map} 
+
+\textsf{\small \textbf{Definizione: } Una \textbf{unordered\_map} è una mappa non ordinata, quindi i suoi elementi sono memorizzati in nessun tipo di ordine particolare, ma sono piazzati a caso.} \\
+
+\textsf{\small Una \textbf{unordered\_map} è implementata usando una \emph{Hash Table}, quindi le performance della struttura dati dipendono dalla funzione hash.} \\
+
+\textsf{\small Per poter utilizzare l'\textbf{unordered\_map} è necessario includere il file di intestazione: \textbf{<unordered\_map>}.} \\
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=1.2\textwidth, height=1.2\textheight, keepaspectratio]{./imgs/unordered_map_include_unordered_map_initialize_it.png}
+	\caption{unordered\_map}
+	\label{fig:unordered_map_include_unordered_map_initialize_it}
+\end{figure}
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=1.2\textwidth, height=1.2\textheight, keepaspectratio]{./imgs/function_pointers_unordered_map_pointer_to_a_function.png}
+	\caption{unordered\_map function pointer}
+	\label{fig:function_pointers_unordered_map_pointer_to_a_function}
+\end{figure}
+
+\subsection{unordered\_map function pointer}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1.2\textwidth, height=1.2\textheight, keepaspectratio]{./imgs/function_pointers_unordered_map_pointer_to_a_function_lambda_function.png}
+	\caption{unordered\_map function pointer}
+	\label{fig:function_pointers_unordered_map_pointer_to_a_function_lambda_function}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1.2\textwidth, height=1.2\textheight, keepaspectratio]{./imgs/function_pointers_unordered_map_functional_std_function.png}
+	\caption{unordered\_map function pointer}
+	\label{fig:function_pointers_unordered_map_functional_std_function}
+\end{figure}
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1.2\textwidth, height=1.2\textheight, keepaspectratio]{./imgs/function_pointers_unordered_map_functional_std_function2.png}
+	\caption{unordered\_map function pointer}
+	\label{fig:function_pointers_unordered_map_functional_std_function2}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1.2\textwidth, height=1.2\textheight, keepaspectratio]{./imgs/function_pointers_unordered_map_functional_std_function3.png}
+	\caption{unordered\_map function pointer}
+	\label{fig:function_pointers_unordered_map_functional_std_function3}
+\end{figure}
+
+%TODO: multimap?
+
+\subsection{Set}
+
+\textsf{\small \textbf{Definizione: } I \textbf{set} (insiemi in italiano) è un contenitore associativo nel quale gli elementi devono essere unici. Gli elementi dell'insieme non possono essere modificati una volta nel container, quindi sono sempre \textbf{const}.} \\
+
+\textsf{\small Per usare gli insieme è necessario includere l'header \textbf{<set>}.} \\
+
+\textbf{Proprietà: } \\
+
+\begin{enumerate}
+	\item \textsf{\small Il \textbf{set} memorizza gli elementi in ordine.}
+	\item \textsf{\small Tutti gli elementi in un \textbf{set} hanno valori unici.}
+	\item \textsf{\small I valori del \textbf{set} non possono essere modificati, quindi sono \textbf{immutable} (immutabili).}
+	\item \textsf{\small I \textbf{set} utilizzano la \textbf{Binary search tree}.}
+	\item \textsf{\small I valori in un set sono \textbf{non indicizzati}.}
+\end{enumerate}
+
+\textsf{\small Per memorizzare gli elementi in maniera non ordinata c'è \textbf{unordered\_set()}.} \\
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=1.2\textwidth, height=1.2\textheight, keepaspectratio]{./imgs/set_insert_second_operations.png}
+	\caption{set}
+	\label{fig:set_insert_second_operations}
+\end{figure}
+
+%TODO: multiset?
+
+\subsection{Pair}
 
 \textsf{\small \textbf{Definizione: } } \\
 
-%TODO: map, hashmap, set, pair
+\subsection{Hash Table}
+
+\textsf{\small \textbf{Definizione: } } \\
+
+%TODO: sttrutture dati.
 
 % -------------------------- SECTION: TYPE TRAITS ------------------------------------
 
@@ -2540,3 +2674,24 @@
 % ------------------------------------------------------------------------------------
 
 %TODO: C++20 oppure in un capitolo a parte?
+
+%TODO: Algorithm library: 
+
+%TODO: C++20:
+%TODO: ranges, concepts, constrained algorithms
+
+%TODO: execution policies
+%TODO: optionals
+%TODO: heap, set, queue, priority_queue
+%TODO: std::accumulate, std::any_of, find, search
+%TODO: copy_if, copy_n_code
+%TODO: std_count, count_if
+%TODO: scan, equal code, fill_if, fill_n_code
+%TODO: std_generate, inner product, iota, permutations
+%TODO: sort
+%TODO: lexicographic compare
+%TODO: minmax, max, min
+%TODO: mismatch
+%TODO: std_transform
+%TODO: std_unique_code
+%TODO: SFINAE e concepts
