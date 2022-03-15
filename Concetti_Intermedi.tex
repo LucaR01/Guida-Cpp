@@ -2651,7 +2651,140 @@
 
 \subsection{Pair}
 
-\textsf{\small \textbf{Definizione: } } \\
+\textsf{\small \textbf{Definizione: } Il \textbf{pair} (paio, coppia) serve per combinare due valori anche di tipi diversi. È praticamente usato per memorizzare delle \textbf{tuple} (sequenza di n elementi).} \break
+
+\textsf{\small I \textbf{pair} sono contenuti nell'header \textbf{<utility>}.} \\
+
+\textsf{\small Alcune proprietà del \textbf{pair}: } \\
+
+\begin{itemize}
+	\item \textsf{\small Il primo elemento viene referenziato come \emph{first} ed il secondo come \emph{second}.}
+	\item \textsf{\small I \textbf{pair} possono essere assegnati, copiati, paragonati. Gli elementi in una mappa o hash\_map sono di tipo \textbf{pair} per default, dove \emph{first} è la chiave associata con il suo valore da \emph{second}.}
+	\item \textsf{\small Per accedere agli elementi, usiamo il nome della variabile seguita dall'operatore \textbf{.} (punto) seguito dalla keyword \emph{first} o \emph{second}.}
+\end{itemize}
+
+\begin{lstlisting}
+	#include <iostream>
+	#include <utility> // Per i pair
+	
+	int main()
+	{
+		std::pair<char, int> pair;
+		pair.first = 'L';
+		pair.second = 1;
+		
+		std::cout << pair.first << " " << pair.second << std::endl; //Output: L 1
+		
+		std::pair<std::string, double> pair2("Ciao a tutti", 2.22);
+		
+		std::cout << pair2.first << " " << pair2.second << std::endl; //Output: Ciao a tutti 2.22
+		
+		std::pair<int, int> coords = {3, 2}; // Un'altra sintassi valida per dichiarare un pair.
+		
+		std::cout << coords.first << " " << coords.second << std::endl; //Output: 3 2
+		
+		return 0;
+	}
+\end{lstlisting}
+
+\textsf{\small Alcune funzioni membro di \textbf{pair}: } \\
+
+\begin{itemize}
+	\item \textsf{\small \textbf{make\_pair()} : permette di creare un \textbf{pair} anche senza passare i parametri esplicitamente.}
+	\item \textsf{\small \textbf{swap()} : scambia i contenuti di un pair con un altro.}
+	\item \textsf{\small \textbf{tie()} : crea una tupla di referenze lvalues come argomento, per disimballare, spacchettare il pair in variabili separate. Ci sono anche alcune varianti al tie, con o senza \emph{ignore} che permette di ignorare un dato elemento dall'essere spacchettato.}
+\end{itemize}
+
+\begin{lstlisting}
+	#include <iostream>
+	#include <utility>
+	
+	int main()
+	{
+		// Esempio make\_pair
+		std::pair<int, int> pair = std::make_pair(8, 2);
+		std::cout << pair.first << " " << pair.second << std::endl; //Output: 8 2
+		
+		// Esempio swap
+		std::pair<char, int> pair1 = std::make_pair('A', 0);
+		std::pair<char, int> pair2 = std::make_pair('B', 1);
+		
+		std::cout << "Prima dello swap: " << pair1.first << " " << pair1.second << std::endl; //Output: Prima dello swap: A 0
+		
+		pair1.swap(pair2);
+		
+		std::cout << "Dopo lo swap: " << pair1.first << " " << pair1.second << std::endl; //Output: Dopo lo swap: B 1
+		
+		// Esempio tie
+		std::pair<int, int> p1 = { 1, 2 };
+		int a, b;
+		std::tie(a, b) = p1;
+		std::cout << a << " " << b << "\n"; // Output: 1 2
+		
+		std::pair<int, int> p2 = { 3, 4 };
+		std::tie(a, ignore) = p2;
+		
+		std::cout << a << " " << b << "\n"; // Output: 3 2 (b è rimasto al valore precedente perché abbiamo messo ignore)
+		return 0;
+	}
+\end{lstlisting}
+
+\textsf{\small Possiamo usare gli operatori anche con i \textbf{pair}: } \\
+
+\begin{enumerate}
+	\item \textsf{\small \textbf{=} : implementato in questo modo: std::pair\& operator=(const std::pair\& pr).}
+	\item \textsf{\small \textbf{==} per comparare due pair.}
+	\item \textsf{\small \textbf{!=} per controllare se non sono uguali.}
+	\item \textsf{\small \textbf{>=}, \textbf{<=} per controllare se è maggiore uguale o minore uguale.}
+\end{enumerate}
+
+\subsection{Tuple}
+
+\textsf{\small \textbf{Definizione: } Una \textbf{tuple} (tupla) è un oggetto che può tenere un numero di elementi. Gli elementi possono essere di vari tipi.} \\
+
+\textsf{\small Per poter usufruire delle tuple occorre importare \textbf{<tuple>}.} \break
+
+\textsf{\small Varie operazioni che si possono fare sulle tuple: } \\
+
+\begin{itemize}
+	\item \textsf{\small \textbf{get()} : è usato per accedere ai valori della tupla e per poterli modificare. Accetta sia l'indice sia il nome come argomento per accedere ad un particolare elemento.}
+	\item \textsf{\small \textbf{make\_tuple()} : usato per assegnare valori alla tupla.}
+	\item \textsf{\small \textbf{tuple\_size} : restituisce il numero di elementi presenti nella tupla.}
+	\item \textsf{\small \textbf{swap()} : scambia gli elementi di due tuple.}
+	\item \textsf{\small \textbf{tie()} : spacchetta le tuple in variabili separate. Ci sono due varianti con e senza \textbf{ignore} per ignorare un particolare elemento della tupla e per non farlo spacchettare.}
+	\item \textsf{\small \textbf{tuple\_cat()} : concatena due tuple e ne restituisce una nuova.}
+\end{itemize}
+
+\begin{lstlisting}
+	#include <iostream>
+	#include <tuple>
+	
+	int main()
+	{
+		std::tuple<char, int, float> tupla;
+		tuple = make_tuple('S', 33, 52.6);
+		
+		std::cout << "Prima della modifica: " << std::get<0>(tupla) << " " << std::get<1>(tupla) << std::get<2>(tupla) << std::endl; //Output: Prima dela modifica: S 33 52.6
+		
+		// Usare get() per modificare i valori:
+		std::get<0>(tupla) = 'T';
+		std::get<2>(tupla) = 21.9;
+		
+		std::cout << "Dopo la modifica: " << std::get<0>(tupla) << " " << std::get<1>(tupla) << std::get<2>(tupla) << std::endl; //Output: Dopo la modifica: T 33 21.9
+		
+		// tuple\_size
+		std::cout << "Il size della tupla è: " << std::tuple_size<decltype(tupla)>::value << std::endl; //Output: Il size della tupla è: 3
+		
+		// swap()
+		
+		// tie()
+		
+		// tuple\_cat()
+		return 0;
+	}
+\end{lstlisting}
+
+%TODO: pair vs tuple
 
 \subsection{Hash Table}
 
