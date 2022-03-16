@@ -4,15 +4,6 @@
 
 %Possibili argomenti aggiuntivi di questo capitolo: 
 
-% Map, Set, HashTable, Pair
-
-% #include type_traits
-
-%TODO: decltype.
-
-% Random numbers? O nel beginner?
-% std::chrono?
-
 %TODO: inline functions.
 
 %TODO: NULL (o null) vs nullptr
@@ -25,15 +16,11 @@
 
 %TODO: pure virtual destructors.
 
-%TODO: typeid. type_traits
+%TODO: SFINAE (Substitution Failure is Not An Error). nel chapter sugli algoritmi.
 
-%TODO: SFINAE (Substitution Failure is Not An Error).
+%TODO: sttrutture dati cosa sono? Strutture dati: array, linked list, stack, queue. E anche Abstract Data Types (ADT): list, stack, queue. map usa Red Black Tree.
 
-%TODO: cos'è la STL (Standard Template Library), questo dopo l'introduzione. (stl è un termine un po' vecchio).
-
-%TODO: #include <bits/stdc++.h> è un header file che include tutti gli header files della STL. Non dovrebbe essere usato perché è lazy ed è un header del GCC che quindi potrebbe non andare in altri e non sai cosa fa perché i suoi contenuti non sono standard e ogni header file dovrebbe essere parsato il che renderebbe il tutto lento.
-
-%TODO: sttrutture dati.
+%TODO: <functional>?
 
 % -------------------------- SECTION: INTRODUZIONE -----------------------------------
 
@@ -45,15 +32,38 @@
 
 % -------------------------- SECTION: STL --------------------------------------------
 
+%TODO: forse è quasi da mettere dopo i templates visto che bisogna sapere cosa sono i templates.
+
 \section{STL | Standard Template Library}
 
-%TODO: cos'è e a cosa serve.
+\textsf{\small \textbf{Definizione: } La \textbf{Standard Template Library} (\emph{STL}) è un insieme di classi template che forniscono le classiche strutture dati e funzioni come: liste, stacks, arrays, eccetera..} \break
+
+\textsf{\small È una libreria di contenitori (containers) di classi, algoritmi e iteratori. È una libreria generalizzata, i suoi componenti sono parametrizzati.} \\
+
+\textsf{\small È stata sviluppata separatamente e poi sottoposta al \textbf{C++ standard commitee} per essere considerata e per dare loro la possibilità di adottarla nel linguaggio.} \break
+
+\textsf{\small \textbf{L'STL ha quattro componenti: } } \\
+
+\begin{itemize}
+	\item \textsf{\small Algoritmi}
+	\item \textsf{\small Contenitori}
+	\item \textsf{\small Funzioni}
+	\item \textsf{\small Iteratori}
+\end{itemize}
 
 \subsection{Che cos'è \#include <bits/stdc++.h>?}
 
-%TODO: #include <bits/stdc++.h> è un header file che include tutti gli header files della STL. Non dovrebbe essere usato perché è lazy ed è un header del GCC che quindi potrebbe non andare in altri e non sai cosa fa perché i suoi contenuti non sono standard e ogni header file dovrebbe essere parsato il che renderebbe il tutto lento.
+\textsf{\small \textbf{Definizione: } È un header file che include tutti gli header files della \textbf{STL}.} \\
 
-% rende il codice non portabile.
+\textsf{\small \textbf{Non} dovrebbe essere usato perché: } \\
+
+\begin{itemize}
+	\item \textsf{\small è \emph{lazy} (pigro).}
+	\item \textsf{\small è un header del compilatore \emph{GCC} e quindi \textbf{non} è portabile, ovvero potrebbe \textbf{non} andare in altri.}
+	\item \textsf{\small non sai che cosa fa perché i suoi contenuti \textbf{non} sono standard.}
+	\item \textsf{\small ogni header file dovrebbe essere \emph{parsato} il che renderebbe tutto più lento.}
+	\item \textsf{\small rende il codice \textbf{non} portabile.}
+\end{itemize}
 
 % -------------------------- SECTION: TEMPLATES --------------------------------------
 
@@ -942,6 +952,9 @@
 
 \section{Constructor types | Rules of}
 
+%TODO: explicit constructor, converting constructor.
+%TODO: Private Destructor
+
 \subsection{Rule of Zero}
 
 \textsf{\small \textbf{Definizione: } La \textbf{regola dello zero} (è una regola generale/un'indicazione) afferma che se non hai bisogno di nessuno di questi, allora non ne devi implementare nessuno: } \\
@@ -1490,6 +1503,8 @@
 			virtual void show() = 0;
 	};
 \end{lstlisting}
+
+%TODO: Pure Virtual Destructor
 
 \subsection{Abstract Class}
 
@@ -2620,7 +2635,40 @@
 	\label{fig:function_pointers_unordered_map_functional_std_function3}
 \end{figure}
 
-%TODO: multimap?
+\subsubsection{multimap}
+
+\textsf{\small \textbf{Definizione: } Una \textbf{multimap} è simile ad una \textbf{mappa}, ma con l'aggiunta che molteplici elementi possono avere le stesse chiavi. Inoltre, in questo caso, le coppie chiave-valore non devono essere per forza uniche. Inoltre, nelle \textbf{multimap} le chiavi sono sempre memorizzate in ordine.} \\
+
+\begin{lstlisting}
+	#include <iostream>
+	#include <map>
+	
+	int main()
+	{
+		std::multimap<char, int> m1 = {
+			{'a', 1},
+			{'a', 2},
+			{'b', 3},
+			{'c', 4},
+			{'c', 5},
+		};
+		
+		std::multimap<char, int>m2(m1.begin(), m1.end());
+		
+		std::cout << "La Multimap contiene i seguenti elementi:" << std::endl;
+		for (auto it = m2.begin(); it != m2.end(); ++it)
+		std::cout << it->first << " = " << it->second << std::endl;
+		
+		//Output: La multimap contiene i seguenti elementi: 
+		//Output: a = 1
+		//Output: a = 2
+		//Output: b = 3
+		//Output: c = 4
+		//Output: c = 5
+		
+		return 0;
+	}
+\end{lstlisting}
 
 \subsection{Set}
 
@@ -2640,14 +2688,42 @@
 
 \textsf{\small Per memorizzare gli elementi in maniera non ordinata c'è \textbf{unordered\_set()}.} \\
 
-\begin{figure}[ht]
+\begin{figure}[H]
 	\centering
 	\includegraphics[width=1.2\textwidth, height=1.2\textheight, keepaspectratio]{./imgs/set_insert_second_operations.png}
 	\caption{set}
 	\label{fig:set_insert_second_operations}
 \end{figure}
 
-%TODO: multiset?
+\subsubsection{multiset}
+
+\textsf{\small \textbf{Definizione: } I \textbf{multiset} sono dei container associativi simili ai \textbf{set}, ma con un eccezione che molteplici elementi possono avere gli stessi valori.} \\
+
+\begin{lstlisting}
+	#include <iostream>
+	#include <set>
+	
+	int main()
+	{
+		std::multiset<int> multiSet;
+		
+		multiSet.insert(9);
+		multiSet.insert(9);
+		multiSet.insert(9);
+		
+		std::cout << multiSet.count(9) << std::endl; //Output: 3
+		
+		multiSet.erase(multiSet.find(9)); // Rimuoverà solo uno dei tre 9.
+		
+		std::cout << multiSet.count(9) << std::endl; //Output: 2
+		
+		multiSet.erase(9); // Rimuoverà tutte le occorrenze del valore 9.
+		
+		std::cout << multiSet.count(9) << std::endl; //Output: 0
+		
+		return 0;
+	}
+\end{lstlisting}
 
 \subsection{Pair}
 
@@ -2762,7 +2838,7 @@
 	int main()
 	{
 		std::tuple<char, int, float> tupla;
-		tuple = make_tuple('S', 33, 52.6);
+		tupla = std::make_tuple('S', 33, 52.6);
 		
 		std::cout << "Prima della modifica: " << std::get<0>(tupla) << " " << std::get<1>(tupla) << std::get<2>(tupla) << std::endl; //Output: Prima dela modifica: S 33 52.6
 		
@@ -2777,18 +2853,67 @@
 		
 		// swap()
 		
+		std::tuple<char, int, float> tupla2('R', 54, 61.7);
+		std::cout << "Elementi prima dello scambio: " << std::get<0>(tupla) << " " << std::get<1>(tupla) << " " << std::get<2>(tupla) << std::endl; //Output: Elementi prima dello scambio: T 33 21.9
+		
+		tupla.swap(tupla2);
+		
+		std::cout << "Elementi dopo lo scambio: " << std::get<0>(tupla) << " " << std::get<1>(tupla) << " " << std::get<2>(tupla) << std::endl; //Output: Elementi dopo lo scambio: R 54 61.7
+		
+		std::get<0>(tupla) = 'T';
+		std::get<1>(tupla) = 33;
+		std::get<2>(tupla) = 21.9;
+		
 		// tie()
+		char c;
+		int x;
+		float f;
+		
+		std::tie(c, x, f) = tupla;
+		
+		std::cout << "I valori spacchettati della tupla sono: " << c << " " << x << " " << f << std::endl; //Output: I valori spacchettati della tupla sono: R 54 61.7
 		
 		// tuple\_cat()
+		auto tupla3 = std::tuple_cat(tupla, tupla2);
+		
+		std::cout << "Gli elementi della nuova tupla sono: " << std::get<0>(tupla3) << " " << std::get<1>(tupla3) << " " << std::get<2>(tupla3) << " " << std::get<3>(tupla3) << " " << std::get<4>(tupla3) << " " << std::get<5>(tupla3) << " " << std::endl; //Output: Gli elementi della nuova tupla sono: T 33 21.9 R 54 61.7
 		return 0;
 	}
 \end{lstlisting}
 
-%TODO: pair vs tuple
+\subsection{Pair vs Tuple}
+
+\textsf{\small Quali sono le differenze tra \textbf{pair} e \textbf{tuple}?} \\
+
+\begin{tabular}{|c|c|}
+	\hline
+	\textbf{Pair} & \textbf{Tuple} \\
+	\hline
+	\textsf{\small Può contenere soltanto una coppia di valori.} & \textsf{\small Può contenere molteplici valori.} \\
+	\hline
+	\textsf{\small Un Pair è una specifico } & \textsf{\small È una classe template } \\
+	\textsf{\small caso di tuple a due elementi.} & \textsf{\small con size fisso di valori eterogenei.} \\
+	\hline
+	\textsf{\small Non è difficile ottenere } & \textsf{\small È un po' più complicato } \\
+	\textsf{\small i suoi elementi.} & \textsf{\small ottenere i suoi elementi.} \\
+	\hline
+	\textsf{\small Dovrebbe essere un po' più veloce di tuple.} & \textsf{\small È un po' più lenta se non ottimizzata.} \\
+	\hline
+\end{tabular}
 
 \subsection{Hash Table}
 
-\textsf{\small \textbf{Definizione: } } \\
+\textsf{\small \textbf{Definizione: } L'\textbf{hashing} è una tecnica o processo di mappatura di chiavi e valori in una \textbf{hash table} attraverso una \textbf{hash function}.} \\
+
+\textsf{\small Queste \textbf{hash function} potrebbero portare ad una collisione, ovvero quando due o più chiavi sono mappate allo stesso valore. Il \textbf{Chain Hashing} evita le collisioni: Ogni cella dell'\textbf{hash table} punta ad una \emph{lista linkata} di records che hanno lo stesso valore di \textbf{hash function}.} \\
+
+%TODO: forse questo non è corretto?
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1.2\textwidth, height=1.2\textheight, keepaspectratio]{./imgs/hash_table_template_specialization.png}
+	\caption{Hash Table Template Specialization}
+	\label{fig:hash_table_template_specialization}
+\end{figure}
 
 %TODO: sttrutture dati.
 
@@ -2798,11 +2923,322 @@
 
 \section{Type Traits}
 
-\textsf{\small \textbf{Definizione: } } \\
+\textsf{\small \textbf{Definizione: } L'header \textbf{<type\_traits>} contiene un insieme di classi template per trasformare e controllare le proprietà dei tipi a compile-time.} \\
 
-%TODO: include <type_traits>
-%TODO: typeid
-%TODO: decltype
+\textsf{\small Sono di solito usati per controllare gli errori dell'utente, sviluppo della programmazione generale e permettere ottimizzazioni.} \\
+
+\textsf{\small La maggior parte dei \textbf{type traits} sono usati per controllare se un tipo soddisfa il criterio.} \\
+
+\subsection{decltype}
+
+\textsf{\small \textbf{Definizione: } \textbf{decltype} è un modo per specificare il  tipo: gli dai un'espressione e \textbf{decltype} ti restituisce il tipo (la tipologia della variabile) dell'espressione che gli hai passato.} \\
+
+\textsf{\small Per esempio: se passi a \textbf{decltype(a)}, dove \emph{a} è il nome di una variabile (\emph{id-expression}) di tipo \textbf{int} allora \textbf{decltype} restituirà la tipologia di quella variabile che in questo caso è \textbf{int}. Se, invece, \emph{a} è un \textbf{lvalue} di tipo \emph{T} allora restituirà \emph{T \&} e se \emph{a} è un \textbf{rvalue} allora restituirà il tipo \emph{T}.} \\
+
+\begin{lstlisting}
+	int foo();
+	int n = 9;
+	
+	// Usiamo decltype per ottenere la tipologia e la usiamo per assegnarla alle variabili.
+	decltype(n) x = 18; // la variabile x è di tipo int. (id-expression)
+	
+	decltype((n)) y = x; // y è un int\& (n è un lvalue)
+	
+	decltype(foo()) z = foo(); // z è un int (rvalue)
+	
+	decltype(foo()) && w = foo(); // w è un int\&\&
+	
+	decltype((n)) && k = n; // k è int\& (\& \&\& collassa in \&)
+\end{lstlisting}
+
+\textsf{\small La forma speciale \textbf{decltype(auto)} deduce la tipologia della variabile dalla sua inizializzazione.} \\
+
+\begin{lstlisting}
+	const int a = 99;
+	auto b = a;  // b ha tipo int
+	decltype(auto) c = a; // c ha tipologia const int, ciò che è stato ritornato da decltype.
+\end{lstlisting}
+
+\textsf{\small Alcuni esempi su type\_traits: } \\
+
+\begin{lstlisting}
+	#include <iostream>
+	#include <type_traits>
+	
+	// is\_function
+	void f(){};
+	int x(int a){return a};
+	int(*y)(int)=x;
+	
+	// is\_class
+	class MyClass{};
+	
+	int main()
+	{
+		// is\_function
+		std::cout << std::boolalpha << "is_function<x>: " << std::is_function<decltype(x)>::value << " is_function<y>: " << std::is_function<decltype(y)>::value << std::endl; //Output: is\_function<x>: true is\_function<y>: false
+		
+		// is\_class
+		std::cout << std::boolalpha << "is_class<MyClass>: " << std::is_class<MyClass>::value << std::endl; //Output: is\_class<MyClass>: true
+		return 0;
+	}
+\end{lstlisting}
+
+\begin{lstlisting}
+	#include <iostream>
+	#include <type_traits>
+	
+	template <typename T>
+	void miServeUnPuntatore(T t) {
+		std::static_assert(std::is_pointer<T>::value, "T deve essere di tipo puntatore");
+	}
+	
+	//Overload per quando T non è un puntatore.
+	template<typename T>
+	typename std::enable_if<!std::is_pointer<T>::value>::type
+	faccioQualcosaColPuntatore(T t) {
+		//Corpo della funzione
+	}
+	
+	//Overload per quando T è un puntatore
+	template<typename T>
+	typename std::enable_if<std::is_pointer<T>::value>::type 
+	faccioQualcosaColPuntatore (T t) {
+		//Corpo della funzione
+	}
+\end{lstlisting}
+
+\textsf{\small Oltre a queste sono presenti tante altre funzioni.} \\
+
+% ------------------ SECTION: RUN-TIME TYPE INFORMATION (RTTI) -----------------------
+
+%TODO: spostare questa sezione dove ci sono i casts o lasciarla qui? Penso di lasciarla qui, credo.
+
+\section{RTTI | Run-Time Type Information}
+
+\textsf{\small \textbf{Definizione: } Il \textbf{Run-Time Type Information} (\emph{RTTI}) è un meccanismo che espone le informazioni del tipo di un oggetto a runtime ed è disponibile solo per le classi che hanno almeno una \textbf{funzione virtuale}. Permette di determinare la tipologia di un oggetto durante l'esecuzione del programma.} \\
+
+\subsection{Runtime Casts}
+
+\textsf{\small Il cast a runtime che controlla che il cast sia valido è l'approccio più semplice per verificare il tipo dell'oggetto a runtime usando un puntatore o una referenza. È utile quando abbiamo bisogno di fare un cast da un puntatore ad una classe base a una classe derivata.} \\
+
+\textsf{\small Quando abbiamo a che fare con una gerarchia di classi, il casting degli oggetti è richiesto, di solito.} \\
+
+\textsf{\small Ci sono due tipi di casting: } \\
+
+\begin{itemize}
+	\item \textsf{\small \textbf{Upcasting} : Quando un puntatore o referenza di una classe derivata è trattata come un puntatore a una classe base.}
+	\item \textsf{\small \textbf{Downcasting} : Quando un puntatore o referenza a una classe base è convertito a puntatore di una classe derivata.}
+\end{itemize}
+
+\textsf{\small \textbf{dynamic\_cast} : in una gerarchia di ereditarietà è usato per il \emph{downcasting} di un puntatore di una classe base a una classe figlia.} \\
+
+\textsf{\small Se riesce ritorna un puntatore al tipo convertito, altrimenti, fallisce se proviamo a fare un cast ad un tipo invalido come un puntatore che non è del tipo desiderato della classe derivata. Per esempio: \textbf{dynamic\_cast} non riesce a fare un cast ad un' altra classe se questa non ha almeno una funzione virtuale.} \\
+
+\begin{lstlisting}
+	#include <iostream>
+	class B {
+	};
+	class D : public B {
+	};
+	
+	int main()
+	{
+		B* b = new D;
+		D* d = std::dynamic_cast<D*>(b); // Da errore perché B non ha nemmeno una funzione virtuale.
+		return 0;
+	}
+	
+\end{lstlisting}
+
+% -------------------------- SECTION: TYPE INFO --------------------------------------
+
+\section{Typeinfo}
+
+\textsf{\small \textbf{Definizione: } Il file di intestazione \textbf{<typeinfo>} contiene implementazioni riguardo l'ottenere informazioni di un tipo, incluso il nome del tipo e modi per compararlo con altri tipi.} \\
+
+\subsection{typeid}
+
+\textsf{\small È usato quando servono le informazioni del tipo dinamico o a runtime di un oggetto.} \\
+\textsf{\small È un'espressione lvalue.} \\
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1.2\textwidth, height=1.2\textheight, keepaspectratio]{./imgs/typeinfo_typeid.png}
+	\caption{typeid}
+	\label{fig:typeinfo_typeid}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1.2\textwidth, height=1.2\textheight, keepaspectratio]{./imgs/typeinfo_typeid_if.png}
+	\caption{typeid}
+	\label{fig:typeinfo_typeid_if}
+\end{figure}
+
+\textsf{\small In alcuni casi, \textbf{typeid} potrebbe essere più veloce di \textbf{dynamic cast}.} \\
+
+\subsection{typeinfo}
+
+\textsf{\small La funzione \textbf{typeinfo()} è un costrutto del compilatore GCC, non esiste (al momento) nel linguaggio e fa la stessa cosa di \textbf{decltype}, ovvero restituisce la tipologia di una variabile.} \\
+
+% -------------------------- SECTION: ELLISSI ----------------------------------------
+
+\newpage
+
+\section{Ellissi}
+
+\textsf{\small \textbf{Definizione: } Le \textbf{Ellissi}, ovvero i \textbf{...} (tre puntini) permettono ad una funzione di accettare un numero variabile di argomenti. È anche conosciuta come \emph{variable argument list}. } \\
+
+\textsf{\small Di solito, le funzioni possono prendere solo un numero fisso di parametri, ma con le \textbf{ellissi} (\emph{ellipsis} in inglese) si possono passare tanti argomenti quanti se ne vuole. } \\
+
+\textsf{\small Le \textbf{ellissi} sono definite nel file di intestazione \textbf{cstdarg}.} \\
+
+\begin{lstlisting}
+	#include <iostream>
+	#include <cstdarg>
+	
+	double average(int count, ...)
+	{
+		// va\_list è usata per iterare sull'ellissi.
+		va_list list;
+		
+		// Inizializza la posizione di va\_list.
+		va_start(list, count);
+		
+		double average = 0.0;
+		
+		// Itera su ogni argomento passato.
+		for(int i = 0; i < count; i++)
+		{
+			average += static_cast<double>(va_arg(list, int)) / count;
+		}
+	
+		// Finisce l'utilizzo di va\_list.
+		va_end(list);
+		
+		return average;
+	}
+
+	int main()
+	{
+		double avg = average(6, 3, 6, 9, 10, 7, 1);
+		
+		std::cout << "La media è: " << avg << std::endl; //Output: La media è: 6.0 ((3 + 6 + 9 + 10 + 7 + 1) / 6 = 36 / 6 = 6.0)
+		return 0;
+	}
+\end{lstlisting}
+
+\textsf{\small \textbf{Come funziona?}} \\
+
+\begin{itemize}
+	\item \textsf{\small \textbf{va\_list} : usato per accedere ai valori dell'ellissi.}
+	\item \textsf{\small \textbf{va\_start} : punta alla \textbf{va\_list} all'inizio dell'ellissi.}
+	\item \textsf{\small \textbf{va\_arg} : restituisce il valore a cui \textbf{va\_list} si sta riferendo e muove \textbf{va\_list} al prossimo parametro.}
+	\item \textsf{\small \textbf{va\_end} : prende soltanto un argomento \textbf{va\_list} stessa. È usato per pulire la \textbf{va\_list}.}
+\end{itemize}
+
+\textsf{\small Non è molto usata in C++, perché al posto di usare l'\textbf{ellissi} possiamo passare come argomento un contenitore, come un \textbf{std::vector}, eccetera..} \\
+
+% ------------------------ SECTION: INLINE FUNCTIONS ---------------------------------
+
+\newpage
+
+\section{Inline Functions}
+
+\textsf{\small \textbf{Definizione: } Le \textbf{inline functions} (\emph{funzioni in linea}) sono un concetto molto potente. Se una funzione è \textbf{inline} il compilatore piazzerà una copia del codice di quella funzione ad ogni punto dove essa è chiamata.} \\
+
+\textsf{\small Per le funzioni grandi, lunghe e/o che eseguono complesse tasks,	l'\emph{overhead} (sovrastante, sopra la testa, risorse in sovrappiù rispetto a quelle strettamente necessarie) è di solito insignificante comparato all'ammontare di tempo che la funzione ci mette per essere eseguita. Mentre, per quelle più piccole, le funzioni usate comunemente, il tempo necessario per fare la chiamata alla funzione è spesso molto di più rispetto a quello necessario per eseguirla.} \\
+
+\textsf{\small Questo occorre per le piccole funzioni, perché il tempo di esecuzione è minore del tempo di cambio. (\emph{switching time}).} \break
+
+\textsf{\small Quindi, la keyword \textbf{inline} nelle funzioni serve per ridurre l'\emph{overhead} nella chiamata alla funzione. È una funzione che viene espansa in linea quando viene chiamata. Quando la funzione \textbf{inline} viene chiamata, l'intero codice viene sostituito o inserito al momento della chiamata.} \\
+
+\textsf{\small Il compilatore può ignorare il qualificato \textbf{inline} nel caso che la funzione definita \textbf{inline} sia più di una riga di codice.} \\
+
+\textsf{\small È comune usarlo nelle funzioni delle classi. } \\
+
+%TODO: è sbagliato questo esempio? Solo per le inline void?
+\begin{lstlisting}
+	#include <iostream>
+	
+	inline int max(int x, int y)
+	{
+		return x > y ? x : y;
+	}
+
+	int main()
+	{
+		std::cout << "max(3,9): " << max(3,9) << std::endl; //Output: 9
+		std::cout << "max(21, 0): " << max(21, 0) << std::endl; //Output: 21
+		std::cout << "max(4, 12): " << max(4, 12) << std::endl; //Output: 12
+	}
+\end{lstlisting}
+
+\textsf{\small Inoltre il compilatore non la eseguirà \textbf{inline} se: } \\
+
+\begin{itemize}
+	\item \textsf{\small Se una funzione contiene un loop.}
+	\item \textsf{\small Se una funzione contiene variabili statiche.}
+	\item \textsf{\small Se una funzione è ricorsiva.}
+	\item \textsf{\small Se il tipo di ritorno non è void e il return non esiste nel corpo della funzione.}
+	\item \textsf{\small Se la funzione contiene switch o goto.}
+\end{itemize}
+
+\textsf{\small Le funzioni \textbf{inline} hanno i seguenti vantaggi: } \\
+
+%TODO: "Questo non è possibile nelle funzioni normali" forse è da contestualizzare, argomentare, aggiungere spiegazioni e anche per la parte del flusso delle chiamate.
+
+\begin{itemize}
+	\item \textsf{\small Non occorre l'\emph{overhead} della funzione.}
+	\item \textsf{\small Risparmia l'\emph{overhead} della push/pop di variabili nello stack quando è chiamata.}
+	\item \textsf{\small Risparmia l'\emph{overhead} di una chiamata \textbf{return} da una funzione.}
+	\item \textsf{\small Il compilatore potrebbe eseguire delle ottimizzazioni sul corpo della funzione. Questo non è possibile per le chiamate alle funzioni normali. Inoltre potrebbe ottimizzare anche il flusso delle chiamate.}  
+	\item \textsf{\small Possono essere utili per gli \emph{embedded systems} perché possono produrre meno codice.}
+\end{itemize}
+
+\textsf{\small Gli svantaggi delle funzioni \textbf{inline}: } \\
+
+\begin{itemize}
+	\item \textsf{\small Le variabili aggiunte consumano più registri, il che potrebbe causare \emph{overhead} sul \emph{register variable resource utilization}.}
+	\item \textsf{\small Se utilizzi troppe funzioni \textbf{inline} allora lo spazio del file binario eseguibile sarà molto grosso per via della duplicazione dello stesso codice.}
+	\item \textsf{\small Troppe \textbf{inline} può anche ridurre le \emph{cache hit} (quando il contenuto che ti serve si trova nella cache e quindi viene caricato direttamente da lì al posto di richiederla dalla memoria primaria), riducendo la velocità di fetch dalla cache alla memoria primaria.}
+	\item \textsf{\small Potrebbero aumentare l'\emph{overhead} del compilatore, perché se uno modifica una funzione \textbf{inline} allora il compilatore dovrebbe rimpiazzare tutto il codice un'altra volta, altrimenti continuerebbe ad essere eseguita con le vecchie funzionalità.}
+	\item \textsf{\small Potrebbero non essere utili per gli \emph{embedded systems}, perché in essi lo spazio del codice è più importante della velocità.}
+	\item \textsf{\small Potrebbero causare \emph{thrashing} (quando l'hard disk è in sovraccarico per via dello spostamento di informazioni tra memoria di sistema e memoria virtuale eccessivamente, portando a continui \emph{page faults}), perché l'\textbf{inline} potrebbe incrementare lo spazio del file eseguibile.}
+\end{itemize}
+
+\begin{lstlisting}
+	#include <iostream>
+	
+	// Bad practice
+	class A {
+		public:
+			inline int square(int s) // è ridondante
+			{
+				// Questa funzione è automaticamente inline.
+			}
+	};
+
+	// Good practice
+	clas A {
+		public:
+			int square(int s); // Dichiarazione prototipo della funzione
+	};
+
+	inline A::square(int s) // Definizione della funzione.
+	{
+		// Corpo della funzione.
+	}
+\end{lstlisting}
+
+\textsf{\small Altre curiosità sulle funzioni \textbf{inline}: } \\
+
+\textsf{\small È raccomandato di usare sempre le funzioni \textbf{inline} al posto delle macro. Le macros (in C++) non sono quasi mai necessarie e portano ad errori. Ci sono alcuni problemi con le macro: non possono accedere ai membri privati di una classe, sembrano delle funzioni, ma non lo sono, ed altro..} \\
+
+\textsf{\small Tendenzialmente le funzioni che fanno I/O (input/output) non dovrebbero essere definite come \textbf{inline} perché spenderebbero un considerevole ammontare di tempo. Il tempo del codice di I/0 supera l'\emph{overhead} della chiamata alla funzione.} \break
+
+\textsf{\small Un buon utilizzo delle funzioni \textbf{inline} possono essere di ottimo valore, ma un uso inappropriato non porterà a risultati migliori. Non porre tutte le funzioni \textbf{inline}. È meglio avere il minor numero di funzioni \textbf{inline} possibili.} \\
 
 % ------------------------------------------------------------------------------------
 
