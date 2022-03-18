@@ -1010,8 +1010,9 @@ Mentre, l'ultima preview mostrata è stata quella del C++23.}\\
 	\textsf{\small Deve essere inizializzata } & \textsf{\small Può anche non essere inizializzata } \\
 	\textsf{\small alla dichiarazione} & \textsf{\small alla dichiarazione} \\
 	\hline
-	\textsf{\small Condivide la stessa memoria con la variabile originale, } & \textsf{\small Ha un proprio spazio e } \\
-	\textsf{\small ma prende anche dello spazio nello stack.} & \textsf{\small indirizzo di memoria sullo stack.} \\
+	\textsf{\small Condivide la stessa memoria  } & \textsf{\small Ha un proprio spazio e } \\
+	\textsf{\small con la variabile originale, } & \textsf{\small indirizzo di memoria } \\
+	\textsf{\small ma prende anche dello spazio nello stack.} & \textsf{\small sullo stack.} \\
 	\hline
 	\textsf{\small Non può essere riassegnato.} & \textsf{\small Può essere riassegnato.} \\
 	\hline
@@ -1024,6 +1025,35 @@ Mentre, l'ultima preview mostrata è stata quella del C++23.}\\
 	%\textsf{\small } & \textsf{\small } \\
 	%\hline
 \end{tabular}
+
+\subsection{NULL vs nullptr}
+
+\textsf{\small \textbf{NULL} portato dal C corrisponde semplicemente a 0 (è una macro) e non necessariamente ad un puntatore. Mentre \textbf{nullptr} (è un \emph{pointer literal}), specifico del C++ è sempre un puntatore, di tipo \emph{std::nullptr\_t} (è un prvalue di tipo nullptr\_t), un puntatore a tutti gli effetti. Se lo si cerca di adottare ad un'altra variabile, tipo ad un int darà errore.} \\
+
+\textsf{\small \textbf{nullptr} è implicitamente convertibile a qualsiasi tipo di puntatore.} \\
+
+\begin{lstlisting}
+	#include <iostream>
+	
+	int main()
+	{
+		int ptr = nullptr; // Errore.
+		
+		int *ptr = nullptr; // Va bene.
+		return 0;
+	}
+\end{lstlisting}
+
+\begin{lstlisting}
+	#include <iostream>
+	
+	void func(int n);
+	void func(char *s);
+	
+	func ( NULL ); // Quale delle due funzioni verrà chiamata? La prima, perché NULL è 0 e quindi un int.
+\end{lstlisting}
+
+\textsf{\small \textbf{nullptr} è definito nell'header \textbf{<cstddef>}, ma non serve includerlo perché è una \emph{built-in} keyword.} \\ 
 
 % -------------------------- SECTION: STRINGHE ---------------------------------------
 
