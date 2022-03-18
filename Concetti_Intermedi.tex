@@ -4,18 +4,6 @@
 
 %Possibili argomenti aggiuntivi di questo capitolo: 
 
-%TODO: inline functions.
-
-%TODO: NULL (o null) vs nullptr
-
-%TODO: explicit keyword, converting constructor.
-
-%TODO: Private Destructor.
-
-%TODO: copy elision.
-
-%TODO: pure virtual destructors.
-
 %TODO: SFINAE (Substitution Failure is Not An Error). nel chapter sugli algoritmi.
 
 %TODO: sttrutture dati cosa sono? Strutture dati: array, linked list, stack, queue. E anche Abstract Data Types (ADT): list, stack, queue. map usa Red Black Tree.
@@ -143,8 +131,6 @@
 	\caption{Template}
 	\label{fig:template}
 \end{figure}
-
-%TODO: typename
 
 % -------------------------- SECTION: VECTOR -----------------------------------------
 
@@ -437,8 +423,27 @@
 
 \textsf{\small La keyword \textbf{virtual} può essere posta sia prima che dopo \textbf{public}.} \\
 
-%TODO: Aggiungere immagini: "virtual_functions_recap_terminology_and_concepts".
-%TODO: Aggiungere immagini: "virtual_functions_implementation".
+%TODO: queste volendo vanno bene anche a 1 di width e height
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1.2\textwidth, height=1.2\textheight, keepaspectratio]{./imgs/virtual_functions_recap_terminology_and_concepts1.png}
+	\caption{Recap Virtual Functions}
+	\label{fig:virtual_functions_recap_terminology_and_concepts1}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1.2\textwidth, height=1.2\textheight, keepaspectratio]{./imgs/virtual_functions_recap_terminology_and_concepts2.png}
+	\caption{Recap Virtual Functions}
+	\label{fig:virtual_functions_recap_terminology_and_concepts2}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1.2\textwidth, height=1.2\textheight, keepaspectratio]{./imgs/virtual_functions_implementation.png}
+	\caption{Virtual Functions Implementazione}
+	\label{fig:virtual_functions_implementation}
+\end{figure}
 
 % -------------------------- SECTION: POLYMORPHISM -----------------------------------
 
@@ -770,9 +775,12 @@
 	\label{fig:typecasting}
 \end{figure}
 
-%TODO: Aggiungere immagine "cast_types_recap_static_dynamic_reinterpret_const_c-style".
-
-%TODO: typeid
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=1.2\textwidth, height=1.2\textheight, keepaspectratio]{./imgs/cast_types_recap_static_dynamic_reinterpret_const_c-style2.png}
+	\caption{Recap Cast Types}
+	\label{fig:cast_types_recap_static_dynamic_reinterpret_const_c-style2}
+\end{figure}
 
 % -------------------------- SECTION: LAMBDAS ----------------------------------------
 
@@ -857,7 +865,6 @@
 	std::cout << "Il numero di elementi piu' grandi o uguali ad n sono: " << countN << std::endl; // Output: Il numero di elementi più grandi o uguali ad n sono: 4 (perchè abbiamo inserito anche il 24 nell'operazione precedente).
 \end{lstlisting}
 
-%TODO: capture.
 %TODO: poi trattare anche dei functors.
 
 % -------------------------- SECTION: MEMORIA DINAMICA -------------------------------
@@ -927,7 +934,7 @@
 \begin{itemize}
 	\item \textsf{\small Il C++ non ha un garbage collector, quindi per ogni \textbf{new} ci deve essere una corrispondente \textbf{delete}.}
 	\item \textsf{\small Se viene lanciata un'eccezione poi la memoria non viene mai liberata.}
-	\item \textsf{\small Dovrebbe essere tutto nel distruttore, concetto del \emph{RAII}.} %TODO: add ref quando ne parlerò.
+	\item \textsf{\small Dovrebbe essere tutto nel distruttore, concetto del \emph{RAII}.}
 	\item \textsf{\small Se restituisci per esempio una stringa a qualcuno, ora sono loro a doverla cancellare (con la \textbf{delete}). E se a loro volta la passassero come argomento? Quando dovrebbe essere liberata? (con \textbf{delete}).}
 	\item \textsf{\small Può essere un problema nel multi-threading.}
 	\item \textsf{\small Potrebbe portare a dei \emph{memory leaks}.}
@@ -951,9 +958,6 @@
 % -------------------------- SECTION: TIPI DI COSTRUTTORI | RULE OF 3 ----------------
 
 \section{Constructor types | Rules of}
-
-%TODO: explicit constructor, converting constructor.
-%TODO: Private Destructor
 
 \subsection{Rule of Zero}
 
@@ -1068,8 +1072,6 @@
 			int y;
 	};
 \end{lstlisting}
-
-%TODO: copy constructor = delete, copy assignment = delete.
 
 \subsection{=default | Defaulted Functions}
 
@@ -1377,8 +1379,6 @@
 
 %TODO: codice
 
-%TODO: explicit keyword?
-
 % -------------------------- SECTION: MOVE SEMANTICS ---------------------------------
 
 \section{Move Semantics}
@@ -1481,9 +1481,6 @@
 
 \newpage
 
-%TODO: abstract
-%TODO: Pure Virtual
-
 \section{Classi Astratte}
 
 \textsf{\small \textbf{Definizione: } Una \textbf{classe astratta} è una classe generica dove non siamo in grado di implementare tutte le funzioni e che il suo unico scopo è quello di essere ereditata da altre classe che implementeranno le sue funzioni.} \\
@@ -1504,7 +1501,40 @@
 	};
 \end{lstlisting}
 
-%TODO: Pure Virtual Destructor
+\subsection{Pure Virtual Destructor} %TODO: o qui o dopo la subsection Abstract Class
+
+\textsf{\small \textbf{Definizione: } È possibile in C++ dichiarare un distruttore come \textbf{virtuale} e lasciare che le classi derivate si occupano della sua implementazione.} \\
+
+\textsf{\small Solo i distruttori possono essere dichiarati \textbf{virtuali}, i costruttori no.} \\
+
+\begin{lstlisting}
+	#include <iostream>
+	
+	class Base {
+		public:
+			virtual ~Base() = 0; // Pure virtual destructor
+	};
+
+	Base::~Base(){
+		std::cout << "Chiamato il distruttore virtuale puro" << std::endl;
+	}
+
+	class Derived : public Base {
+		public:
+			~Derived() {
+				std::cout << "Distruttore della classe derivata" << std::endl;
+			}
+	};
+
+	int main()
+	{
+		Base *bPtr = new Derived();
+		delete bPtr;
+		//Output: Distruttore della classe derivata
+		//Output: Chiamato il distruttore virtuale puro
+		return 0;
+	}
+\end{lstlisting}
 
 \subsection{Abstract Class}
 
@@ -1582,11 +1612,6 @@
 \textsf{\small Quindi si può simulare un'interfaccia in C++ ponendo tutte le funzioni della classe \textbf{astratta} come \textbf{pure virtual functions}.} \\
 
 % -------------------------- SECTION: ECCEZIONI --------------------------------------
-
-%TODO: try/catch
-%TODO: Errori a compile-time ed errori a runtime.
-%TODO: throw.
-%TODO: std::throw exception
 
 \newpage
 
@@ -1676,14 +1701,69 @@
 	\textbf{Compile-Time Errors} & \textbf{Runtime-Errors} \\
 	\hline
 	\textsf{\small Errori di sintassi.} & \textsf{\small Non sono rilevati dal compilatore.} \\
+	\hline
 	\textsf{\small Prevengono l'esecuzione del codice.} & \textsf{\small Prevengono il codice dalla completa esecuzione.} \\
+	\hline
 	\textsf{\small Vengono rilevati dal compilatore } & \textsf{\small Vengono fixati (sistemati) solo dopo} \\
 	\textsf{\small e possono essere corretti} & \textsf{\small che il codice viene} \\
 	\textsf{\small nel momento della programmazione.} & \textsf{\small eseguito.} \\
 	\hline
 \end{tabular}
 
-%TODO: Volendo aggiungere immagine "exceptions_recap".
+\subsection{noexcept}
+
+\textsf{\small \textbf{Definizione: } La keyword \textbf{noexcept} è un operatore unario che valuta se l'operando può propagare un'eccezione. È un metodo per il programmatore di informare il compilatore se una funzione può o no lanciare eccezioni.} \\
+
+\textsf{\small \textbf{noexcept} può produrre dei falsi negativi.} \\
+
+%TODO: volendo modificare l'esempio del codice.
+\begin{lstlisting}
+	#include <iostream>
+	#include <vector>
+	
+	class Sigma {
+		public:
+			Sigma()
+			{
+				std::cout << "Costruendo Sigma" << std::endl;
+			}
+		
+			Sigma( Sigma&& ) noexcept
+			{
+				std::cout << "Moving Sigma" << std::endl;
+ 			}
+ 		
+ 			Sigma( const Sigma& )
+ 			{
+ 				std::cout << "Copying Sigma" << std::endl;
+ 			}
+	};
+
+	int main()
+	{
+		std::vector<Sigma> sigmas;
+		sigmas.emplace_back();
+		sigmas.emplace_back();
+		sigmas.emplace_back();
+		
+		//Output: Costruendo Sigma
+		//Output: Costruendo Sigma
+		//Output: Moving Sigma
+		//Output: Costruendo Sigma
+		//Output: Moving Sigma
+		//Output: Moving Sigma
+		
+		return 0;
+	}
+\end{lstlisting}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\textwidth, height=1\textheight, keepaspectratio]{./imgs/exceptions_recap2.png}
+	\caption{Recap Eccezioni}
+	\label{fig:"exceptions_recap2}
+\end{figure}
+
 \subsection{Assertions}
 
 \textsf{\small \textbf{Definizione: } Le \textbf{assertions} sono delle dichiarazioni usate per testare delle assunzioni fatte dal programmatore.} \\
@@ -1816,8 +1896,6 @@
 \textsf{\small Quindi, in conclusione, usare \textbf{$\backslash$n} sembra migliore in termini di prestazioni rispetto \textbf{std::endl} a meno che non sia necessario ripulire il buffer dello stream.} \break
 
 \subsection{Manipolazione degli stream}
-
-%TODO: <iomanip>
 
 \textsf{\small \textbf{Definizione: } I \textbf{manipolatori} sono funzioni che permettono di manipolare \textbf{l'input/output} dello stream. Non vuol dire che modifichiamo la variabile, modifica soltanto lo stream.} \\
 
@@ -3239,6 +3317,161 @@
 \textsf{\small Tendenzialmente le funzioni che fanno I/O (input/output) non dovrebbero essere definite come \textbf{inline} perché spenderebbero un considerevole ammontare di tempo. Il tempo del codice di I/0 supera l'\emph{overhead} della chiamata alla funzione.} \break
 
 \textsf{\small Un buon utilizzo delle funzioni \textbf{inline} possono essere di ottimo valore, ma un uso inappropriato non porterà a risultati migliori. Non porre tutte le funzioni \textbf{inline}. È meglio avere il minor numero di funzioni \textbf{inline} possibili.} \\
+
+% -------------------------- SECTION: COPY ELISION -----------------------------------
+
+\section{Copy Elision}
+
+\textsf{\small \textbf{Definizione: } La \textbf{Copy Elision} o anche \textbf{Copy Omission} è una tecnica di ottimizzazione del compilatore che evita la copiatura non necessaria di oggetti.} \\
+
+\begin{lstlisting}
+	#include <iostream>
+	
+	class A {
+		public:
+			A(const char* str = "\0")
+			{
+				std::cout << "Chiamato il costruttore. " << std::endl;
+			}
+		
+			A(const A &a)
+			{
+				std::cout << "Costruttore di copia chiamato. " << std::endl;
+			}
+	};
+
+	int main()
+	{
+		A a = "copiami";
+		// Output: Chiamato il costruttore.
+		// In teoria quando l'oggetto a viene costruito, il costruttore a un argomento è usato per convertire "copiami" all'oggetto temporaneo e l'oggetto temporaneo è copiato nell'oggetto a.
+		// La maggior parte dei compilatori C++ evita questi \emph{overhead} di creare un oggetto temporaneo e di copiarlo.
+		// Ma se non vogliamo questo comportamento, possiamo compilare passando l'argomento "-fno-elide-constructors"
+		// g++ nomefile.cpp -fno-elide-constructors
+		return 0;
+	}
+\end{lstlisting}
+
+% ------------- SECTION: CONVERSION CONSTRUCTOR & EXPLICIT KEYWORD -------------------
+
+\section{Conversion Constructor \& Explicit keyword}  %TODO: lasciarlo qui o spostarlo come subsection da qualche parte?
+
+\subsection{Explicit Keyword}
+
+\textsf{\small \textbf{Definizione: } La keyword \textbf{explicit} è usata per marcare il costruttore per non convertire implicitamente i tipi.} \\
+
+\begin{lstlisting}
+	#include <iostream>
+	
+	class Foo {
+		public:
+		Foo(int n); // Alloca n bytes all'oggetto Foo.
+		Foo(const char *p); // inizializza l'oggetto con char *p.
+	};
+	
+	class Foo2 {
+		public:
+		explicit Foo(int n); // Alloca n bytes.
+		Foo(const char* p); // inizializza con la stringa p.
+	};
+	
+	int main()
+	{
+		Foo mystring = 'x'; // In questo caso il carattere 'x' verrà implicitamente convertito ad int e verrà chiamato il costruttore Foo(int), ma questo non è ciò che intendevamo fare. Per evitare questo mettiamo la keyword explicit nel costruttore.
+		
+		Foo2 mystring = 'x'; // In questo caso verrà chiamato il costruttore con Foo(const char* p);
+		return 0;
+	}
+\end{lstlisting}
+
+\subsection{Conversion Constructor}
+
+\textsf{\small \textbf{Definizione: } Se un costruttore può essere chiamato con un solo parametro, allora questo costruttore diventa un \textbf{conversion constructor}, perché permette la conversione automatica alla classe costruita.} \\
+
+\begin{lstlisting}
+	#include <iostream>
+	
+	class A {
+		public:
+		int x;
+			A(int x)
+			{
+				this->x = x;	
+			}
+	};
+
+	class B {
+		public:
+			int x, y;
+			B(int x, int y)
+			{
+				this->x = x;
+				this->y = y;
+			}
+	};
+
+	int main()
+	{
+		A obj(7);
+		
+		obj = 12; // Conversion constructor invocato.
+		
+		B obj2(3, 8);
+		
+		obj2 = { 4, 0 }; // Conversion consturctor a parametri multipli invocato.
+		
+		return 0;
+	}	
+\end{lstlisting}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1.3\textwidth, height=1.3\textheight, keepaspectratio]{./imgs/Conversion_Constructor.png}
+	\caption{Conversion Constructor}
+	\label{fig:Conversion_Constructor}
+\end{figure}
+
+% ------------------------ SECTION: PRIVATE DESTRUCTORS ------------------------------
+
+\section{Private Destructors} %TODO: mettere questa parte nella sezione con la friend keyword?
+
+\textsf{\small \textbf{Definizione: } Quando vogliamo prevenire la distruzione di un oggetto, possiamo porre il suo distruttore privato.} \\
+
+\textsf{\small Questo non potrà mai essere allocato sullo stack, sempre sull'heap (memoria allocata dinamicamente). L'unico modo per poterli distruggere sarà in altri modi, attraverso un \textbf{friend} o un \textbf{membro}.} \\
+
+\begin{lstlisting}
+	#include <iostream>
+	
+	class MyClass {
+		private:
+			~MyClass() 
+			{
+				// Distruttore privato.
+			}
+		public:
+			friend void destructMyClass(MyClass*);
+	};
+
+	// Dichiarata all'esterno, ma che può ancora accedere all'interno della classe perché dichiarata friend.
+	void destructMyClass(MyClass* ptr)
+	{
+		delete ptr;
+	}
+
+	int main()
+	{
+		MyClass object; // Questo darà errore fermando il programma.
+		
+		MyClass *object; // Col puntatore non darà errore perché nessun oggetto è stato creato. (ovvio che bisogna rimuovere la riga sopra, altrimenti non va il programma)
+		
+		MyClass object2 = new MyClass; // Anche questo non darà errore quindi sarà il programmatore ad occuparsi di rimuovere la memoria dell'oggetto allocata.
+		
+		delete object2; // Però in questo caso se chiamiamo delete genererà un errore per via del distruttore privato.
+		
+		destructMyClass(object); // In questo caso l'oggetto verrà effettivamente distrutto.
+		return 0;
+	}
+\end{lstlisting}
 
 % ------------------------------------------------------------------------------------
 

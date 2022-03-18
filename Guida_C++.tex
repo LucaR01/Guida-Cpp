@@ -114,7 +114,7 @@
 	showspaces=false,
 	showstringspaces=false,
 	%otherkeywords={>,<,.,;,-,!,=,~},
-	morekeywords={\#, std, std::cout, cout, std::endl, endl, ::, ifndef, define, endif, pragma, override, decltype}, % \# non funziona.
+	morekeywords={\#, std, std::cout, cout, std::endl, endl, ::, ifndef, define, endif, pragma, override, decltype, noexcept}, % \# non funziona.
 	%keywordstyle=\color{weborange},
 	tabsize=4
 }
@@ -328,11 +328,11 @@
 	
 	\include{Concetti_Intermedi} 
 	
+	\include{Concetti_Avanzati} % Concetti avanzati del linguaggio, C++20, concepts, ranges, ec..
+	
 	% Capitolo, possibili nomi: I maghi degli Algoritmi, Le gemme degli Algoritmi, La libreria degli Algoritmi, Le gemme della libreria degli Algoritmi.
 	
-	%\include{Libreria_Algoritmi}
-	
-	\include{Concetti_Avanzati} % Concetti avanzati del linguaggio, C++20, concepts, ranges, ec..
+	%\include{Libreria_Algoritmi} % prima o dopo Concetti_Avanzati?
 	
 \end{document}
 
