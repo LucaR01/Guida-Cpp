@@ -1,6 +1,6 @@
-% ----------------------------- CONCETTI AVANZATI -------------------------------------
+% ----------------------------- CONCETTI AVANZATI ------------------------------------
 
-%\chapter{Concetti Avanzati}
+\chapter{Concetti Avanzati}
 
 % Argomenti di questo capitolo:
 
@@ -11,8 +11,207 @@
 % friend functions
 % e make unique
 
+%TODO: Copy-and-Swap Idiom?
+%TODO: Signal Handling? (magari in un capitolo sul multithreading)
+%TODO: Prevent Object Copy?
+%TODO: Command Line Arguments?
+
+%TODO: tecniche per debuggare codice?
+%TODO: Writing C++ code efficiently in Competitive Programming?
+
+%TODO: 7 Advance C++ Concepts: RAII, Return Type Resolver, Type Erasure, CRTP, Virtual Constructor, SFINAE, Proxy.
+
+%TODO: pointer to function?
+
 % std uniform real distribution
 
-% C++ 20: Concepts, ranges, coroutines, template parameter list, modules, ecc..
+% C++ 20: Concepts, ranges, coroutines, template parameter list, modules, ecc.. (non qui, ma in Le gemme della libreria degli Algoritmi)
 
-% -------------------------- SECTION: INTRODUZIONE -------------------------------------
+%TODO: Dependency Injection
+%TODO: std::static_pointer_cast
+%TODO: std::enable_share_from_this
+%TODO: allocate_shared
+%TODO: Allocator
+%TODO: std::bad_alloc
+
+%TODO: std::clamp (non è chi sa che cosa di avanzato, comunque).
+%TODO: normal_distribution
+
+% -------------------------- SECTION: INTRODUZIONE -----------------------------------
+
+\section{Introduzione}
+
+\textsf{\small In questo capitolo "finale" tratterò argomenti un po' più complessi o che almeno non mi verrebbe da mettere negli altri due capitoli precedenti.} \\
+
+\textsf{\small Verranno trattati argomenti come gli smart pointers e quindi unique pointers, share pointers, weak pointers, le friend function, uniform real distribution e altri importanti concetti avanzati.} \\
+
+% -------------------------- SECTION: FRIEND KEYWORD ---------------------------------
+
+\newpage
+
+\section{Friend Keyword}
+
+\subsection{Friend Class}
+
+\textsf{\small \textbf{Definizione: } La keyword \textbf{friend} è usata per accedere ai membri privati e protetti di una classe nella quale è dichiarata \textbf{friend}.} \\
+
+\begin{lstlisting}
+	#include <iostream>
+	
+	class A {
+		public:
+			A() { a = 0 };
+			friend class B; // Classe amica.
+			
+		private:
+			int a;
+	};
+
+	class B {
+		public:
+			void showA(A& x)
+			{
+				// Visto che B è un'amica di A, può accedere ai membri privati di A.
+				std::cout << "A::a : " << x.a; 
+			}
+	};
+
+	int main()
+	{
+		A a;
+		B b;
+		b.showA(); //Output: A::a : 0
+		return 0;
+	}
+\end{lstlisting}
+
+\subsection{Friend Function}
+
+\textsf{\small \textbf{Definizione: } Come per le \textbf{classi friend}, una \textbf{funzione friend} ha accesso speciale ai membri privati e protetti.} \\
+
+\textsf{\small Una \textbf{friend function} può essere: } \\
+
+\begin{itemize}
+	\item \textsf{\small Un membro di un'altra classe.}
+	\item \textsf{\small Una funzione globale.}
+\end{itemize}
+
+\textsf{\small Alcuni importanti punti riguardo alle \textbf{friend} functions e classes: } \\
+
+\begin{itemize}
+	\item \textsf{\small Dovrebbero essere usate solo in maniera limitata. Troppe funzioni o classi \textbf{friend} diminuiscono l'encapsulazione.}
+	\item \textsf{\small L'amicizia non è reciproca. Se la classe A è amica della classe B, allora B non è automaticamente amica di A.}
+	\item \textsf{\small L'amicizia non è ereditata.}
+	%\item \textsf{\small }
+\end{itemize}
+
+\begin{lstlisting}
+	#include <iostream>
+	
+	class A {
+		public:
+			friend void printWidth( A a);
+			void setWidth(double w);
+			
+		private:
+			double width;
+	};
+
+	// Definizione della funzione membro di A.
+	void A::setWidth(double w)
+	{
+		width = w;
+	}
+
+	// printWidth non è una funzione membra di nessuna classe.
+	void printWidth( A a )
+	{
+		// Visto che la funzione printWidth è amica di A, può accedere direttamente a qualsiasi membro di A.
+		std::cout << "Width di A: " << a.width << std::endl;
+	}
+
+	int main()
+	{
+		A a;
+		
+		a.setWidth(11.1);
+		
+		// Uso la funzione amica per stampare la width di a.
+		printWidth( a ) ; //Output: Width di A: 11.1
+		return 0;
+	}
+\end{lstlisting}
+
+% -------------------------- SECTION: SMART POINTERS ---------------------------------
+
+\newpage
+
+\section{Smart Pointers}
+
+\textsf{\small \textbf{Definizione: } } \\
+
+%TODO: unique, share, weak, 
+%TODO: std::make_unique vs std::unique_ptr
+%TODO: std::make_shared
+
+%TODO: problemi dei vecchi puntatori.
+
+%TODO: std::static_pointer_cast
+%TODO: std::enable_share_from_this
+%TODO: allocate_shared
+%TODO: Allocator
+%TODO: std::bad_alloc
+
+\subsection{unique pointers}
+
+\textsf{\small \textbf{Definizione: } } \\
+
+\subsection{share pointers}
+
+\textsf{\small \textbf{Definizione: } } \\
+
+\subsection{weak pointers}
+
+\textsf{\small \textbf{Definizione: } } \\
+
+% -------------------------- SECTION: UNIFORM REAL DISTRIBUTION ----------------------
+
+\newpage
+
+\section{Uniform Real Distribution}
+
+\textsf{\small \textbf{Definizione: } } \\
+
+%TODO: Dependency Injection
+
+% -------------------------- SECTION: 7 CONCETTI AVANZATI ----------------------------
+
+\newpage
+
+%TODO: Questo come ultimo argomento del capitolo!
+
+%TODO: Come prima cosa qui aggiungere quell'immagine sui 7 concetti avanzati.
+
+%TODO: RAII, Return Type Resolver, Type Erasure, CRTP, Virtual Constructor, SFINAE, Proxy.
+
+\section{7 Concetti Avanzati}
+
+\subsection{RAII}
+
+\textsf{\small \textbf{Definizione: } } \\ %TODO: scrivere che abbiamo già trattato questo argomento nel precedente capitolo oppure nel capitolo Concetti Intermedi, ma voglio comunque ripassarlo qui.
+
+\subsection{Return Type Resolver}
+
+\subsection{Type Erasure}
+
+\subsection{CRTP}
+
+\subsection{Virtual Constructor}
+
+\subsection{SFINAE}
+
+%TODO: tratterò questo argomento anche nel capitolo Le gemme della libreria degli Algoritmi.
+
+\subsection{Proxy}
+
+% ------------------------------------------------------------------------------------
