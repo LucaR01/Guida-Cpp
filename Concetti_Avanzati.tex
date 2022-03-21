@@ -248,6 +248,9 @@
 %TODO: std::bad_alloc
 %TODO: auto_ptr (C++98)
 
+%TODO: dynamic_pointer_cast
+%TODO: const_pointer_cast
+
 \subsection{unique pointers}
 
 \textsf{\small \textbf{Definizione: } Gli \textbf{unique pointers} sono un tipo di \textbf{smart pointers} che memorizzano un solo puntatore alla volta.} \\
@@ -464,21 +467,267 @@
 	%\item \textsf{\small }
 \end{itemize}
 
-%TODO: std::make_unique
-%TODO: operazioni possibili sugli unique pointers
-%TODO: std::move, move ownership
-%TODO: std::swap
-%TODO: pass as an argument
-%TODO: return it from a function
-
-
 \subsection{share pointers}
 
-\textsf{\small \textbf{Definizione: } } \\
+\textsf{\small \textbf{Definizione: } Gli \textbf{shared pointers} sono un tipo di \textbf{smart pointers} dove più di un puntatore può puntare allo stesso oggetto e un contatore (\emph{Reference Counter}) verrà mantenuto di conseguenza.} \\
+
+\textsf{\small Abbiamo sempre bisogno di includere l'header \textbf{<memory>} per poterlo utilizzare.} \break
+
+\begin{lstlisting}
+	#include <iostream>
+	#include <memory>
+	
+	class A {
+		public:
+			int x;
+			A(int x) : x(x){};
+	};
+
+	int main()
+	{
+		auto sharedPtr1 = std::make_shared<A>(7); // oppure si può anche fare: std::shared\_ptr<A> sharedPtr1(new A{7});
+		
+		std::shared_ptr<A> sharedPtr2 = sharedPtr1;
+		std::shared_ptr<A> sharedPtr3 = sharedPtr1;
+		
+		// Tutti e tre gli \textbf{shared1\_ptr} puntano allo stesso oggetto.
+		return 0;
+	}
+\end{lstlisting}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\textwidth, height=1\textheight, keepaspectratio]{./imgs/shared_ptr3.png}
+	\caption{Shared ptr}
+	\label{fig:shared_ptr3}
+\end{figure}
+
+\textsf{\small Possiamo creare uno \textbf{shared pointer} sia con \textbf{shared\_ptr} sia con \textbf{make\_shared}.} \\
+
+\subsubsection{Differenza tra std::shared\_ptr vs std::make\_shared}
+
+\textsf{\small Una delle differenze tra questi due è che \textbf{make\_shared} performa una sola allocazione nell'heap, mentre \textbf{shared\_ptr} ne fa due.} \\
+
+\textsf{\small \textbf{shared\_ptr} si occupa di due entità: } \\
+
+\begin{itemize}
+	\item \textsf{\small Il blocco di controllo (\emph{control block}) che memorizza dei meta data come \emph{ref-counts} (contatore delle referenze all'oggetto), \emph{type-erased deleter}, ecc..}
+	\item \textsf{\small l'oggetto stesso.}
+\end{itemize}
+
+\textsf{\small \textbf{std::make\_shared} fa una singola allocazione nell'heap per lo spazio necessario sia per il \emph{control block} sia per \emph{l'oggetto}. } \break
+
+\textsf{\small Inoltre \textbf{std::make\_shared} è \emph{exception-safe} (sicuro per quanto riguarda le eccezioni).} \\
+
+\textsf{\small Per di più, \textbf{make\_shared} sfrutta dell'ottimizzazione conosciuta come \emph{We know Where You Live} che permette al \emph{control block} di essere un piccolo puntatore, quindi \textbf{make\_shared} non solo evita un'ulteriore allocazione, ma alloca anche meno memoria totale.} \break
+
+\textsf{\small Un problema che potrebbe esserci per quanto riguarda \textbf{std::make\_shared} è che visto che fa una singola allocazione, non c'è modo di deallocare la memoria del \emph{control block} e dell'\emph{oggetto} in modo indipendente. Un altro svantaggio, di conseguenza è che essendoci una singola allocazione, la memoria non può essere deallocata finché il \emph{control block} non è più usato. } \\
+
+\subsubsection{Operazioni sui shared pointers}
+
+\textsf{\small Sono possibili varie operazioni sugli \textbf{shared pointers}: } \\
+
+\begin{itemize}
+	\item \textsf{\small \textbf{(*nomepuntatore).variabile} : dereferenza}
+	\item \textsf{\small \textbf{nomepuntatore->variabile} : dereferenza come sopra}
+	\item \textsf{\small \textbf{.get()} : per poter accedere al \emph{raw pointer} chiamato \textbf{stored pointer}.}
+	\item \textsf{\small \textbf{use\_count()} : per ottenere il numero di \textbf{shared\_ptr} che puntano allo stesso oggetto.}
+	\item \textsf{\small \textbf{.reset()} : scollega e svuota il puntatore.}
+\end{itemize}
+
+\textsf{\small Lo \textbf{shared pointer} inoltre allo \emph{stored pointer}, possiede un secondo puntatore che punta ad un \textbf{control block}. Il \emph{control block} ha un \emph{reference counter} (contatore delle referenze) che memorizza il numero di \textbf{shared pointers} che puntano allo stesso oggetto.} \\
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1.2\textwidth, height=1.2\textheight, keepaspectratio]{./imgs/shared_ptr_structure.png}
+	\caption{Shared ptr structure}
+	\label{fig:shared_ptr_structure}
+\end{figure}
+
+\subsubsection{Distruzione degli shared pointers}
+
+\textsf{\small Quando verrà eliminato l'oggetto gestito dagli \textbf{shared\_ptr}?} \\
+
+\textsf{\small Quando uno \textbf{shared pointer} viene distrutto, allora il \emph{control block} decrementerà il \emph{reference counter}.} \\
+
+\textsf{\small L'oggetto verrà eliminato quando l'ultimo \textbf{shared\_ptr} verrà eliminato.} \\
+
+\begin{lstlisting}
+	#include <iostream>
+	#include <memory>
+	
+	class A {
+		public:
+			int x;
+			A(int x) : x(x) {};
+	};
+
+	int main()
+	{
+		auto shrPtr1 = std::make_shared<A>(5);
+		auto shrPtr2 = shrPtr1;
+		auto shrPtr3 = shrPtr1;
+		
+		{
+			auto shrPtr4 = shrPtr1;
+			std::cout << shrPtr1.use_count() << std::endl; //Output: 4
+		}
+		
+		std::cout << shrPtr1.use_count() << std::endl; //Output: 3
+		
+		shrPtr3 = std::make_shared<A>(8); // shrPtr3 punta ad un altro oggetto.x
+		
+		shrPtr2.reset(); // shrPtr2 scollegato e svuotato.
+		
+		std::cout << shrPtr1.use_count() << std::endl; //Output: 1
+		return 0;
+	}
+\end{lstlisting}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\textwidth, height=1\textheight, keepaspectratio]{./imgs/shared_ptr_destruction.png}
+	\caption{Shared ptr destruction}
+	\label{fig:shared_ptr_destruction}
+\end{figure}
+
+\subsubsection{Passare gli shared pointers ad una funzione}
+
+\textsf{\small Se una funzione vuole l'\emph{ownership} (proprietà) su un \textbf{shared\_ptr}, possiamo passarlo per valore: } \\
+
+\begin{lstlisting}
+	#include <iostream>
+	#include <memory>
+	
+	void function(std::shared_ptr<int> sp)
+	{
+		std::cout << sp.use_count() << std::endl;
+	}
+
+	int main()
+	{
+		auto sp1 = std::make_shared<int>(6);
+		std::cout << sp1.use_count() << std::endl; //Output: 1
+		
+		function(sp1); //Output: 2
+		
+		std::cout << sp1.use_count() << std::endl; //Output: 1 (lo shared\_ptr nella funzione "function" viene distrutto una volta usciti da essa, perché è locale alla funzione)
+		return 0;
+	}
+\end{lstlisting}
+
+\subsubsection{Restituire gli shared pointers}
+
+\textsf{\small Una funzione può restituire \textbf{shared\_ptr} per valore: } \\
+
+\begin{lstlisting}
+	#include <iostream>
+	#include <memory>
+	
+	std::shared_ptr<int> function()
+	{
+		auto sp = std::make_shared<int>(9);
+		return sp;
+	}
+
+	int main()
+	{
+		auto sp1 = function(); // Lo shared\_ptr dentro alla funzione non esiste più, però viene ritornato e recuperato nella variabile sp1.
+		
+		std::cout << sp1.use_count() << std::endl; //Output: 1
+		std::cout << *sp1 << std::endl; //Output: 9
+		return 0;
+	}
+\end{lstlisting}
+
+\textsf{\small Un problema col restituire uno \textbf{shared\_ptr}, se lo devi restituire al "mondo esterno", meglio restituirlo come \emph{reference}, perché altrimenti uno potrebbe chiamare la \textbf{.reset()} su quello \textbf{shared pointer}.} \break
+
+\textsf{\small Un altro modo per restituire uno \textbf{shared\_ptr} è attraverso \emph{std::allocate\_shared}.} \\
+
+\begin{lstlisting}
+	#include <iostream>
+	#include <memory>
+	
+	int main () {
+		std::allocator<int> alloc;    // allocatore di default per gli int.
+		std::default_delete<int> del; // deleter di default per gli int.
+		
+		std::shared_ptr<int> foo = std::allocate_shared<int> (alloc,12);
+		
+		auto bar = std::allocate_shared<int> (alloc,24);
+		
+		auto baz = std::allocate_shared<std::pair<int,int>> (alloc,33,44);
+		
+		std::cout << "*foo: " << *foo << '\n'; //Output: *foo: 12
+		std::cout << "*bar: " << *bar << '\n'; //Output: *bar: 24
+		std::cout << "*baz: " << baz->first << ' ' << baz->second << '\n'; //Output: *baz: 33 44
+		
+		return 0;
+	}
+\end{lstlisting}
+
+\subsubsection{static\_pointer\_cast}
+
+\textsf{\small \textbf{Definizione: } \textbf{static\_pointer\_cast} è una funzione, non una keyword e restituisce uno \textbf{shared\_ptr} che possiede e contiene un puntatore all'oggetto costruito.} \\
+
+\textsf{\small Se il parametro passato non è vuoto, ciò che viene restituito condivide la proprietà con il parametro passato, quindi il contatore viene incrementato di 1.} \\
+
+\textsf{\small Se il parametro è vuoto (non possiede nulla), allora l'oggetto ritornato è uno \textbf{shared\_ptr} vuoto.} \\
+
+\begin{lstlisting}
+	#include <iostream>
+	#include <memory>
+	
+	class Base {};
+	
+	class Derived : public Base {
+		public:
+			void print()
+			{
+				std::cout << "Hello World!" << std::endl;
+			}
+	};
+
+	int main()
+	{
+		std::shared_ptr<Base> spBase(std::make_shared<Derived>());
+		
+		std::static_pointer_cast<Derived>(spBase)->print();
+		
+		static_cast<Derived*>(spBase.get())->print();
+		
+		//Output: Hello World!
+		//Output: Hello World!
+		return 0;
+	}
+\end{lstlisting}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\textwidth, height=1\textheight, keepaspectratio]{./imgs/std_shared_ptr_std_static_pointer_cast2.png}
+	\caption{Static pointer cast}
+	\label{fig:std_shared_ptr_std_static_pointer_cast2}
+\end{figure}
+
+%TODO: dynamic_pointer_cast (volendo, ma non necessario, giusto per approfondimento)
+%TODO: const_pointer_cast
+
+\subsubsection{Performance degli shared pointers}
+
+\textsf{\small Uno \textbf{shared pointer} ha bisogno di due \emph{raw pointers}. Un insieme di \textbf{shared pointers} hanno bisogno di essere gestiti da una \emph{control unit} (\emph{control block}). Quindi la memoria che uno \textbf{shared pointer} occupa è maggiore dei \emph{raw} e degli \textbf{unique} pointers.} \\
+
+\subsubsection{Shared pointers, unique pointers or raw pointers}
+
+\textsf{\small Se un oggetto ha bisogno di un singolo proprietario per tutta la durata del programma e possiamo immaginare il puntatore come un'entità singola, allora usiamo un \textbf{unique pointer}. Per delle performance più buone gli \textbf{unique pointers} sono migliori rispetto agli \textbf{shared pointers}.} \\
+
+\textsf{\small Gli \textbf{shared pointers} sono utili dove non abbiamo bisogno di pensare alle \emph{performance}, \emph{ownership} e \emph{lifetime} degli oggetti.}
 
 \subsection{weak pointers}
 
 \textsf{\small \textbf{Definizione: } } \\
+
+%TODO: altre subsections
+%TODO: static_pointer_cast
 
 % -------------------------- SECTION: UNIFORM REAL DISTRIBUTION ----------------------
 
