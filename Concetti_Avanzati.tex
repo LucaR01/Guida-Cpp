@@ -39,6 +39,12 @@
 
 %TODO: magari aggiungere nel capitolo "basi del linguaggio": struct destructors che servono se allochi della memoria nelle struct, non se le usi, ma se allochi.
 
+%TODO: xvalue?
+
+%TODO: performance optimization, performance, optimization techniques?
+%TODO: un esempio è usare ++i al posto di i++
+%TODO: esempi: Premature Pessimization to avoid Premature Optimization.
+
 % -------------------------- SECTION: INTRODUZIONE -----------------------------------
 
 \section{Introduzione}
@@ -724,10 +730,95 @@
 
 \subsection{weak pointers}
 
-\textsf{\small \textbf{Definizione: } } \\
+\textsf{\small \textbf{Definizione: } I \textbf{weak pointers} sono un tipo di \textbf{smart pointers} che non prende la proprietà dell'oggetto, ma agisce come un osservatore. Non partecipa al \emph{reference counter} (non viene contato) e non estende la \emph{lifetime} dell'oggetto. Sono usati, principalmente, per rompere la dipendenza circolare degli \textbf{shared pointers}.} \\
+
+\subsubsection{Problema della dipendenza ciclica}
+
+\textsf{\small \textbf{Definizione: } Mettiamo di avere due classi: A e B, se entrambe hanno un puntatore che punta all'altra, avremo un ciclo e il \emph{use\_count()} non arriverà mai a 0, il che crea un problema nella rimozione di questi due puntatori.} \\
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\textwidth, height=1\textheight, keepaspectratio]{./imgs/shared_ptr_problem_cyclic_dependency.jpg}
+	\caption{Cyclic dependency}
+	\label{fig:shared_ptr_problem_cyclic_dependency}
+\end{figure}
+
+\textsf{\small Per questo motivo usiamo gli \textbf{weak pointers}, perché non vengono conteggiati nel \emph{reference counter}. Possono, comunque avere accesso all'oggetto.} \\
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1.2\textwidth, height=1.2\textheight, keepaspectratio]{./imgs/shared_ptr_problem_cyclic_dependency2.jpg}
+	\caption{Cyclic dependency}
+	\label{fig:shared_ptr_problem_cyclic_dependency2}
+\end{figure}
+
+\textsf{\small Quindi, il problema della \emph{dipendenza ciclica} si risolve con l'utilizzo degli \textbf{weak pointers}.} \\
+
+\subsubsection{Quando usare i weak pointers?}
+
+\textsf{\small \textbf{Quando usare i weak pointers?}} \break
+
+\textsf{\small Quando vuoi riferire al tuo oggetto da molteplici posti, per quelle referenze dove non è okay ignorarle e deallocarle.} \\
+
+%TODO: risolvere problema del danglin pointer
+
+\subsubsection{Operazioni sugli weak pointers}
+
+\textsf{\small Ci sono varie operazioni sui \textbf{weak pointers}: } \\
+
+\begin{itemize}
+	\item \textsf{\small \textbf{*} : dereferenza}
+	\item \textsf{\small \textbf{->} : dereferenza, accedere ai membri della classe/struct, ecc..}
+	\item \textsf{\small \textbf{.lock()} : restituisce uno \textbf{shared\_ptr} con le informazioni preservate nel \textbf{weak\_ptr} se non è \emph{expired}. Se il \textbf{weak\_ptr} è \emph{expired} (scaduto), la funzione restituisce un \textbf{shared\_ptr} vuoto.}
+	%\item \textsf{\small \textbf{.get()} : }
+	\item \textsf{\small \textbf{.reset()} : cancella il vecchio oggetto e ne crea uno nuovo.}
+	\item \textsf{\small \textbf{.swap()} : scambia due \textbf{weak pointers}.}
+	\item \textsf{\small \textbf{.use\_count()} : restituisce il numero di \textbf{shared pointers} che puntano allo stesso oggetto.}
+	\item \textsf{\small \textbf{.expired()} : restituisce se il \textbf{weak\_ptr} è vuoto o non ci sono più \textbf{shared\_ptr} nel \emph{owner group}. I puntatori "scaduti" (\emph{expired}) sono come \textbf{weak pointers} vuoti quando \emph{locked}, e non possono quindi essere più usati.}
+	\item \textsf{\small \textbf{.owner-before()} : restituisce se l'oggetto deve andare prima del parametro. Se l'oggetto appartiene allo stesso \emph{owner group} del parametro, allora restituisce \emph{false}, anche se il valore memorizzato dai puntatori è diverso.}
+	%\item \textsf{\small \textbf{} : }
+\end{itemize}
+
+\begin{lstlisting}
+	#include <iostream>
+	#include <memory>
+	
+	class Person {
+		public:
+			std::string name;
+			Person(std::string name) : name(name){};
+	};
+	
+	int main()
+	{
+		std::weak_ptr<Person> wp;
+		
+		auto teacher = std::make_shared<Person>("Giorgio");
+		
+		wp = teacher;
+		
+		// Per controllare se l'oggetto è ancora lì o no.
+		// lock() restituisce un shared\_ptr temporaneo.
+		if(auto temp = wp.lock())
+		{
+			std::cout << temp->name << std::endl;
+		} else {
+			std::cout << "L'oggetto non c'è più" << std::endl;
+		}
+		return 0;
+	}
+\end{lstlisting}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\textwidth, height=1\textheight, keepaspectratio]{./imgs/weak_ptr1.png}
+	\caption{Weak pointers}
+	\label{fig:weak_ptr1}
+\end{figure}
+
+\textsf{\small Uno \textbf{shared pointer} ha un \textbf{control block} che conta il numero di \textbf{shared pointers} e di \textbf{weak pointers}. Quando il contatore degli \textbf{shared pointers} arriva a 0, l'oggetto viene eliminato, ma il \emph{control block} resta vivo finché il contatore dei \textbf{weak pointers} non raggiunge 0.} \\
 
 %TODO: altre subsections
-%TODO: static_pointer_cast
 
 % -------------------------- SECTION: UNIFORM REAL DISTRIBUTION ----------------------
 
