@@ -2,14 +2,7 @@
 
 \chapter{Concetti Avanzati}
 
-% Argomenti di questo capitolo:
-
-% unique pointers
-% smart pointers
-% shared pointer
-% weak pointers
-% friend functions
-% e make unique
+% Argomenti di questo capitolo da trattare:
 
 %TODO: Copy-and-Swap Idiom?
 %TODO: Signal Handling? (magari in un capitolo sul multithreading)
@@ -23,27 +16,30 @@
 
 %TODO: pointer to function?
 
-% std uniform real distribution
+% std uniform real distribution (Forse sta meglio nel capitolo degli Algoritmi)
 
 % C++ 20: Concepts, ranges, coroutines, template parameter list, modules, ecc.. (non qui, ma in Le gemme della libreria degli Algoritmi)
 
 %TODO: Dependency Injection
-%TODO: std::static_pointer_cast
-%TODO: std::enable_share_from_this
-%TODO: allocate_shared
-%TODO: Allocator
-%TODO: std::bad_alloc
 
-%TODO: std::clamp (non è chi sa che cosa di avanzato, comunque).
-%TODO: normal_distribution
+%TODO: std::bad_alloc (Insomma, non necessaria per sto capitolo credo)
+
+%TODO: std::clamp (non è chi sa che cosa di avanzato, comunque) (magari nel capitolo degli algoritmi).
+%TODO: normal_distribution (insomma, più nel capitolo degli Algoritmi)
 
 %TODO: magari aggiungere nel capitolo "basi del linguaggio": struct destructors che servono se allochi della memoria nelle struct, non se le usi, ma se allochi.
 
-%TODO: xvalue?
+%TODO: xvalue? (oppure lo aggiungo quando parlo di lvalue e rvalue)
 
 %TODO: performance optimization, performance, optimization techniques?
 %TODO: un esempio è usare ++i al posto di i++
 %TODO: esempi: Premature Pessimization to avoid Premature Optimization.
+
+%TODO: ci starebbe anche un capitolo a parte per:
+%TODO: - Algoritmi (questo lo faccio)
+%TODO: - Multithreading
+%TODO: - Performance, clean code
+%TODO: - Design Patterns
 
 % -------------------------- SECTION: INTRODUZIONE -----------------------------------
 
@@ -241,25 +237,14 @@
 	}
 \end{lstlisting}
 
-%TODO: unique, share, weak, 
-%TODO: std::make_unique vs std::unique_ptr
-%TODO: std::make_shared
-
-%TODO: problemi dei vecchi puntatori.
-
-%TODO: std::static_pointer_cast
-%TODO: std::enable_share_from_this
-%TODO: allocate_shared
-%TODO: Allocator
-%TODO: std::bad_alloc
-%TODO: auto_ptr (C++98)
-
 %TODO: dynamic_pointer_cast
 %TODO: const_pointer_cast
 
 \subsection{unique pointers}
 
 \textsf{\small \textbf{Definizione: } Gli \textbf{unique pointers} sono un tipo di \textbf{smart pointers} che memorizzano un solo puntatore alla volta.} \\
+
+\textsf{\small Prima degli \textbf{unique\_ptr} c'erano gli \textbf{auto\_ptr} (C++98), ma dal C++11 sono \emph{deprecati} (ovvero che non è raccomandato utilizzare, è obsoleto o ha bisogno di ulteriore sviluppo), quindi ora si consiglia di utilizzare gli \textbf{unique\_ptr}. } \\
 
 \textsf{\small Sarà necessario includere \textbf{<memory>} per poter usufruire degli \textbf{unique pointers}.} \\
 
@@ -718,6 +703,39 @@
 %TODO: dynamic_pointer_cast (volendo, ma non necessario, giusto per approfondimento)
 %TODO: const_pointer_cast
 
+\subsubsection{enable\_shared\_from\_this}
+
+\textsf{\small \textbf{Definizione: } \textbf{std::enable\_shared\_from\_this} permette un oggetto \emph{t} che è gestito da uno \textbf{shared\_ptr} \emph{sp} di generare, in modo sicuro, degli \textbf{shared\_ptr} addizionali, istanze \emph{sp1}, \emph{sp2} che condividono tutti la proprietà dell'oggetto \emph{t} con \emph{sp}.} \break
+
+\textsf{\small Ereditare da \textbf{std::enable\_shared\_from\_this} fornisce il tipo T con una funzione membro \emph{shared\_from\_this()}. Se un oggetto \emph{t} di tipo T è gestito da uno \textbf{shared\_ptr} \emph{sp}, allora chiamare \emph{shared\_from\_this()} restituirà un nuovo \textbf{shared\_ptr} che condivide la proprietà di \emph{t} con \emph{sp}. } \\
+
+\begin{lstlisting}
+	#include <iostream>
+	#include <memory>
+	
+	struct B : std::enable_shared_from_this<B> {};
+	
+	int main()
+	{
+		std::shared_ptr<B> foo, bar;
+		
+		foo = std::make_shared<B>();
+		
+		bar = foo->shared_from_this();
+		
+		if(!foo.owner_before(bar) && !bar.owner_before(foo))
+		{
+			std::cout << "foo e bar condividono la proprietà" << std::endl;
+		}
+	
+		//Output: foo e bar condividono la proprietà
+	
+		return 0;
+	}
+\end{lstlisting}
+
+\textsf{\small Inoltre, c'è anche una funzione \emph{weak\_from\_this} che restituisce un \textbf{weak\_ptr} che tiene traccia della proprietà di \textbf{*this} da parte di tutte le istanze di \textbf{shared\_ptr}.} \\
+
 \subsubsection{Performance degli shared pointers}
 
 \textsf{\small Uno \textbf{shared pointer} ha bisogno di due \emph{raw pointers}. Un insieme di \textbf{shared pointers} hanno bisogno di essere gestiti da una \emph{control unit} (\emph{control block}). Quindi la memoria che uno \textbf{shared pointer} occupa è maggiore dei \emph{raw} e degli \textbf{unique} pointers.} \\
@@ -824,11 +842,55 @@
 
 \newpage
 
+%TODO: forse da mettere nel capitolo degli Algoritmi.
+
 \section{Uniform Real Distribution}
 
-\textsf{\small \textbf{Definizione: } } \\
+\textsf{\small \textbf{Definizione: } La \textbf{uniform real distribution}, in probabilità, si riferisce alla distribuzione nella quale le probabilità sono definite da una variabile casuale continua, una che può prendere qualsiasi valore tra due numeri, così la distribuzione è detta essere una distribuzione probabilistica continua. } \\
+
+\textsf{\small Per poter usufruire della \textbf{uniform real distribution} sarà necessario includere \textbf{<random>}.} \\ 
+
+\textsf{\small Questa ha diverse funzioni: } \\
+
+\begin{itemize}
+	\item \textsf{\small \textbf{a()} : restituisce il limite inferiore.}
+	\item \textsf{\small \textbf{b()} : restituisce il limite superiore.}
+	\item \textsf{\small \textbf{min()} : restituisce il valore minimo che la funzione può restituire.}
+	\item \textsf{\small \textbf{max()} : restituisce il valore massimo che la funzione può restituire.}
+	\item \textsf{\small \textbf{reset()} : si resetta la distribuzione affinché la prossima non sia basata sui valori precedenti.}
+	%\item \textsf{\small \textbf{} : }
+\end{itemize}
+
+\begin{lstlisting}
+	#include <iostream>
+	#include <random>
+	
+	int main()
+	{
+		double a = 0, b = 2.0;
+		
+		std::uniform_real_distribution<double> distribution(a, b);
+		
+		std::cout << "limite inferiore: " << distribution.a() << std::endl; //Output: limite inferiore: 0
+		std::cout << "limite superiore: " << distribution.b() << std::endl; //Output: limite superiore 2.0
+		
+		std::cout << "distribuzione min: " << distribution.min() << std::endl; //distribuzione min: 0
+		std::cout << "distribuzione max: " << distribution.max() << std::endl; //distribuzione max: 2.0
+		
+		distribution.reset(); 
+		return 0;
+	}
+\end{lstlisting}
+
+\textsf{\small Come detto, in precedenza, può essere utile nella generazione di numeri casuali.} \\
+
+%TODO: magari approfondire, aggiungere un esempio in cui si generano numeri casuali.
 
 %TODO: Dependency Injection
+%TODO: pointer to a function
+%TODO: Tecniche per debuggare codice
+%TODO: C++ Competitive Programming e clean code.
+%TODO: Scrivere codice efficiente.
 
 % -------------------------- SECTION: 7 CONCETTI AVANZATI ----------------------------
 
@@ -841,6 +903,16 @@
 %TODO: RAII, Return Type Resolver, Type Erasure, CRTP, Virtual Constructor, SFINAE, Proxy.
 
 \section{7 Concetti Avanzati}
+
+%TODO: uncomment quando avrò aggiunto l'immagine.
+\begin{comment}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\textwidth, height=1\textheight, keepaspectratio]{./imgs/.png}
+	\caption{Unique ptr}
+	\label{fig:}
+\end{figure}
+\end{comment}
 
 \subsection{RAII}
 
