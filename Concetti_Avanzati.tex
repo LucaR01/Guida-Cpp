@@ -9,8 +9,8 @@
 %TODO: Prevent Object Copy?
 %TODO: Command Line Arguments?
 
-%TODO: tecniche per debuggare codice?
-%TODO: Writing C++ code efficiently in Competitive Programming?
+%TODO: tecniche per debuggare codice? (magari in un capitolo apposito)
+%TODO: Writing C++ code efficiently in Competitive Programming? (magari in un capitolo apposito)
 
 %TODO: 7 Advance C++ Concepts: RAII, Return Type Resolver, Type Erasure, CRTP, Virtual Constructor, SFINAE, Proxy.
 
@@ -34,12 +34,6 @@
 %TODO: performance optimization, performance, optimization techniques?
 %TODO: un esempio è usare ++i al posto di i++
 %TODO: esempi: Premature Pessimization to avoid Premature Optimization.
-
-%TODO: ci starebbe anche un capitolo a parte per:
-%TODO: - Algoritmi (questo lo faccio)
-%TODO: - Multithreading
-%TODO: - Performance, clean code
-%TODO: - Design Patterns
 
 % -------------------------- SECTION: INTRODUZIONE -----------------------------------
 
@@ -886,11 +880,315 @@
 
 %TODO: magari approfondire, aggiungere un esempio in cui si generano numeri casuali.
 
-%TODO: Dependency Injection
-%TODO: pointer to a function
-%TODO: Tecniche per debuggare codice
-%TODO: C++ Competitive Programming e clean code.
-%TODO: Scrivere codice efficiente.
+% -------------------------- SECTION: COPY-AND-SWAP IDIOM ----------------------------
+
+\section{Copy-And-Swap Idiom}
+
+\textsf{\small \textbf{Cos'è il \textbf{copy-and-swap idiom} e a cosa serve?}} \break
+
+\textsf{\small Qualsiasi classe che gestisce una risorsa (\emph{un wrapper}, come uno \textbf{smart pointer}) ha bisogno di implementare la \emph{Rule of Three} (destructor, copy constructor, copy assignment). La \emph{copy-and-swap} assiste il \emph{copy assignment} in due cose: evitare la duplicazione di codice e fornisce una forte sicurezza a livello di eccezioni (\emph{exception safety}).} \\
+
+\textsf{\small Concettualmente funziona utilizzando la funzionalità del \emph{copy constructor} di creare una copia locale dei dati, prendere questa copia con una funzione \emph{swap}, scambiando i vecchi dati con quelli nuovi.} \\
+
+\textsf{\small La copia temporanea viene distrutta, portandosi i vecchi dati con essa. Restiamo con una copia dei nuovi dati.} \\
+
+\textsf{\small Per poter far questo quindi avremo bisogno di: } \\
+
+\begin{itemize}
+	\item \textsf{\small copy-constructor}
+	\item \textsf{\small destructor}
+	\item \textsf{\small swap function}
+\end{itemize}
+
+\begin{lstlisting}
+	#include <iostream>
+	#include <cstring>
+	
+	class anyArrayClass
+	{
+		int size;
+		int *ptr;
+		public:
+		anyArrayClass(int s=0):size(s),
+		ptr(size? new int[size]:nullptr) {}
+		
+		// Copy constructor
+		anyArrayClass(const anyArrayClass& obj):size(obj.size),
+		ptr(size? new int[size]:nullptr)
+		{
+			memmove(ptr, obj.ptr, size*sizeof(int));
+		}
+		
+		friend void swap(anyArrayClass& obj1, anyArrayClass& obj2)
+		{
+			std::swap(obj1.size, obj2.size);
+			std::swap(obj1.ptr, obj2.ptr);
+		}
+		
+		// overloaded assignment operator
+		// argomento passato per valore. chiama il copy constructor
+		anyArrayClass& operator=(anyArrayClass obj)	
+		{
+			// calling friend function
+			swap(*this, obj);
+			return *this;
+		}
+		
+		~anyArrayClass()
+		{
+			delete[] ptr;
+		}
+	};
+\end{lstlisting}
+
+\textsf{\small I vantaggi sono: } \\
+
+\begin{itemize} %TODO: questo è da riguardare.
+	\item \textsf{\small Non c'è più bisogno di controlli per l'assegnamento a se stesso visto che il parametro è passato per valore. Inoltre l'allocazione a se stesso è molto rara quindi l'\emph{overhead} della copiatura non dovrebbe essere un problema.}
+	\item \textsf{\small Ora il \emph{copy constructor} è usato per creare un oggetto temporaneo, lo swapping (scambio) avverrà soltanto se l'oggetto temporaneo è stato creato affatto. Praticamente, quello che stiamo facendo manualmente, il compilatore lo sta facendo per noi.}
+	\item \textsf{\small Riusabilità del codice: l'operatore \emph{operator=()} non ha molto codice nel suo corpo, anzi stiamo usando il \emph{copy constructor} e la funzione \emph{swap} per fare il lavoro.}
+\end{itemize}
+
+%\textsf{\small \textbf{Nota:} Non puoi usare \textbf{std::swap} visto che internamente usa il \emph{copy constructor} e l'\emph{assignment operator}.} \\ %TODO: c'è bisogno di ulteriori verifiche.
+
+% -------------------------- SECTION: PREVENTING OBJECT COPY -------------------------
+
+\section{Preventing Object Copy} %TODO: questo posso metterlo nel capitolo di quando parlo di =deleted
+
+\textsf{\small \textbf{Definizione: } Serve per non permette ad un'istanza di una classe di essere copiata.} \\
+
+\textsf{\small Per fare questo ci sono vari modi: } \\
+
+\begin{enumerate}
+	\item \textsf{\small \textbf{Porre il \emph{copy constructor} ed il \emph{copy assignment} privati} }
+	\item \textsf{\small \textbf{Ereditare una classe con un \emph{copy constructor} e un \emph{copy assignment operator} privati} }
+	\item \textsf{\small \textbf{Usare i \emph{copy constructor = delete} e il \emph{copy assignment operator = delete}}}
+\end{enumerate}
+
+\begin{lstlisting}
+	#include <iostream>
+	
+	class Base {
+		int x;
+		public:
+			Base(){}
+			Base(int y) : x(y) {}
+			Base(const Base& temp_obj) = delete;
+			Base& operator=(const Base& temp_obj) = delete;
+	};
+	
+	int main()
+	{
+		Base b1(10);
+		Base b2(b1); // Chiama il copy constructor, da errore perché abbiamo messo \textbf{= delete} per non permettiamo la copiatura di oggetti.
+		b2 = b1; //Chiama il copy assignment operator, da errore perché abbiamo messo \textbf{= delete} per non permettiamo la copiatura di oggetti.
+		return 0;
+	}
+\end{lstlisting}
+
+% ------------------------- SECTION: COMMAND LINE ARGUMENTS --------------------------
+
+\newpage
+
+\section{Command Line Arguments} %TODO: questo non è necessariamente un argomento avanzato.
+
+\textsf{\small \textbf{Definizione: } È possibile passare degli argomenti da linea di comando nei terminali dei sistemi operativi. Per fare questo definiamo il \textbf{main()} con due parametri: il primo corrisponde al numero di comandi da linea di comando e il secondo è la lista degli argomenti passati da linea di comando.} \\
+
+\begin{lstlisting}
+	// Questi sono i due tipici modi di definire il main per passare argomenti da linea di comando:
+	
+	int main(int argc, char *argv[]) {}
+	// Oppure:
+	int main(int argc, char **argv) {} 
+\end{lstlisting}
+
+\begin{itemize}
+	\item \textsf{\small \textbf{argc (ARGument Count)} : è un intero e memorizza il numero di argomenti passati da linea di comando da parte dell'utente, incluso il nome del programma. Quindi se passiamo un valore al programma, il valore di \emph{argc}, il numero di argomenti sarebbe 2: uno l'argomento passato e l'altro il nome del programma.} \\
+	\item \textsf{\small \textbf{argv (ARGument Vector)} : è un array di puntatori di caratteri che lista tutti gli argomenti.} \\
+	\begin{itemize}
+		\item \textsf{\small Se \emph{argc} è maggiore di zero, l'array di elementi da argv[0] a argv[argc - 1] conterrà i puntatori alle stringhe.}
+		\item \textsf{\small argv[0] è il nome del programma. Dopo quello fino ad argv[argc - 1] ogni elemento è un comando passato da linea di comando al programma.}
+	\end{itemize}
+\end{itemize}
+
+\begin{lstlisting}
+	#include <iostream>
+	
+	int main(int argc, char** argv)
+	{
+		std::cout << "Hai inserito: " << argc << " argomenti: " << "\n";
+		
+		for(int i = 0; i < argc; i++)
+		{
+			std::cout << argv[i] << "\n";
+		}
+	
+		//Input: ./programma ciao a tutti
+		//Output: Hai inserito 4 argomenti:
+		//Output: ./programma
+		//Output: ciao
+		//Output: a
+		//Output: tutti
+		
+		return 0;
+	}
+\end{lstlisting}
+
+\textsf{\small Proprietà degli argomenti da linea di comando: } \\
+
+\begin{itemize}
+	\item \textsf{\small Sono passati alla funzione \textbf{main()}.}
+	\item \textsf{\small Sono parametri/argomenti forniti al programma quando viene invocato.}
+	\item \textsf{\small Sono usati per controllare il programma dall'esterno, piuttosto che metterli all'interno del codice.}
+	\item \textsf{\small argv[argc] è un puntatore a \textbf{NULL}.}
+	\item \textsf{\small argv[0] tiene il nome del programma.}
+	\item \textsf{\small argv[1] punta al primo argomento e argv[argc - 1] all'ultimo.}
+\end{itemize}
+
+% ---------------------- SECTION: TECNICHE PER IL DEBUGGING --------------------------
+
+\newpage
+
+\section{Tecniche per il debugging}
+
+\textsf{\small \textbf{Definizione: } \textbf{Debugging} si riferisce alle tecniche impiegate dai programmatori per cercare di correggere gli errori, i bugs di un programma.} \\
+
+\textsf{\small Una metodologia di base è questa: } \\
+
+\begin{itemize}
+	\item \textsf{\small Osserva il problema.}
+	\item \textsf{\small Identifica la natura del problema.}
+	\item \textsf{\small Identifica la condizione (o condizioni) che innesca il problema.}
+	\item \textsf{\small Identifica il meccanismo di guasto, fallimento.}
+	\item \textsf{\small Fixa il problema.}
+	%\item \textsf{\small }
+\end{itemize}
+
+\textsf{\small Per fare questo potrebbe tornare utile: } \\
+
+\begin{itemize}
+	\item \textsf{\small Commentare il codice.}
+	\item \textsf{\small Validare il flusso del codice, programma (\emph{code flow}).}
+	\item \textsf{\small Controllare valori stampandoli a schermo.}
+\end{itemize}
+
+%TODO: magari approfondire, puù degli esempi
+
+% ---------------------- SECTION: DEPENDENCY INJECTION -------------------------------
+
+%TODO: pattern? Magari in un capitolo sui Design Patterns
+
+%\newpage
+
+%\section{Dependency Injection}
+
+%\textsf{\small \textbf{Definizione: } } \\
+
+% ---------------------- SECTION: POINTER TO FUNCTION --------------------------------
+
+\newpage
+
+\section{Puntatore a funzione}
+
+\textsf{\small \textbf{Definizione: } I \textbf{puntatori a funzione} o \textbf{function pointers} sono dei puntatori che puntano a delle funzioni.} \\ %TODO: la definizione è da: "grazie al cazzo".
+
+\begin{lstlisting}
+	#include <iostream>
+	
+	void fun(int a)
+	{
+		std::cout << "Valore di a: " << a << std::endl;
+	}
+	
+	int main()
+	{
+		// fun\_ptr è un puntatore alla funzione fun() (quella sopra)
+		void (*fun_ptr)(int) = &fun;
+		
+		/* La riga sopra è equivalente alle seguenti due sotto:
+		void (*fun_ptr)(int);
+		fun_ptr = &fun;
+		*/
+		
+		// Chiamando fun() attraverso fun\_ptr
+		(*fun_ptr)(10);
+		
+		return 0;
+	}
+\end{lstlisting}
+
+\textsf{\small Si può anche scrivere così: } \\
+
+\begin{lstlisting}
+	#include <iostream>
+	
+	void fun(int a)
+	{
+		std::cout << "Il valore di a: " << a << std::endl;
+	}
+	
+	int main()
+	{
+		void (*fun_ptr)(int) = fun; // \& rimosso
+		
+		fun_ptr(10); // * rimosso
+		
+		return 0;
+	}
+\end{lstlisting}
+
+\textsf{\small Alcuni fatti riguardo i \textbf{function pointers} dal C: } \\
+
+\begin{itemize}
+	\item \textsf{\small Questi puntano all'inizio del codice eseguibile.}
+	\item \textsf{\small A differenza dei normali puntatori, non allochiamo e deallochiamo memoria usando i \textbf{function pointers}.}
+	\item \textsf{\small Il nome della funzione può anche essere usato per ottenere l'indirizzo della funzione.}
+	\item \textsf{\small Proprio come i puntatori normali, possiamo avere un array di \textbf{function pointers}.}
+	\item \textsf{\small Possono essere usati al posto degli switch.}
+	\item \textsf{\small Come i puntatori normali anche questi possono essere passati come argomenti e restituiti dalle funzioni.}
+	\item \textsf{\small Alcune funzionalità del C++ sono implementate usando i \textbf{function pointers}, come ad esempio le \textbf{funzioni virtuali}.}
+\end{itemize}
+
+\begin{lstlisting}
+	#include <iostream>
+	
+	void add(int a, int b)
+	{
+		std::cout << "Addizione: " << a + b << std::endl;
+	}
+	void subtract(int a, int b)
+	{
+		std::cout << "Sottrazione: " << a - b << std::endl;
+	}
+	void multiply(int a, int b)
+	{
+		std::cout << "Moltiplicazione: " << a * b << std::endl;
+	}
+	
+	int main()
+	{
+		// fun\_ptr\_arr è un array di function pointers (puntatori a funzioni).
+		void (*fun_ptr_arr[])(int, int) = {add, subtract, multiply};
+		unsigned int ch, a = 7, b = 5;
+		
+		printf("Enter Choice: 0 for add, 1 for subtract and 2 "
+		"for multiply\n");
+		std::cout << "0. Aggiungi" << "\n";
+		std::cout << "1. Riduzione" << "\n";
+		std::cout << "2. Moltiplicazione" << "\n";
+		std::cout << "Scelta: ";
+		
+		std::cin >> ch;
+		
+		if (ch > 2) return 0;
+		
+		(*fun_ptr_arr[ch])(a, b);
+		
+		return 0;
+	}
+\end{lstlisting}
+
+%TODO: std::function
 
 % -------------------------- SECTION: 7 CONCETTI AVANZATI ----------------------------
 
@@ -904,19 +1202,18 @@
 
 \section{7 Concetti Avanzati}
 
-%TODO: uncomment quando avrò aggiunto l'immagine.
-\begin{comment}
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=1\textwidth, height=1\textheight, keepaspectratio]{./imgs/.png}
-	\caption{Unique ptr}
-	\label{fig:}
+	\includegraphics[width=1.2\textwidth, height=1.2\textheight, keepaspectratio]{./imgs/7-Advanced-C-programming-styles-and-idiom-examples-you-should-know.png}
+	\caption{7 Concetti Avanzati}
+	\label{fig:7-Advanced-C-programming-styles-and-idiom-examples-you-should-know}
 \end{figure}
-\end{comment}
 
 \subsection{RAII}
 
-\textsf{\small \textbf{Definizione: } } \\ %TODO: scrivere che abbiamo già trattato questo argomento nel precedente capitolo oppure nel capitolo Concetti Intermedi, ma voglio comunque ripassarlo qui.
+\textsf{\small Abbiamo già trattato questo argomento nel precedente capitolo \emph{Concetti Intermedi}, ma lo riprenderemo qui visto che è uno dei 7 Concetti Avanzati del linguaggio.} \\
+
+\textsf{\small \textbf{Definizione: } } \\
 
 \subsection{Return Type Resolver}
 
