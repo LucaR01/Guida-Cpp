@@ -35,6 +35,8 @@
 %TODO: un esempio è usare ++i al posto di i++
 %TODO: esempi: Premature Pessimization to avoid Premature Optimization.
 
+%TODO: template metaprogramming? (nel capitolo dei Design Patterns)
+
 % -------------------------- SECTION: INTRODUZIONE -----------------------------------
 
 \section{Introduzione}
@@ -1213,20 +1215,653 @@
 
 \textsf{\small Abbiamo già trattato questo argomento nel precedente capitolo \emph{Concetti Intermedi}, ma lo riprenderemo qui visto che è uno dei 7 Concetti Avanzati del linguaggio.} \\
 
-\textsf{\small \textbf{Definizione: } } \\
+\textsf{\small \textbf{Definizione: } \textbf{RAII} (\emph{\textbf{R}esource \textbf{A}cquisition \textbf{i}s \textbf{I}nitialization}), o anche conosciuta come \emph{Execute-around object}, \emph{Resource release is finalization}, \emph{Scope-bound resource management} è una tecnica di programmazione il cui intento è quello di rilasciare le risorse precedentemente allocate alla fine dello scope. } \\
+
+\textsf{\small Implementiamo questo attraverso: il \emph{wrapping} delle risorse nella classe; acquisizione della risorse nel costruttore immediatamente dopo l'allocazione e automaticamente rilasciata nel distruttore; risorse usate attraverso un'interfaccia della classe.} \\
+
+\begin{lstlisting}
+	#include <iostream>
+	
+	class Resource {
+		public:
+			Resource(int x, int y) { std::cout << "risorsa acquisista\n"; }
+			~Resource() { std::cout << "risorsa distrutta\n"; }
+	};
+
+	void func()
+	{
+		Resource *ptr = new Resource(1, 2);
+		int x;
+		
+		std::cout << "Inserisci un numero: ";
+		std::cin >> x;
+		
+		if(x == 0)
+		{
+			// La funzione restituisce prima del return e quindi ptr non verrà deallocato, cancellato!
+			throw 0;
+		} else if(x < 0) {
+			// La funzione restituisce prima della deallocazione, quindi ptr non verrà deallocato!
+			return;
+		}
+		delete ptr;
+	}
+
+	int main()
+	{
+		func();
+		return 0;
+	}
+\end{lstlisting}
+
+\textsf{\small Nel codice sopra, il \emph{return} o il \emph{throw} avvengono prima della \textbf{delete} quindi ptr non viene deallocato e la sua memoria è \emph{leaked} ogni volta che la funzione viene chiamata.} \\
+
+\begin{lstlisting}
+	#include <iostream>
+	
+	template<class T>
+	class smart_ptr
+	{
+		T* m_ptr;
+		public:
+			template<typename... Args>
+			smart_ptr(Args&&... args) : m_ptr(new T(std::forward<Args>(args)...)){}
+			~smart_ptr() { delete m_ptr; }
+			
+			smart_ptr(const smart_ptr& rhs) = delete;
+			smart_ptr& operator=(const smart_ptr& rhs) = delete;
+			
+			smart_ptr(smart_ptr&& rhs) : m_ptr(exchange(rhs.m_ptr, nullptr)){}
+			smart_ptr& operator=(smart_ptr&& rhs){        
+				if (&rhs == this) return *this;
+				delete m_ptr;
+				m_ptr = exchange(rhs.m_ptr,nullptr);
+				return *this;
+			}
+			
+			T& operator*() const { return *m_ptr; }
+			T* operator->() const { return m_ptr; }
+	};
+	
+	void func()
+	{
+		auto ptr = smart_ptr<Resource>(1, 2); // ora ptr garantisce il rilascio della risorsa (resource).
+		// ...
+	}
+
+	int main()
+	{
+		func();
+		return 0;
+	}
+\end{lstlisting}
+
+\textsf{\small Ora non importa cosa succede dopo la dichiarazione di \emph{ptr}, verrà comunque distrutto quando la funzione termina (a prescindere da come termina). } \\
+
+\textsf{\small Visto che \emph{ptr} è un oggetto locale, il distruttore verrà chiamato mentre la funzione riavvolge indietro lo stack (\emph{function stack frame}). Perciò siamo sicuri che la risorsa verrà appropriatamente liberata.} \\
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\textwidth, height=1\textheight, keepaspectratio]{./imgs/death_and_memory.jpg}
+	\caption{La morte della memoria e RAII}
+	\label{fig:death_and_memory}
+\end{figure}
 
 \subsection{Return Type Resolver}
 
+\textsf{\small \textbf{Definizione: } Il \textbf{Return Type Resolver}, o anche conosciuto come \emph{Return type overloading} è un idioma il cui intento è quello di dedurre il tipo della variabile inizializzata o da assegnare.} \\
+
+\textsf{\small Il problema: } \\
+
+\begin{lstlisting}
+	#include <iostream>
+	#include <string>
+	
+	int fromString(const char *str) { return std::stoi(str); }
+	float fromString(const char* str) { return std::stoi(str); } // Errore
+\end{lstlisting}
+
+\textsf{\small Una funzione non può essere \emph{overloaddata} solo dal suo tipo di ritorno.} \\
+
+\begin{lstlisting}
+	#include <iostream>
+	#include <string>
+	
+	class fromString {
+		const std::string str;
+		public:
+			fromString(const char* str) : str(str) {}
+			template<typename type>
+			operator type(){
+				if constexpr(std::is_same_v<type, float>) return stof(str);
+				else if(std::is_same_v<type, int>) return stoi(str);
+			}
+	};
+
+	int main()
+	{
+		// Funzionerà con C++17 e oltre perché ha is\_same\_v
+		int iStr = fromString("321");
+		float fStr = fromString("654.987");
+		return 0;
+	}
+\end{lstlisting}
+
+%TODO: magari scrivere in basi del linguaggio o anche qui cos'è 'if constexpr'.
+
+\begin{itemize}
+	\item \textsf{\small Quando usi \textbf{nullptr} serve per dedurre il corretto tipo dipendendo dal puntatore a cui sta assegnando.}
+	\item \textsf{\small Si può anche superare questa limitazione nel modo in cui abbiamo visto sopra.}
+	\item \textsf{\small \textbf{Return Type Resolver} può anche essere usato per fornire un'interfaccia generale per l'assegnamento, indipendente dall'oggetto a cui è stato assegnato.}
+\end{itemize}
+
 \subsection{Type Erasure}
+
+\textsf{\small \textbf{Definizione: } \textbf{Type Erasure}, o anche conosciuto come \emph{Duck-typing} serve per generare dei container che possono gestire una varietà di tipi.} \\
+
+\textsf{\small Questo può essere implementato attraverso: \emph{void*}, \emph{templates}, \emph{polimorfismo}, \emph{union}, \emph{proxy class}, eccetera..} \break
+
+\begin{itemize}
+	\item \textsf{\small Il C++ è un linguaggio \emph{statically typed} con uno \emph{typing} forte. In questi tipi di linguaggio, la tipologia dell'oggetto è conosciuta a compile-time.} %TODO: magari spiegare meglio la parte del 'statically typed' con forte 'typing'
+	\item \textsf{\small Quindi il tipo di un oggetto, dopo la compilazione, non cambia.}
+	\item \textsf{\small Per ovviare a questo esistono vari containers come: \emph{std::any} (C++17), \emph{std::variant} (C++17), \emph{std::function} (C++11), eccetera..}
+\end{itemize}
+
+\textsf{\small Quindi esistono varie tecniche per implementare questo: } \\
+
+\subsubsection{Type erasure usando void* (come nel C)}
+
+\begin{lstlisting}
+	void qsort(void* base, size_t num, size_t size, int(*comapare)(const void*, const void*));
+\end{lstlisting}
+
+\textsf{\small Lo svantaggio è che non è sicuro e separa la funzione compare necessaria per ogni tipo.} \\
+
+\subsubsection{Type erasure usando i templates}
+
+\begin{lstlisting}
+	template <class RandomAccessIterator>
+		void sort(RandomAccessIterator first, RandomAccessIterator last);
+\end{lstlisting}
+
+\textsf{\small Lo svantaggio: potrebbe portare all'instanzione di molte funzioni template e quindi di tempi di compilazione più lunghi. } \\
+
+\subsubsection{Type erasure usando il polimorfismo}
+
+\begin{lstlisting}
+	class Base { 
+		public:
+			virtual void method() = 0; 
+	};
+	
+	class C : Base { 
+		public:
+			void method() { cout << "classe C\n"; } 
+	};
+
+	class D : Base { 
+		public:
+			void method() { cout << "classe D\n"; } 
+	};
+	
+	// Non vediamo un tipo concreto (viene cancellato) anche se lo si può dynamic\_cast.
+	void call(Base* ptr) 
+	{ 
+		ptr->method(); 
+	};
+\end{lstlisting}
+
+\textsf{\small Lo svantaggio è che costa a livello di runtime (dynamic dispatch, indirection, vtable, eccetera..)} \\
+
+\subsubsection{Type erasure usando le union}
+
+\begin{lstlisting}
+	class Data {
+		public:
+			int x;
+	};
+	
+	union U {
+		Data d;         // occupa 1 byte
+		std::int32_t n; // occupa 4 bytes
+		char c;         // occupa 1 byte
+		
+		~U() {}         // ha bisogno di sapere il tipo correntemente attivo.
+	}; // un'istanza di U occupa in totale 4 bytes.
+
+	int main()
+	{
+		U u; // creo un'istanza chiamata u della union U.
+		
+		u.c = 's';
+		u.d.x = 3;
+		
+		std::cout << "u.c: " << u.c << std::endl; //Output: u.c: s
+		std::cout << "u.d.x: " << u.d.x << std::endl; //Output: u.d.x: 3
+		return 0;
+	}
+\end{lstlisting}
+
+\textsf{\small Lo svantaggio è che non è sicuro a livello di tipo (\emph{type-safe}).} \\
+
+\subsubsection{Type erasure usando i containers generici}
+
+\begin{lstlisting}
+	#include <iostream>
+	#include <memory>
+	
+	struct any 
+	{
+		struct base {};
+		
+		template<typename T>
+		struct inner: base{
+			inner(T t): m_t{std::move(t)} {}
+			T m_t;
+			static void type() {}
+		};
+		
+		any(): m_ptr{nullptr}, typePtr{nullptr} {}
+		
+		template<typename T>
+		any(T && t): m_ptr{std::make_unique<inner<T>>(t)}, typePtr{&inner<T>::type} {}
+		
+		template<typename T>
+		any& operator=(T&& t){
+			m_ptr = std::make_unique<inner<T>>(t); 
+			typePtr = &inner<T>::type;
+			return *this;
+		}
+		
+		private:
+		template<typename T>
+		friend T& any_cast(const any& var);
+		
+		std::unique_ptr<base> m_ptr = nullptr;
+		void (*typePtr)() = nullptr;
+	};
+	
+	template<typename T>
+	T& any_cast(const any& var)
+	{
+		if(var.typePtr == any::inner<T>::type)
+		return static_cast<any::inner<T>*>(var.m_ptr.get())->m_t;
+		throw std::logic_error{"Bad cast!"};
+	}
+	
+	int main()
+	{
+		any var(10);
+		std::cout << any_cast<int>(var) << std::endl;
+		
+		var = std::string{"some text"};
+		std::cout << any_cast<std::string>(var) << std::endl;
+		
+		return 0;
+	}
+\end{lstlisting}
+
+\textsf{\small Da notare come stiamo usando la funzione statica vuota \emph{inner<T>::type} per determinare l'istanza del template in \emph{any\_cast<T>}.} \\
+
+\textsf{\small Questo è usato per gestire molteplici tipi di valori di ritorno dalle funzioni (Anche se non è raccomandato).} \\
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\textwidth, height=1\textheight, keepaspectratio]{./imgs/type_erasure.png}
+	\caption{Type Erasure}
+	\label{fig:type_erasure}
+\end{figure}
 
 \subsection{CRTP}
 
+\textsf{\small \textbf{Definizione: } Il \textbf{CRTP} (\emph{\textbf{C}uriously \textbf{R}ecurring \textbf{T}emplate \textbf{P}attern}), o anche conosciuto come \emph{Upside-down inheritance} o \emph{Static polymorphism} è utilizzato per ottenere il polimorfismo statico.} \\
+
+\textsf{\small Per ottenere questo fa uso della specializzazione delle classi template (\emph{base class template specialization}).} \break
+
+\textsf{\small Problema: } \\
+
+\begin{lstlisting}
+	#include <iostream>
+	
+	struct obj_type_1
+	{
+		bool operator<(const value &rhs) const {return m_x < rhs.m_x;}
+		// bool operator==(const value \&rhs) const;
+		// bool operator!=(const value \&rhs) const;    
+		// e la lista va avanti..
+		private:
+		// dati membri da comparare
+	};
+	
+	struct obj_type_2
+	{
+		bool operator<(const value &rhs) const {return m_x < rhs.m_x;}
+		// bool operator==(const value \&rhs) const;
+		// bool operator!=(const value \&rhs) const;    
+		// e la lista va avanti..
+		private:
+		// dati membri da comparare.
+	};
+	
+	struct obj_type_3 { }
+	struct obj_type_4 { }
+	// e la lista va avanti..
+\end{lstlisting}
+
+\begin{itemize}
+	\item \textsf{\small Per ogni oggetto comparabile, c'è bisogno di un rispettivo operatore di comparazione, il che è ridondante perché se abbiamo l'operatore <, possiamo \emph{overloaddare} gli altri operatori basandoci su quello.}
+	\item \textsf{\small Quindi, l'operatore < è l'unico operatore che possiede l'informazione del tipo, altri operatori possono essere fatti indipendenti per questioni di riusabilità.}
+	%\item \textsf{\small }
+\end{itemize}
+
+\textsf{\small La soluzione: } \\
+
+\textsf{\small L'implementazione è semplice: \emph{separare le funzionalità dei tipi dipendenti e indipendenti e legare le funzionalità del tipo indipendente con la classe base usando la \emph{self-referencing template} (template a se stesso)}.} \\
+
+\begin{lstlisting}
+	#include <iostream>
+	
+	template <class derived>
+	struct compare {};
+	
+	struct value : compare<value> {
+		int m_x;
+		value(int x) : m_x(x) {}
+		bool operator<(const value &rhs) const { return m_x < rhs.m_x; }
+	};
+	
+	template <class derived>
+	bool operator > (const compare<derived> &lhs, const compare<derived> &rhs) {
+		// static\_assert(std::is\_base\_of\_v<compare<derived>, derived>); // Compile time safety measures
+		return (static_cast<const derived&>(rhs)<static_cast<const derived&>(lhs));
+	}
+	
+	/*  Same goes with other operators
+	== :: returns !(lhs < rhs) and !(rhs < lhs)
+	!= :: returns !(lhs == rhs)
+	>= :: returns (rhs < lhs) or (rhs == lhs)
+	<= :: returns (lhs < rhs) or (rhs == lhs) 
+	*/
+	
+	// Ora non c'è più bisogno di scrivere gli operatori di comparazione per ogni classe.
+	// Scriviamo solo il tipo dipendente `operator <` \& usiamo il CRTP.
+	int main() {   
+		value v1{5}, v2{10};
+		std::cout << std::boolalpha << "v1 > v2: " << (v1 > v2) << '\n'; //Output: v1 > v2: false
+		return 0;
+	}
+\end{lstlisting}
+
+\textsf{\small \textbf{CRTP} è ampiamente usata per il polimorfismo statico senza sostenere il costo del meccanismo di \emph{virtual dispatch}. Consideriamo il seguente codice, senza l'uso di \textbf{virtual} e continuando ad ottenere le funzionalità del polimorfismo statico.} \\
+
+\begin{lstlisting}
+	#include <iostream>
+	
+	template<typename specific_animal>
+	class animal {
+		public:
+			void who() { implementation().who(); }
+		private:
+		specific_animal& implementation() {return *static_cast<specific_animal*>(this);}
+	};
+	
+	class dog : public animal<dog> {
+		public:
+			void who() { std::cout << "dog" << std::endl; }
+	};
+	
+	class cat : public animal<cat> {
+		public:
+			void who() { std::cout << "cat" << std::endl; }
+	};
+	
+	template<typename specific_animal>
+	void who_am_i(animal<specific_animal> & animal) {
+		animal.who();
+	}
+	
+	int main()
+	{
+		cat c;
+		c.who(); //Output: cat
+		return 0;
+	}
+\end{lstlisting}
+
+\textsf{\small \textbf{CRTP} può anche essere usato per l'ottimizzazione e permette anche la riusabilità del codice.} \\
+
+\textsf{\small Con C++20 risolviamo anche con lo \textbf{spaceship operator} <=> (default comparisons)/ \emph{three-way-comparison operator}.} \\
+
+%TODO: magari approfondire lo spaceship operator aggiunto con C++20 (fare una subsubsection)
+
+\subsubsection{3-way comparison operator | Spaceship Operator}
+
+\textsf{\small Con il C++20 è stato aggiunto l'operatore \emph{three-way-comparator} \textbf{<=>} chiamato lo \textbf{spaceship operator}.} \\
+
+\textsf{\small Questo operatore determina per due oggetti \emph{A} e \emph{B} se \emph{A < B}, \emph{A = B} o \emph{A > B}.} \\
+
+\textsf{\small Inoltre, una funzione \emph{three-way-comparison} è una funzione che darà l'intera relazione in una query. Tradizionalmente, una funzione del genere è \emph{strcmp()}, date due stringhe restituisce un intero dove: } \\
+
+\begin{itemize}
+	\item \textsf{\small < 0 significa che la prima stringa è minore.}
+	\item \textsf{\small == 0 significa che sono uguali.}
+	\item \textsf{\small > 0 significa che la prima stringa è maggiore.}
+\end{itemize}
+
+\textsf{\small Può dare uno di questi tre risultati e quindi per questo è chiamata \emph{three-way-comparison}.} \\
+
+\begin{tabular}{|c|c|}
+	\hline
+	\textbf{Equality} & \textbf{Ordering} \\
+	\hline
+	\textsf{\small \textbf{Primario}: ==} & \textsf{\small <=>} \\
+	\hline
+	\textsf{\small \textbf{Secondario}: !=} & \textsf{\small <, >, <=, >=} \\
+	\hline
+\end{tabular}
+
+\begin{lstlisting}
+	(A <=> B) < 0 // è vera se A < B.
+	(A <=> B) > 0 // è vera se A > B.
+	(A <=> B) == 0 // è vera se A e B sono uguali.
+\end{lstlisting}
+
+\textsf{\small Esempio: } \\
+
+\begin{lstlisting}
+	#include <iostream>
+	
+	int main()
+	{
+		float a = -0.0;
+		float b = 0.0;
+		
+		auto compare = a <=> b;
+		
+		if(comapre < 0)
+		{
+			std::cout << "-0.0 è minore di 0.0" << std::endl;
+		} else if(compare == 0){
+			std::cout << "-0.0 e 0.0 sono uguali." << std::endl;
+		} else {
+			std::cout << "-0.0 è maggiore di 0.0" << std::endl;
+		}
+	
+		//Output: -0.0 e 0.0 sono uguali.
+		return 0;
+	}
+\end{lstlisting}
+
 \subsection{Virtual Constructor}
 
+\textsf{\small \textbf{Definizione: } Il \textbf{Costruttore Virtuale}, o anche conosciuto come \emph{Factory method/design-pattern}, ha lo scopo di creare una copia o un nuovo oggetto senza sapere di concreto il suo tipo.} \\
+
+\textsf{\small Per fare questo sfruttiamo le funzioni \emph{overloaded} con l'assegnamento polimorfico.} \break
+
+\textsf{\small Il problema: } \\
+
+\begin{itemize}
+	\item \textsf{\small C++ supporta la distruzione di oggetti polimorfici usando il \textbf{distruttore virtuale} della classe base, ma l'equivalente supporto per la creazione e la copiatura di oggetti manca visto che non supporta i \textbf{costruttori virtuali}, ma ci sono i \textbf{copy constructors}.}
+	\item \textsf{\small Inoltre, non puoi creare un oggetto a meno che sai il suo tipo, perché il compilatore deve sapere l'ammontare di spazio da allocare. Per lo stesso motivo, la copiatura di un oggetto richiede anch'esso di sapere il suo tipo a compile-time.}
+\end{itemize}
+
+\begin{lstlisting}
+	#include <iostream>
+	
+	class Animal {
+		public:
+			virtual ~Animal(){ std::cout<<"~animal\n"; }
+	};
+	
+	class Dog : public Animal {
+		public:
+			~Dog(){ std::cout<<"~dog\n"; }
+	};
+	
+	class Cat : public Animal {
+		public:
+			~Cat(){ std::cout<<"~cat\n"; }
+	};
+	
+	void who_am_i(Animal *who) {
+		
+		// Come `creare` l'oggetto dello stesso tipo, ovvero puntato da who ?
+		// Come `copiare` l'oggetto dello stesso tipo, ovvero puntato da who ?
+		
+		delete who; // si può cancellare gli oggetti puntati da who.
+	}
+\end{lstlisting}
+
+\textsf{\small La soluzione: } \\
+
+\begin{itemize}
+	\item \textsf{\small La tecnica del \textbf{Costruttore Virtuale} permette la creazione polimorfica e la copiatura di oggetti delegando la creazione e la copiatura dell'oggetto alla classe derivata attraverso l'uso di funzioni virtuali.}
+	\item \textsf{\small Il seguente codice non solo implementa il \textbf{costruttore virtuale}, ma anche il \textbf{virtual copy constructor}.}
+\end{itemize}
+
+\begin{lstlisting}
+	#include <iostream>
+	#include <memory>
+	
+	class Animal {
+		public:
+			virtual ~Animal() = default;
+			virtual std::unique_ptr<Animal> create() = 0;
+			virtual std::unique_ptr<Animal> clone() = 0;
+	};
+	
+	class Dog : public Animal {
+		public:
+			std::unique_ptr<Animal> create() { return std::make_unique<Dog>(); }
+			std::unique_ptr<Animal> clone() { return std::make_unique<Dog>(*this); }
+	};
+	
+	class Cat : public Animal {
+		public:
+			std::unique_ptr<animal> create() { return std::make_unique<Cat>(); }
+			std::unique_ptr<animal> clone() { return std::make_unique<Cat>(*this); }
+	};
+	
+	void who_am_i(Animal *who) {
+		auto new_who = who->create(); // `create` l'oggetto dello stesso tipo, ovvero puntato da who ?
+		
+		auto duplicate_who = who->clone(); // `copy` l'oggetto dello stesso tipo, ovvero puntato da who ?    
+		
+		delete who; //si può cancellare l'oggetto puntatore da who.
+	}
+\end{lstlisting}
+
+\textsf{\small Fornisce un'interfaccia generica per produrre/copiare una varietà di classi usando solo una classe.} \\
+
 \subsection{SFINAE}
+
+\textsf{\small \textbf{Definizione: } \textbf{SFINAE} (\emph{\textbf{S}ubstitution \textbf{F}ailure \textbf{I}s \textbf{N}ot \textbf{A}n \textbf{E}rror}) ha lo scopo di filtrare le funzioni che non producono delle istanze template valide da un insieme di funzioni \emph{overloaded}.} \\
+
+\textsf{\small Otteniamo questo in maniera automatica dal compilatore oppure sfruttando \textbf{std::enable\_if}.} \break
+
+\textsf{\small Motivazioni: } \\
+
+\begin{itemize}
+	\item \textsf{\small È una feature del linguaggio (non un idioma).}
+	\item \textsf{\small Durante l'\emph{overload} delle funzioni template, quando la sostituzione del tipo specificato o dedotto dei parametri del template falliscono, la specializzazione viene scartata invece che causare un errore di compilazione.}
+	\item \textsf{\small Il fallimento della sostituzione (\emph{Substitution Failure}) accade quando il tipo o l'espressione sono mal formati.}
+\end{itemize}
+
+\begin{lstlisting}
+	#include <iostream>
+	
+	template<class T>
+	void func(T* t){ // Single overload set
+		if constexpr(std::is_class_v<T>){ std::cout << "T è un tipo definito dall'utente\n"; }
+		else { std::cout << "T è un tipo primitivo\n"; }
+	}
+	
+	int primitive_t = 6;
+	struct {char var = '4';}class_t;
+	
+	int main()
+	{
+		func(&class_t);
+		func(&primitive_t);
+		
+		//Output: T è un tipo definito dall'utente
+		//Output: T è un tipo primitivo
+		return 0;
+	}
+\end{lstlisting}
+
+\textsf{\small Immagina di volere creare due insiemi (basati sui tipi primitivi e sui tipi definiti dall'utente separatamente) di una funzione che ha la stessa \emph{signature}? (tipo di ritorno, nome, parametri della funzione).} \\
+
+\textsf{\small Soluzione: } \\
+
+\begin{lstlisting}
+	#include <iostream>
+	
+	template<class T, typename = std::enable_if_t<std::is_class_v<T>>>
+	void func(T* t){
+		std::cout << "T è un tipo definito dall'utente.\n";
+	}
+	
+	template<class T, std::enable_if_t<std::is_integral_v<T>, T> = 0>
+	void func(T* t){ // la signature della funzione non è modificata.
+		std::cout << "T è un tipo primitivo.\n";
+	}
+\end{lstlisting}
+
+\textsf{\small Il code snippet sopra è un esempio di come sfruttare \textbf{SFINAE} attraverso l'uso di \textbf{std::enable\_if}, nella quale l'istanze template diventeranno uguali a \emph{void func<(anonymous), void>((anonymous) * t)} e \emph{void func(int *t)}} \break
+
+\textsf{\small Assieme con \textbf{std::enable\_if}, \textbf{SFINAE} è ampiamente usata nel \emph{template metaprogramming}.} \\
+
+\textsf{\small La libreria standard ha anche influenzato \textbf{SFINAE} nel \emph{utilities} \textbf{<type\_traits>}.} \\
+
+\begin{lstlisting}
+	#include <iostream>
+	
+	template<typename T>
+	class is_class_type {
+		template<typename C> static char test(int C::*);    
+		template<typename C> static double test(...);
+		public:
+		enum { value = sizeof(is_class_type<T>::test<T>(0)) == sizeof(char) };
+	};
+	
+	struct class_t{};
+	
+	int main()
+	{
+		std::cout<<is_class_type<class_t>::value<< std::endl; //Output: 1
+		std::cout<<is_class_type<int>::value<< std::endl; //Output: 0
+		return 0;
+	}
+\end{lstlisting}
+
+\textsf{\small Senza \textbf{SFINAE} avresti un errore dal compilatore, qualcosa del tipo: <<\emph{0 cannot be converted to member pointer for a non-class type int}>> visto che sia l'\emph{overload} di test differisce solo del tipo di ritorno.} \\
+\textsf{\small Visto che int non è una classe non può avere membro puntatore di tipo \emph{int int::*}.} \\
 
 %TODO: tratterò questo argomento anche nel capitolo Le gemme della libreria degli Algoritmi.
 
 \subsection{Proxy}
+
+\textsf{\small \textbf{Definizione: } } \\
 
 % ------------------------------------------------------------------------------------
