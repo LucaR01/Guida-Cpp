@@ -4,17 +4,9 @@
 
 % Argomenti di questo capitolo da trattare:
 
-%TODO: Copy-and-Swap Idiom?
 %TODO: Signal Handling? (magari in un capitolo sul multithreading)
-%TODO: Prevent Object Copy?
-%TODO: Command Line Arguments?
 
-%TODO: tecniche per debuggare codice? (magari in un capitolo apposito)
 %TODO: Writing C++ code efficiently in Competitive Programming? (magari in un capitolo apposito)
-
-%TODO: 7 Advance C++ Concepts: RAII, Return Type Resolver, Type Erasure, CRTP, Virtual Constructor, SFINAE, Proxy.
-
-%TODO: pointer to function?
 
 % std uniform real distribution (Forse sta meglio nel capitolo degli Algoritmi)
 
@@ -1858,10 +1850,64 @@
 \textsf{\small Senza \textbf{SFINAE} avresti un errore dal compilatore, qualcosa del tipo: <<\emph{0 cannot be converted to member pointer for a non-class type int}>> visto che sia l'\emph{overload} di test differisce solo del tipo di ritorno.} \\
 \textsf{\small Visto che int non è una classe non può avere membro puntatore di tipo \emph{int int::*}.} \\
 
-%TODO: tratterò questo argomento anche nel capitolo Le gemme della libreria degli Algoritmi.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\textwidth, height=1\textheight, keepaspectratio]{./imgs/SFINAE.png}
+	\caption{SFINAE}
+	\label{fig:SFINAE}
+\end{figure}
 
 \subsection{Proxy}
 
-\textsf{\small \textbf{Definizione: } } \\
+\textsf{\small \textbf{Definizione: } Il \textbf{Proxy}, o anche conosciuto come \emph{operator[] (subscript) proxy}, \emph{double/twice operator overloading} è un \emph{design pattern} il cui intento è quello di ottenere funzionalità pratiche attraverso una classe \emph{middleware}.} \\
+
+\textsf{\small Quindi, il \textbf{Proxy} è una classe che fornisce un'interfaccia modificata ad un'altra classe ed è usata per implementare il \textbf{Proxy Patern}: nel quale un oggetto è un intermediatore per qualche altro oggetto.} \\
+
+\textsf{\small Implementiamo questo attraverso una classe \emph{temporanea/proxy}.} \break
+
+\begin{itemize}
+	\item \textsf{\small È per via del \emph{subscript operator} (operator[]), ma è possibile che anche il tipo/classe che si frappone nello scambio di dati sia proxy. }
+	\item \textsf{\small Abbiamo già visto un esempio di questo nel \textbf{type-erasure} (classe any::inner<>).}
+	\item \textsf{\small Vedremo un ulteriore esempio ora con l'\textbf{operator[]}}
+\end{itemize}
+
+\begin{lstlisting}
+	#include <iostream>
+	
+	template <typename T = int>
+	struct arr2D{
+		private:
+		struct proxy_class{
+			proxy_class(T *arr) : m_arr_ptr(arr) {}
+			// operator[]
+			T &operator[](uint32_t idx) { return m_arr_ptr[idx]; }
+			
+			private:
+			T *m_arr_ptr;
+		};
+		
+		T m_arr[10][10];
+		
+		public:
+		arr2D::proxy_class operator[](uint32_t idx) { return arr2D::proxy_class(m_arr[idx]); }
+	};
+	
+	int main()
+	{
+		arr2D<> arr;
+		arr[0][0] = 1;
+		std::cout << arr[0][0]; //Output: 1
+		return 0;
+	}
+\end{lstlisting}
+
+\textsf{\small Per creare delle funzionalità pratiche come \emph{double operator overloading}, \emph{std::any}, eccetera..} \\
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1.2\textwidth, height=1.2\textheight, keepaspectratio]{./imgs/Design_Patterns/Proxy_Pattern.png}
+	\caption{Proxy Pattern}
+	\label{fig:Proxy_Pattern}
+\end{figure}
 
 % ------------------------------------------------------------------------------------
