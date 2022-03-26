@@ -8,16 +8,9 @@
 
 %TODO: Writing C++ code efficiently in Competitive Programming? (magari in un capitolo apposito)
 
-% std uniform real distribution (Forse sta meglio nel capitolo degli Algoritmi)
-
-% C++ 20: Concepts, ranges, coroutines, template parameter list, modules, ecc.. (non qui, ma in Le gemme della libreria degli Algoritmi)
-
 %TODO: Dependency Injection
 
 %TODO: std::bad_alloc (Insomma, non necessaria per sto capitolo credo)
-
-%TODO: std::clamp (non è chi sa che cosa di avanzato, comunque) (magari nel capitolo degli algoritmi).
-%TODO: normal_distribution (insomma, più nel capitolo degli Algoritmi)
 
 %TODO: magari aggiungere nel capitolo "basi del linguaggio": struct destructors che servono se allochi della memoria nelle struct, non se le usi, ma se allochi.
 
@@ -945,100 +938,6 @@
 
 %\textsf{\small \textbf{Nota:} Non puoi usare \textbf{std::swap} visto che internamente usa il \emph{copy constructor} e l'\emph{assignment operator}.} \\ %TODO: c'è bisogno di ulteriori verifiche.
 
-% -------------------------- SECTION: PREVENTING OBJECT COPY -------------------------
-
-\section{Preventing Object Copy} %TODO: questo posso metterlo nel capitolo di quando parlo di =deleted
-
-\textsf{\small \textbf{Definizione: } Serve per non permette ad un'istanza di una classe di essere copiata.} \\
-
-\textsf{\small Per fare questo ci sono vari modi: } \\
-
-\begin{enumerate}
-	\item \textsf{\small \textbf{Porre il \emph{copy constructor} ed il \emph{copy assignment} privati} }
-	\item \textsf{\small \textbf{Ereditare una classe con un \emph{copy constructor} e un \emph{copy assignment operator} privati} }
-	\item \textsf{\small \textbf{Usare i \emph{copy constructor = delete} e il \emph{copy assignment operator = delete}}}
-\end{enumerate}
-
-\begin{lstlisting}
-	#include <iostream>
-	
-	class Base {
-		int x;
-		public:
-			Base(){}
-			Base(int y) : x(y) {}
-			Base(const Base& temp_obj) = delete;
-			Base& operator=(const Base& temp_obj) = delete;
-	};
-	
-	int main()
-	{
-		Base b1(10);
-		Base b2(b1); // Chiama il copy constructor, da errore perché abbiamo messo \textbf{= delete} per non permettiamo la copiatura di oggetti.
-		b2 = b1; //Chiama il copy assignment operator, da errore perché abbiamo messo \textbf{= delete} per non permettiamo la copiatura di oggetti.
-		return 0;
-	}
-\end{lstlisting}
-
-% ------------------------- SECTION: COMMAND LINE ARGUMENTS --------------------------
-
-\newpage
-
-\section{Command Line Arguments} %TODO: questo non è necessariamente un argomento avanzato.
-
-\textsf{\small \textbf{Definizione: } È possibile passare degli argomenti da linea di comando nei terminali dei sistemi operativi. Per fare questo definiamo il \textbf{main()} con due parametri: il primo corrisponde al numero di comandi da linea di comando e il secondo è la lista degli argomenti passati da linea di comando.} \\
-
-\begin{lstlisting}
-	// Questi sono i due tipici modi di definire il main per passare argomenti da linea di comando:
-	
-	int main(int argc, char *argv[]) {}
-	// Oppure:
-	int main(int argc, char **argv) {} 
-\end{lstlisting}
-
-\begin{itemize}
-	\item \textsf{\small \textbf{argc (ARGument Count)} : è un intero e memorizza il numero di argomenti passati da linea di comando da parte dell'utente, incluso il nome del programma. Quindi se passiamo un valore al programma, il valore di \emph{argc}, il numero di argomenti sarebbe 2: uno l'argomento passato e l'altro il nome del programma.} \\
-	\item \textsf{\small \textbf{argv (ARGument Vector)} : è un array di puntatori di caratteri che lista tutti gli argomenti.} \\
-	\begin{itemize}
-		\item \textsf{\small Se \emph{argc} è maggiore di zero, l'array di elementi da argv[0] a argv[argc - 1] conterrà i puntatori alle stringhe.}
-		\item \textsf{\small argv[0] è il nome del programma. Dopo quello fino ad argv[argc - 1] ogni elemento è un comando passato da linea di comando al programma.}
-	\end{itemize}
-\end{itemize}
-
-\begin{lstlisting}
-	#include <iostream>
-	
-	int main(int argc, char** argv)
-	{
-		std::cout << "Hai inserito: " << argc << " argomenti: " << "\n";
-		
-		for(int i = 0; i < argc; i++)
-		{
-			std::cout << argv[i] << "\n";
-		}
-	
-		//Input: ./programma ciao a tutti
-		//Output: Hai inserito 4 argomenti:
-		//Output: ./programma
-		//Output: ciao
-		//Output: a
-		//Output: tutti
-		
-		return 0;
-	}
-\end{lstlisting}
-
-\textsf{\small Proprietà degli argomenti da linea di comando: } \\
-
-\begin{itemize}
-	\item \textsf{\small Sono passati alla funzione \textbf{main()}.}
-	\item \textsf{\small Sono parametri/argomenti forniti al programma quando viene invocato.}
-	\item \textsf{\small Sono usati per controllare il programma dall'esterno, piuttosto che metterli all'interno del codice.}
-	\item \textsf{\small argv[argc] è un puntatore a \textbf{NULL}.}
-	\item \textsf{\small argv[0] tiene il nome del programma.}
-	\item \textsf{\small argv[1] punta al primo argomento e argv[argc - 1] all'ultimo.}
-\end{itemize}
-
 % ---------------------- SECTION: TECNICHE PER IL DEBUGGING --------------------------
 
 \newpage
@@ -1910,4 +1809,4 @@
 	\label{fig:Proxy_Pattern}
 \end{figure}
 
-% ------------------------------------------------------------------------------------
+% ------------------------------ FINE CAPITOLO ---------------------------------------
