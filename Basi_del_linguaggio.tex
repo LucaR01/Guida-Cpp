@@ -11,7 +11,9 @@
 
 %TODO: magari aggiungere nel capitolo "basi del linguaggio": struct destructors che servono se allochi della memoria nelle struct, non se le usi, ma se allochi.
 
-%TODO: forse potrei aggiungere un po' di storia del linguaggio, già c'è, ma potrei aggiungerne altra. Magari le varie versioni che ci sono state negli anni, le major versions. (una sezione solo per le versioni, dopo la sezione 'Il Linguaggio')
+%TODO: constexpr if, constexpr function 
+
+%TODO: spiegare cos'è il main e a cosa serve (oppure in realtà ce l'ho già)
 
 % -------------------------- SECTION: INTRODUZIONE -----------------------------------
 
@@ -39,6 +41,65 @@ Mentre, l'ultima preview mostrata è stata quella del C++23.}\\
 \textsf{\small Il C++ è un linguaggio di programmazione general purpose nato nel 1983 da Bjarne Stroustrup nei Bell Labs come evoluzione del C.}\\
 
 \textsf{Il nome del linguaggio deriva dal C, ma con l'aggiunta dell'operatore ++ che nel C serve per incrementare di 1. Il che stava a significare che il C++ è come il C, ma migliore, ovvero come suo successore.}\\
+
+% ---------------------------- SECTION: VERSIONI -------------------------------------
+
+\newpage
+
+\section{Versioni}
+
+\textsf{\small Il C++ è un linguaggio che esiste da tanto e quindi nel tempo ha ricevuto diversi aggiornamenti, di seguito una lista delle versioni del linguaggio: } \\
+
+\textsf{\small Il numero affianco a \textbf{C++} è l'anno in cui è uscita la versione.} \\
+
+\begin{itemize}
+	\item \textsf{\small \textbf{C++98/03}}
+	\begin{itemize}
+		\item \textsf{\small \emph{Nuove features} : RTTI, covariant return types, cast operators, mutable, bool, declarations in conditions, template instantiations, member templates, export}
+		\item \textsf{\small \emph{Aggiunte alle librerie} : locales, bitset, valarray, auto\_ptr, templatized string, I/O streams, e complex numbers.}
+		\item \textsf{\small \emph{Basate sul STL} :  containers, algorithms, iterators, function objects}
+	\end{itemize}
+	\item \textsf{\small \textbf{C++11}}
+	\begin{itemize}
+		\item \textsf{\small Grosso numero di cambiamenti alle pratiche standard già esistenti e miglioramenti all'astrazione disponibile per i programmatori.}
+		\item \textsf{\small Numeri in virgola mobile dal IEEE 754: std::decimal::decimal32, std::decimal::decimal64, eccetera..} %TR1 (Technical Report 1)
+		\item \textsf{\small Fondata la \emph{The Standard C++ Foundation}.}
+	\end{itemize}
+	\item \textsf{\small \textbf{C++14}}
+	\begin{itemize}
+		\item \textsf{\small \emph{Nuove features} : variable templates, generic lambdas, lambda init-capture, new/delete elision,relaxed restrictions on constexpr functions, binary literals, digit separators, return type deduction for functions, aggregate classes with default non-static member initializers.}
+		\item \textsf{\small \emph{Nuove features delle librerie} : std::make\_unique
+			std::shared\_timed\_mutex and std::shared\_lock, std::integer\_sequence, std::exchange, std::quoted, e molti altri piccoli miglioramenti alle librerie già presenti, come: two-range overloads for some algorithms, type alias versions of type traits, user-defined literals for basic\_string, duration and complex, eccetera...}
+		\item \textsf{\small Altre estensioni alle librerie.}
+	\end{itemize}
+	\item \textsf{\small \textbf{C++17}}
+	\begin{itemize}
+		\item \textsf{\small \emph{Nuove features} : fold-expressions, class template argument deduction, non-type template parameters declared with auto, compile-time if constexpr, inline variables, structured bindings, initializers for if and switch, u8 character literal, simplified nested namespaces, using-declaration declaring multiple names, made noexcept part of type system, new order of evaluation rules, guaranteed copy elision, temporary materialization, lambda capture of *this, constexpr lambda, gli attributi dei namespaces non devono essere ripetuti, nuovi attributi: [[fallthrough]], [[maybe\_unused]], [[nodiscard]], \_\_has\_include}
+		\item \textsf{\small \emph{Nuovi files di intestazione} : <any>, <charconv>, <execution>, <filesystem>, <memory\_resource>, <optional>, <string\_view>, <variant>}
+		\item \textsf{\small Ulteriori funzionalità nelle librerie, estensioni, rimozioni e deprecazione di altre funzionalità.}
+	\end{itemize}
+	\item \textsf{\small \textbf{C++20}}
+	\begin{itemize}
+		\item \textsf{\small \emph{Nuove features} : Feature test macros, 3-way comparison operator <=> and operator==() = default, designated initializers, init-statements and initializers in range-for, char8\_t, Nuovi attributi: [[no\_unique\_address]], [[likely]], [[unlikely]], pack-expansions in lambda init-captures, removed the requirement to use typename to disambiguate types in many, contexts, consteval, constinit, further relaxed constexpr, signed integers are 2's complement, aggregate initialization using parentheses, Coroutines, Modules, Constraints and concepts, Abbreviated function templates, DR: array new can deduce array size}
+		\item \textsf{\small \emph{Nuovi headers} : <concepts>, <coroutine>, <compare>, <version>, <source\_location>, <format>, <span>, <ranges>, <bit>, <numbers>, <syncstream>, Per il supporto della libreria dei threads: <stop\_token>, <semaphore>, <latch>, <barrier>}
+		\item \textsf{\small Ulteriori funzionalità alle librerie.}
+	\end{itemize}
+	\item \textsf{\small \textbf{C++23}} %TODO: aggiungere quando uscirà.
+	%\begin{itemize}
+		%\item \textsf{\small }
+		%\item \textsf{\small }
+		%\item \textsf{\small }
+	%\end{itemize}
+\end{itemize}
+
+\textsf{\small Per determinare quale standard del linguaggio il compilatore sta utilizzando usufruiamo della macro: \textbf{\_\_cpluscplus} e la stampiamo a schermata.} \\
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1.2\textwidth, height=1.2\textheight, keepaspectratio]{./imgs/versions_new_in_libraries.png}
+	\caption{Versioni}
+	\label{fig:versions_new_in_libraries}
+\end{figure}
 
 % -------------------------- SECTION: PREPROCESSOR -----------------------------------
 
@@ -1292,6 +1353,14 @@ Mentre, l'ultima preview mostrata è stata quella del C++23.}\\
 	\textsf{\small \textbf{$\backslash$0} = \textbf{$\backslash$00} = $\backslash$000} & \textsf{\small octal escape for null character} \\
 	\hline
 \end{tabular}
+
+\subsubsection{'$\backslash$n' vs "$\backslash$n"}
+
+\textsf{\small \textbf{'$\backslash$n'} è un carattere.} \\
+
+\textsf{\small \textbf{"$\backslash$n"} è un puntatore ad un array di caratteri (una stringa), ovvero l'equivalente di \{ '$\backslash$n', '$\backslash$0' \} ($\backslash$n più il terminatore nullo).} \\
+
+\textsf{\small Quale è meglio utilizzare dipende dalla situazione: in una std::string per esempio un \textbf{char} non si può inserire (quindi '$\backslash$n' non funzionerebbe), ma un \textbf{const char*} si. \label{newline_apici_o_virgolette}} \\
 
 % -------------------------- SECTION: FUNZIONI ---------------------------------------
 

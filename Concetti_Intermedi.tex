@@ -258,6 +258,18 @@
 
 %TODO: Iterable Interface?
 
+\subsection{begin vs cbegin}
+
+\textsf{\small \textbf{begin} restituisce un \emph{iteratore} all'inizio mentre \textbf{cbegin} restituisce un \emph{const\_iterator} all'inizio. } \\
+
+\textsf{\small Quindi, \textbf{begin} che restituisce un \emph{iterator} permette di modificare ciò a cui si sta puntando, mentre \textbf{cbegin}, ovvero il \emph{const\_iterator} non ti permetterà di modificare il valore di ciò a cui sta puntando.} \\
+
+\textsf{\small Lo stesso vale per \textbf{end()} e \textbf{cend()}.} \\
+
+\subsubsection{rend()}
+
+\textsf{\small \textbf{rend()} permette di restituire un iteratore inverso (quella r sta per \emph{reverse}). (quindi parte dalla fine e finisce all'inizio)} \\
+
 % -------------------------- SECTION: VIRTUAL ----------------------------------------
 
 \newpage
@@ -1925,6 +1937,18 @@
 \end{tabular}
 
 \textsf{\small Quindi, in conclusione, usare \textbf{$\backslash$n} sembra migliore in termini di prestazioni rispetto \textbf{std::endl} a meno che non sia necessario ripulire il buffer dello stream.} \break
+
+\subsubsection{Meglio '$\backslash$n' oppure "$\backslash$n"}
+
+\textsf{\small Come trattato nel capitolo \emph{Basi del Linguaggio} a pag.\textbf{\pageref{newline_apici_o_virgolette}} il \textbf{'$\backslash$n'} è un carattere, mentre \textbf{"$\backslash$n"} è un array di due caratteri. } \\
+
+\textsf{\small Quindi, nonostante questo probabilmente non avrà un grande impatto, comunque è probabilmente meglio usare \textbf{'$\backslash$n'} quando lo si vuole usare al posto dell'\textbf{endl}.} \\
+
+\begin{itemize}
+	\item \textsf{\small \textbf{'$\backslash$n'} : per finire la frase (quando si usa cout).}
+	\item \textsf{\small \textbf{"$\backslash$n"} : in una stringa.}
+	\item \textsf{\small \textbf{std::endl} : quando si vuole terminare la frase e pulire (\emph{flush}) il buffer dello stream. }
+\end{itemize}
 
 \subsection{Manipolazione degli stream}
 
