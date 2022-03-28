@@ -877,6 +877,25 @@
 
 %TODO: poi trattare anche dei functors.
 
+\subsection{mutable}
+
+\textsf{\small \textbf{Definizione: } La parola chiave \textbf{mutable} serve per modificare certi dati membri di una classe o struttura attraverso una funzione costante o una lambda (quando le variabili sono catturati per valore) anche se non vuoi modificare gli altri membri.} \\
+
+\begin{lstlisting}
+	#include <iostream>
+	
+	int main()
+	{
+		int a = 11;
+		auto func = [a]() mutable -> int { ++a; std::cout << a << '\n'; return a; };
+		
+		func(); //Output: 12
+		return 0;
+	}
+\end{lstlisting}
+
+%TODO: magari approfondire o mostrare altri esempi.
+
 % -------------------------- SECTION: MEMORIA DINAMICA -------------------------------
 
 \newpage

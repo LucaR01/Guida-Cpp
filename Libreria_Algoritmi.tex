@@ -245,7 +245,7 @@
 
 \textsf{\small \textbf{Definizione: } Queste, invece sono quelle operazioni che ti permettono di modificare la sequenza originaria.} \\
 
-\subsection{Copiare sequenze}
+\subsection{Copiare sequenze | Copy}
 
 \textsf{\small Queste operazioni ti permettono di copiare parti o intere sequenze: \textbf{std::copy}, \textbf{std::copy\_n}, \textbf{std::copy\_if}, \textbf{std::copy\_backward}.} \\
 
@@ -318,7 +318,7 @@
 	}
 \end{lstlisting}
 
-\subsection{Move}
+\subsection{Muovere | Move}
 
 \textsf{\small Queste ci permettono di spostare gli elementi da una sequenza ad un'altra: \textbf{std::move}, \textbf{std::move\_backward}.} \\
 
@@ -347,7 +347,7 @@
 	}
 \end{lstlisting}
 
-\subsection{Swap}
+\subsection{Scambiare | Swap}
 
 \textsf{\small Le operazioni di \textbf{swap} ci permettono di scambiare gli elementi di due sequenze, contenitore: \textbf{std::swap}, \textbf{std::swap\_ranges}, \textbf{iter\_swap}.} \\
 
@@ -394,7 +394,7 @@
 	}
 \end{lstlisting}
 
-\subsection{Transform}
+\subsection{Trasformare | Transform}
 
 \textsf{\small Applica un'operazione sugli elementi delle sequenze: \textbf{std::transform}.} \\
 
@@ -439,9 +439,205 @@
 	}
 \end{lstlisting}
 
-\subsection{Replace}
+\subsection{Rimpiazzare | Replace}
 
 \textsf{\small Queste permettono di rimpiazzare alcuni elementi della sequenza con altri: \textbf{std::replace}, \textbf{std::replace\_if}, \textbf{std::replace\_copy}, \textbf{std::replace\_copy\_if}.} \\
+
+\begin{lstlisting}
+	#include <iostream> // per std::cout
+	#include <algorithm> // per std::replace, replace\_if, replace\_copy\_if
+	#include <vector> // per std::vector
+	#include <array> // per std::array
+	#include <iterator> // per std::ostream\_iterator
+	#include <functional> // per std::bind
+	
+	int main()
+	{
+		// ESEMPIO REPLACE
+		std::array<int, 10> arr{3, 2, 1, 7, 8, 6, 11, 9, 0, 33};
+		
+		std::replace(arr.begin(), arr.end(), 6, 66);
+		
+		for (int a : arr) {
+			std::cout << a << " ";
+		}
+		std::cout << '\n';
+		
+		//Output: 3 2 1 7 8 66 11 9 0 33
+		
+		// ESEMPIO REPLACE\_IF
+		// Se è minore di 3 allora lo sostituiamo con 37.
+		std::replace_if(arr.begin(), arr.end(), 
+		std::bind(std::less<int>(), std::placeholders::_1, 3), 37);
+		for (int a : arr) {
+			std::cout << a << " ";
+		}
+		std::cout << '\n';
+		
+		//Output: 3 37 37 7 8 66 11 9 37 33
+		
+		// ESEMPIO REPLACE\_COPY\_IF
+		std::vector<int> v{6, 1, 22, 66, 3, 9, 8, 1, 4, 5, 7, 0 };
+		std::replace_copy_if(v.begin(), v.end(), std::ostream_iterator<int>(std::cout, " "), [](int n) { return n > 6; }, 33);
+		std::cout << '\n';
+		
+		//Output: 6 1 33 33 3 33 33 1 4 5 33 0
+		return 0;
+	}
+\end{lstlisting}
+
+\subsection{Riempire | Fill}
+
+\textsf{\small Utilizziamo \textbf{std::fill} e \textbf{std::fill\_n} per riempire una sequenza con una serie di elementi.} \\
+
+\begin{lstlisting}
+	#include <iostream>
+	#include <algorithm>
+	#include <vector>
+	#include <iterator>
+	
+	int main()
+	{
+		std::vector<int> v(10, 21);
+		v.reserve(10);
+		std::fill_n( std::back_inserter( v ), 10, 36);
+		
+		for(auto e : v)
+		{
+			std::cout << e << " ";
+		}
+	
+		std::cout << '\n';
+		
+		//Output: 21 21 21 21 21 21 21 21 21 21 36 36 36 36 36 36 36 36 36 36
+		return 0;
+	}
+\end{lstlisting}
+
+\subsection{Generatori | Generate}
+
+\textsf{\small Servono per generare elementi in base ad una funzione generatrice. Questa è definita dall'utente ed è chiamata in modo successivo per assegnare gli elementi, numeri. Queste sono: \textbf{std::generate}, \textbf{std::generate\_n}. } \\
+
+\begin{lstlisting}
+	#include <iostream>
+	#include <algorithm>
+	#include <vector>
+	#include <iterator>
+	#include <random>
+	#include <functional>
+	
+	int main()
+	{
+		// ESEMPIO 1
+		std::vector<int> v;
+		std::generate_n( std::back_inserter(v), 8, [val = 0]() mutable {
+			const auto old = val;
+			val += 6;
+			return old;
+		});
+	
+		for(auto e : v)
+		{
+			std::cout << e << " ";
+		}
+		
+		std::cout << '\n';
+	
+		//Output: 0 6 12 18 24 30 36 42
+	
+		// ESEMPIO 2
+		std::vector<int> v2;
+		
+		std::mt19937 rng( std::random_device{}() );
+		std::uniform_int_distribution<int> d(0, 20);
+		
+		std::generate_n( std::back_inserter(v2), 8, std::bind(d, rng));
+		
+		for(auto e : v2)
+		{
+			std::cout << e << " ";
+		}
+		
+		std::cout << '\n';
+		
+		//Output: 9 6 15 19 14 3 13 8 (pseudo-casuale ogni volta)
+		return 0;
+	}
+\end{lstlisting}
+
+%TODO: generate vs fill (direi non necessario)
+
+\subsection{Rimozione | Remove}
+
+\textsf{\small Come implica dal nome, queste operazioni forniscono un modo per rimuovere elementi da una sequenza: \textbf{std::remove}, \textbf{std::remove\_if}, \textbf{std::remove\_copy}, \textbf{std::remove\_copy\_if}.} \\
+
+\begin{lstlisting}
+	#include <iostream>
+	#include <algorithm>
+	#include <vector>
+	#include <string>
+	#include <cctype>
+	
+	int main()
+	{
+		std::string str = " Testo con degli   spazi bianchi";
+		
+		auto noSpace = std::remove(str.begin(), str.end(), ' ');
+		
+		std::cout << str << std::endl; //Output: Testocondeglispazibianchibianchi
+		
+		std::string str2 = "Testo\n con\tdegli   spazi bianchi\n\n";
+		str2.erase(std::remove_if(str2.begin(), str2.end(), 
+		[](unsigned char c){return std::isspace(c);}), str2.end());
+		
+		std::cout << str2 << std::endl; //Output: Testocondeglispazibianchi
+		return 0;
+	}
+\end{lstlisting}
+
+\subsection{Unico | Unique}
+
+\textsf{\small Permettono di ottenere una sequenza unica, senza elementi ripetuti.} \\
+
+\begin{lstlisting}
+	#include <iostream>
+	#include <algorithm>
+	#include <vector>
+	#include <string>
+	#include <iterator>
+	
+	int main()
+	{
+		// ESEMPIO UNIQUE
+		std::vector<std::string> s = { "0", "1", "2", "2", "2", "3", "5", "4", "6", "9", "9", "5", "11" };
+		
+		const auto s2 = std::unique(s.begin(), s.end());
+		s.erase(s2, s.end());
+		
+		for(auto e : s)
+		{
+			std::cout << e << " ";
+		}
+		
+		std::cout << '\n';
+		//Output: 0 1 2 3 5 4 6 9 5 11
+		
+		// ESEMPIO UNIQUE\_COPY
+		std::string str1 = "La      stringa    con molti       spazi   bianchi!";
+		std::cout << "prima: " << str1 << '\n'; //Output: La      stringa    con molti       spazi   bianchi!
+		
+		std::string str2;
+		std::unique_copy(str1.begin(), str1.end(), std::back_inserter(str2),
+		[](char c1, char c2){ return c1 == ' ' && c2 == ' '; });
+		
+		std::cout << "dopo:  " << str2 << '\n'; //Output: La stringa con molti spazi bianchi!
+		return 0;
+	}
+\end{lstlisting}
+
+\subsection{Invertire | Reverse}
+
+\textsf{\small Queste operazioni consentono di invertire l'ordine delle sequenze: \textbf{std::reverse}, \textbf{std::reverse\_copy}.} \\
 
 \begin{lstlisting}
 	#include <iostream>
@@ -450,6 +646,228 @@
 	
 	int main()
 	{
+		// ESEMPIO REVERSE
+		std::vector<int> vec{ 9, 6, 3};
+		std::reverse(vec.begin(), vec.end());
+		for(auto v : vec) std::cout << v;
+		std::cout << '\n';
+		//Output: 369
+		
+		// ESEMPIO REVERSE\_COPY
+		std::vector<int> vec2({2, 1, 4});
+		
+		std::vector<int> reverseVec(3);
+		
+		std::reverse_copy(std::begin(vec2), std::end(vec2), std::begin(reverseVec));
+		for(auto v : reverseVec)
+		{
+			std::cout << v << " ";
+		}
+	
+		std::cout << '\n';
+		//Output: 4 1 2
+		return 0;
+	}
+\end{lstlisting}
+
+\subsection{Ruotare | Rotate}
+
+\textsf{\small Ruotano l'ordine degli elementi nella sequenza: \textbf{std::rotate}, \textbf{std::rotate\_copy}.} \\
+
+\begin{lstlisting}
+	#include <iostream>
+	#include <algorithm>
+	#include <vector>
+	
+	int main()
+	{
+		std::vector<int> v{3, 7, 9, 8, 2, 1, 0, 10, 4, 5, 12};
+		
+		// Rotazione verso sinistra
+		std::rotate(v.begin(), v.begin() + 1, v.end());
+		
+		for(auto e : v) std::cout << e << " ";
+		std::cout << '\n';
+		
+		//Output: 7 9 8 2 1 0 10 4 5 12 3
+		
+		// Rotazione verso destra
+		std::rotate(v.rbegin(), v.rbegin() + 1, v.rend());
+		
+		for(auto e : v) std::cout << e << " ";
+		std::cout << '\n';
+		
+		//Output: 3 7 9 8 2 1 0 10 4 5 12
+		return 0;
+	}
+\end{lstlisting}
+
+\subsection{Spostare | Shift}
+
+\textsf{\small Servono per spostare di tot elementi le sequenze, a differenza della rotazione che si limita a ruotare la sequenza, con lo spostamento si perdono o si ottengono dati.} \\
+
+\begin{lstlisting}
+	#include <iostream>
+	#include <algorithm>
+	#include <vector>
+	#include <string>
+	
+	int main()
+	{
+		std::vector<std::string>  g{"a", "b", "c", "d", "e", "f", "g"};
+		
+		std::shift_left( begin(g), end(g), 3 );
+		
+		for(auto s : g) std::cout << s << " ";
+		std::cout << '\n';
+		
+		//Output: . . . d e f g (in realtà mi dava errore std::shift\_left non è membro di std)
+		
+		std::shift_right( begin(g), end(g), 3);
+		for(auto s : g) std::cout << s << " ";
+		std::cout << '\n';
+		
+		//Output: . . . d . . . (in realtà mi dava errore std::shift\_right non è membro di std)
+		
+		return 0;
+	}
+\end{lstlisting}
+
+\subsection{Mischiare | Shuffle}
+
+\textsf{\small Serve per mischiare, mescolare gli elementi della sequenza: \textbf{std::shuffle}, \textbf{std::random\_shuffle}.} \\
+
+\begin{lstlisting}
+	#include <iostream>
+	#include <algorithm>
+	#include <vector>
+	#include <string>
+	#include <random>
+	
+	int main()
+	{
+		std::vector<std::string> a = { "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten" };
+		
+		std::mt19937 rng( std::random_device{}());
+		std::shuffle( a.begin(), a.end(), rng );
+		
+		for(auto s : a) std::cout << s << " ";
+		std::cout << '\n';
+		
+		//Output: three zero four two ten one nine seven six eight five (è sempre diversa perché è casuale)
+		return 0;
+	}
+\end{lstlisting}
+
+\fleuron
+
+\textsf{\small Per tutte queste operazioni c'è un equivalente per \emph{ranges} del C++20 a pag. \pageref{ranges}} \\
+
+% ---------------------- SECTION: OPERAZIONI SU PARTIZIONI ---------------------------
+
+\section{Operazioni su Partizioni}
+
+\textsf{\small \textbf{Definizione: } Le \textbf{operazioni su partizioni} permettono di eseguire partizioni sulle sequenze di elementi.} \\
+
+\textsf{\small Queste operazioni possibili sono: \textbf{std::partition}, \textbf{std::is\_partitioned}, \textbf{std::stable\_partition}, \textbf{std::partition\_copy}, \textbf{std::partition\_point}.} \\
+
+\begin{lstlisting}
+	#include <iostream>
+	#include <algorithm>
+	#include <vector>
+	#include <array>
+	
+	int main()
+	{
+		// ESEMPIO PARTITION
+		std::vector<std::string> a = { "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten" };
+		std::vector<int> b = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+		
+		auto partion1 = std::partition( a.begin(), a.end(), [](const auto& s) { return std::any_of( s.begin(), s.end(), []( char c){ return c == 'e'; });});
+		
+		for(auto p : a)
+		{
+			std::cout << p << " ";
+		}
+	
+		std::cout << '\n';
+		
+		//Output: zero one ten three nine five eight seven six four two
+		
+		auto partition2 = std::partition( b.begin(), b.end(), [](int i) { return i % 2 == 0;});
+		
+		for(auto p : b)
+		{
+			std::cout << p << " ";
+		}
+		
+		std::cout << '\n';
+		
+		//Output: 0 10 2 8 4 6 5 7 3 9 1
+		
+		// ESEMPIO STABLE\_PARTITION
+		std::vector<std::string> c = { "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten" };
+		std::vector<int> d = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+		
+		auto partion3 = std::stable_partition( a.begin(), a.end(), [](const auto& s) { return std::any_of( s.begin(), s.end(), []( char c){ return c == 'e'; });});
+		
+		for(auto p : c)
+		{
+			std::cout << p << " ";
+		}
+		
+		std::cout << '\n';
+		
+		//Output: zero one two three four five six seven eight nine ten
+		
+		auto partition4 = std::stable_partition( b.begin(), b.end(), [](int i) { return i % 2 == 0;});
+		
+		for(auto p : d)
+		{
+			std::cout << p << " ";
+		}
+		
+		std::cout << '\n';
+		
+		//Output: 0 1 2 3 4 5 6 7 8 9 10
+		
+		//ESEMPIO IS\_PARTITIONED
+		std::vector<int> v = { 2, 4, 8, 6, 0, 10};
+		bool isPartitioned = std::is_partitioned( v.begin(), v.end(), [](int i){ return i % 2 == 0; });
+		
+		std::cout << std::boolalpha << isPartitioned << std::endl; //Output: true
+		
+		// ESEMPIO PARTITION\_COPY
+		int arr [10] = {1,2,3,4,5,6,7,8,9,10};
+		int trueArr [5] = {0};
+		int falseArr [5] = {0};
+		
+		std::partition_copy(std::begin(arr), std::end(arr), std::begin(trueArr), std::begin(falseArr), [](int i){return i > 5; });
+		
+		for(int a : trueArr)
+		{
+			std::cout << a << " ";
+		}
+		
+		std::cout << '\n';
+		
+		//Output: 6 7 8 9 10
+		
+		for(int a : falseArr)
+		{
+			std::cout << a << " ";
+		}
+		
+		std::cout << '\n';
+		
+		//Output: 1 2 3 4 5
+		
+		// ESEMPIO PARTITION\_POINT
+		std::array v = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+		auto is_even = [](int i){ return i % 2 == 0; };
+		const auto parPoint = std::partition_point(v.cbegin(), v.cend(), is_even);
+		const auto i = std::distance(v.cbegin(), pp);
+		std::cout << "Partition point a: " << i << "; v[" << i << "] = " << *pp << '\n'; //Output: Partition point a: 4; v[4] = 5
 		return 0;
 	}
 \end{lstlisting}
@@ -467,7 +885,9 @@
 \end{lstlisting}
 \end{comment}
 
-% ---------------------- SECTION: OPERAZIONI SU PARTIZIONI ---------------------------
+\fleuron
+
+\textsf{\small Per tutte queste operazioni c'è un equivalente per \emph{ranges} del C++20 a pag. \pageref{ranges}} \\
 
 % --------------------- SECTION: OPERAZIONI DI ORDINAMENTO ---------------------------
 
