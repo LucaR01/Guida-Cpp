@@ -872,7 +872,537 @@
 	}
 \end{lstlisting}
 
-\begin{comment}
+\fleuron
+
+\textsf{\small Per tutte queste operazioni c'è un equivalente per \emph{ranges} del C++20 a pag. \pageref{ranges}} \\
+
+% --------------------- SECTION: OPERAZIONI DI ORDINAMENTO ---------------------------
+
+\newpage
+
+\section{Operazioni di Ordinamento}
+
+\textsf{\small \textbf{Definizione: } Le \textbf{operazioni di ordinamento} consentono di ordinare le sequenze.} \\
+
+\textsf{\small Queste sono: \textbf{std::sort}, \textbf{std::stable\_sort}, \textbf{std::partial\_sort}, \textbf{std::partial\_sort\_copy}, \textbf{std::is\_sorted}, \textbf{std::is\_sorted\_until}, \textbf{std::nth\_elemeent}.} \\
+
+\begin{lstlisting}
+	#include <iostream>
+	#include <algorithm>
+	#include <vector>
+	#include <string>
+	
+	int main()
+	{
+		// ESEMPIO SORT E IS\_SORTED
+		std::vector<int> v{ 7, 9, 1, 0, 2, 5, 3, 4, 8, 10, 6};
+		
+		std::cout << std::boolalpha << std::is_sorted(v.begin(), v.end()) << '\n'; //Output: false
+		
+		std::sort(v.begin(), v.end());
+		
+		for(auto e : v)
+		{
+			std::cout << e << " ";
+		}
+	
+		std::cout << '\n';
+		
+		//Output: 0 1 2 3 4 5 6 7 8 9 10
+		
+		std::cout << std::boolalpha << std::is_sorted(v.begin(), v.end()) << '\n'; //Output: true
+		
+		// ESEMPIO SORT 
+		// Il sort, di solito usa il minore < per fare l'ordinamento, ma in questo caso noi gli passiamo il maggiore >.
+		std::sort(v.begin(), v.end(), std::greater<int>{});
+		
+		for(auto e : v)
+		{
+			std::cout << e << " ";
+		}
+		
+		std::cout << '\n';
+		
+		//Output: 10 9 8 7 6 5 4 3 2 1 0
+		
+		// ESEMPIO STABLE\_SORT
+		class Employee {
+			public:
+				int age;
+				std::string name;  // Non partecipa nei paragoni
+		};
+		
+		// Questo ci serve per indicare alle funzioni sort come devono fare il paragone per ordinare gli elementi.
+		bool operator<(const Employee & lhs, const Employee & rhs)
+		{
+			return lhs.age < rhs.age;
+		}
+	
+		std::vector<Employee> employees =
+		{ 
+			{22, "Gigi"},
+			{37, "Maria"},
+			{48, "Alessio"},
+		};
+	
+		std::stable_sort(v.begin(), v.end());
+		
+		for (const Employee & e : employees)
+			std::cout << e.age << ", " << e.name << '\n';
+			
+		//Output: 22, Gigi
+		//Output: 37, Maria
+		//Output: 48, Alessio
+		
+		// ESEMPIO PARTIAL\_SORT
+		std::vector<int> v2 = { 5, 7, 1, 0, 3, 5, 6, 4, 7, 8, 10, 2 };
+		
+		// Ordina solo una parte del contenitore, non tutto.
+		// Può essere utile, magari per delle classifiche, dove magari servono soltanto i primi 10 o i primi 100 giocatori e non tutti gli altri.
+		std::partial_sort(v2.begin(), v2.begin() + 4, v2.end());
+		
+		for(auto& v : v2)
+		{
+			std::cout << v << " ";
+		}
+	
+		std::cout << '\n';
+		
+		//Output: 0 1 2 3 7 5 6 5 7 8 10 4 (i primi 4 elementi sono ordinati: 0 1 2 3, tutti gli altri son rimasti in posizioni non ordinate)
+		
+		// ESEMPIO NTH\_ELEMENT
+		std::vector<int> v3{11, 7, 9, 4, 2, 2, 6, 7, 9, 3, 7, 7};
+		
+		auto m = v3.begin() + v3.size()/2;
+		std::nth_element(v3.begin(), m, v3.end());
+		
+		for(auto& e : v3)
+		{
+			std::cout << e << " ";
+		}
+		
+		std::cout << '\n';
+		
+		//Output: 6 2 3 4 2 7 7 7 9 9 7 11
+		
+		std::cout << "The medianIl mediano è: " << v3[v3.size()/2] << '\n'; //Output: Il mediano è 7
+		
+		return 0;
+	}
+\end{lstlisting}
+
+\fleuron
+
+\textsf{\small Per tutte queste operazioni c'è un equivalente per \emph{ranges} del C++20 a pag. \pageref{ranges}} \\
+
+% ------------ SECTION: OPERAZIONI DI RICERCA BINARIA (BINARY SEARCH) ----------------
+
+\newpage
+
+\section{Operazioni di ricerca binaria}
+
+\textsf{\small \textbf{Definizione: } Queste servono per operazioni su ricerche binarie: \textbf{std::lower\_bound}, \textbf{std::upper\_bound}, \textbf{std::equal\_range}, \textbf{std::binary\_search}.} \\
+
+\begin{lstlisting}
+	#include <iostream>
+	#include <algorithm>
+	#include <vector>
+	
+	int main()
+	{
+		// ESEMPIO LOWER\_BOUND
+		std::vector<int> v{ 15, 5, 22, 11, 33, 7, 88, 0, 9, 1, 4, 26, 52 };
+		
+		// Restituisce un iteratore che punta al primo elemento che non è minore del valore.
+		const int lowerBound = 3;
+		const auto i = std::lower_bound(v.begin(), v.end(), lowerBound);
+		
+		std::cout << *i << '\n'; //Output: 15
+		
+		// ESEMPIO UPPER\_BOUND
+		// Restituisce un iteratore che punta al primo elemento che è maggiore del valore.
+		const int upperBound = 7;
+		const auto j = std::upper_bound(v.begin(), v.end(), upperBound);
+		
+		std::cout << *j << '\n'; //Output: 22
+		
+		// ESEMPIO EQUAL\_RANGE
+		std::vector<int> v = { 11, 10, 33, 33, 33, 111, 10,
+			333, 369, 77, 77, 80 };
+		
+		// Dichiariamo un iteratore per il
+		// valore di ritorno di std::equal\_range
+		std::pair<std::vector<int>::iterator,
+		std::vector<int>::iterator> it;
+		
+		std::sort(v.begin(), v.end());
+		// v diventa 10 10 11 33 33 33 77 77 80 111 333 369
+		
+		// Usiamo std::equal\_range e compariamo gli elementi
+		// con 33
+		it = std::equal_range(v.begin(), v.begin() + 12, 33);
+		
+		// Displaying the subrange bounds
+		std::cout << "33 è presente nel vettore dall'indice: "
+		<< (it.first - v.begin()) << " fino a: "
+		<< (it.second - v.begin());
+		
+		//Output: 33 è presente nel vettore dall'indice: 3 fino a: 6
+		
+		// ESEMPIO BINARY\_SEARCH
+		std::vector<int> haystack {1, 3, 7, 5, 9};
+		std::vector<int> needles {7, 2, 3};
+		
+		for (auto needle : needles) {
+			std::cout << "Cerco il: " << needle << '\n';
+			if (std::binary_search(haystack.begin(), haystack.end(), needle)) {
+				std::cout << "Trovato " << needle << '\n';
+			} else {
+				std::cout << "Non trovato!\n";
+			}
+		}
+	
+		//Output: Cerco il: 7
+		//Output: Trovato
+		//Output: Cerco il: 2
+		//Output: Non trovato!
+		//Output: Cerco il: 3
+		//Output: Trovato
+		
+		return 0;
+	}
+\end{lstlisting}
+
+\fleuron
+
+\textsf{\small Per tutte queste operazioni c'è un equivalente per \emph{ranges} del C++20 a pag. \pageref{ranges}} \\
+
+% --------------- SECTION: ALTRE OPERAZIONI DI ORDINAMENTO SUI RANGES ----------------
+
+%TODO: questa parte nella sezione sul C++20
+
+% -------------------------- SECTION: OPERAZIONI DI MERGE ----------------------------
+
+\newpage
+
+\section{Operazioni di Fusione (Merge)}
+
+\textsf{\small \textbf{Definizione: } Le \textbf{operazioni di merge} permettono di combinare, di fondere gli elementi di due sequenze: \textbf{std::merge}, \textbf{std::inplace\_merge}.} \\
+
+\begin{lstlisting}
+	#include <iostream>
+	#include <algorithm>
+	#include <vector>
+	#include <random>
+	#include <functional>
+	
+	int main()
+	{
+		// ESEMPIO MERGE
+		std::random_device rd;
+		std::mt19937 mt(rd());
+		std::uniform_int_distribution<> distribution(0, 9);
+		
+		std::vector<int> v1(10), v2(10);
+		std::generate(v1.begin(), v1.end(), std::bind(distribution, std::ref(mt)));
+		std::generate(v2.begin(), v2.end(), std::bind(distribution, std::ref(mt)));
+		
+		std::cout << "Prima del sorting" << '\n';
+		
+		for(auto& v : v1)
+		{
+			std::cout << v << " ";
+		}
+		std::cout << '\n';
+		
+		for(auto& v : v2)
+		{
+			std::cout << v << " ";
+		}
+		std::cout << '\n';
+		
+		//Output: Prima del sorting
+		//Output: 5 6 1 8 4 9 2 5 2 2 (numeri generati casualmente)
+		//Output: 6 0 6 5 7 8 8 2 8 5 (numeri generati casualmente)
+		
+		std::sort(v1.begin(), v1.end());
+		std::sort(v2.begin(), v2.end());
+		
+		std::cout << "Dopo il sorting" << '\n';
+		
+		for(auto& v : v1)
+		{
+			std::cout << v << " ";
+		}
+		std::cout << '\n';
+		
+		for(auto& v : v2)
+		{
+			std::cout << v << " ";
+		}
+		std::cout << '\n';
+		
+		//Output: Dopo il sorting
+		//Output: 1 2 2 2 4 5 5 6 8 9 
+		//Output: 0 2 5 5 6 6 7 8 8 8
+		
+		std::vector<int> v3;
+		std::merge(v1.begin(), v1.end(), v2.begin(), v2.end(), std::back_inserter(v3));
+		
+		std::cout << "v3 contiene: ";
+		
+		for(auto& v : v3)
+		{
+			std::cout << v << " ";
+		}
+		std::cout << '\n';
+		
+		//Output: v3 contiene: 0 1 2 2 2 2 4 5 5 5 5 6 6 6 7 8 8 8 8 9 (numeri generati casualmente)
+		
+		// ESEMPIO INPLACE\_MERGE
+		int first[] = {7, 36, 12, 24, 8};
+		int second[] = {57, 94, 14, 67, 80};
+		
+		std::vector<int> v(10);
+		
+		std::vector<int>::iterator it;
+		
+		std::sort (first,first+5);
+		std::sort (second,second+5);
+		
+		it = std::copy (first, first+5, v.begin()); 
+		std::copy (second,second+5,it);
+		
+		std::inplace_merge (v.begin(),v.begin()+5,v.end());
+		
+		std::cout << "Il vettore risultante contiene: ";
+		for (it=v.begin(); it!=v.end(); ++it)
+		{
+			std::cout << ' ' << *it; 
+		}
+		std::cout << '\n';
+		
+		//Output: Il vettore risultante contiene:  7 8 12 14 24 36 57 67 80 94
+		return 0;
+	}
+\end{lstlisting}
+
+\fleuron
+
+\textsf{\small Per tutte queste operazioni c'è un equivalente per \emph{ranges} del C++20 a pag. \pageref{ranges}} \\
+
+% ------------------------ SECTION: OPERAZIONI SUGLI INSIEMI -------------------------
+
+\newpage
+
+\section{Operazioni sugli insiemi}
+
+\textsf{\small \textbf{Definizione: } Le \textbf{operazioni sugli insiemi} permettono di attuare le tipiche operazioni matematiche: \emph{unione} : \textbf{std::set\_union}, \emph{intersezione} : \textbf{std::set\_intersection}, \emph{differenza} : \textbf{std::set\_difference}, \emph{simmetria differenza} : \textbf{std::set\_symmetric\_difference}.} \\
+
+\begin{lstlisting}
+	#include <iostream>
+	#include <algorithm>
+	#include <vector>
+	#include <string>
+	
+	// Funzione per mostrare gli elementi di un std::vector
+	template<typename T>
+	void printVec(const std::vector<T>& v)
+	{
+		for(const auto& i : v)
+		{
+			std::cout << i << " ";
+		}
+		std::cout << '\n';
+	}
+	
+	int main()
+	{
+		// ESEMPIO INCLUDES
+		std::vector<char> v1 = { 'a', 'b', 'c', 'd', 'f', 'g' };
+		std::vector<char> v2 = { 'a', 'b', 'c' };
+		std::vector<char> v3 = { 'a', 'c' };
+		
+		printVec(v1);
+		std::cout << "include: " << '\n';
+		
+		printVec(v2);
+		
+		std::cout << std::boolalpha << std::includes(v1.begin(), v1.end(), v2.begin(), v2.end()) << '\n'; //Output: true
+		
+		printVec(v3);
+		
+		std::cout << std::boolalpha << std::includes(v1.begin(), v1.end(), v3.begin(), v3.end()) << '\n'; //Output: false
+		
+		std::cout << std::flush;
+		
+		// ESEMPIO SET\_UNION, SET\_INTERSECTION, SET\_DIFFERENCE, SET\_SYMMETRIC\_DIFFERENCE
+		std::vector<int> vec1{ 1, 2, 3, 5, 7, 9 };
+		std::vector<int> vec2{ 6, 4, 1, 2, 3, 9, 11 };
+		
+		std::sort(vec1.begin(), vec1.end());
+		std::sort(vec2.begin(), vec2.end());
+		
+		std::vector<int> destUnion;
+		
+		std::set_union(vec1.begin(), vec1.end(), vec2.begin(), vec2.end(), std::back_inserter(destUnion));
+		
+		std::cout << "unione: ";
+		printVec(destUnion); //Output: unione: 1 2 3 4 5 6 7 9 11
+		
+		std::vector<int> destIntersection;
+		
+		std::set_intersection(vec1.begin(), vec1.end(), vec2.begin(), vec2.end(), std::back_inserter(destIntersection));
+		
+		std::cout << "intersezione: ";
+		printVec(destIntersection); //Output: intersezione: 1 2 3 9
+		
+		std::vector<int> destDifference;
+		
+		std::set_difference(vec1.begin(), vec1.end(), vec2.begin(), vec2.end(), std::back_inserter(destDifference));
+		
+		std::cout << "differenza: ";
+		printVec(destDifference); //Output: differenza: 5 7
+		
+		std::vector<int> destSymmDifference;
+		
+		std::set_symmetric_difference(vec1.begin(), vec1.end(), vec2.begin(), vec2.end(), std::back_inserter(destSymmDifference));
+		
+		std::cout << "differenza simmetrica: ";
+		printVec(destSymmDifference); //Output: differenza simmetrica: 4 5 6 7 11 
+		
+		return 0;
+	}
+\end{lstlisting}
+
+\fleuron
+
+\textsf{\small Per tutte queste operazioni c'è un equivalente per \emph{ranges} del C++20 a pag. \pageref{ranges}} \\
+
+% ------------------------- SECTION: OPERAZIONI SU HEAP ------------------------------
+
+\newpage
+
+\section{Operazioni su Heap}
+
+\textsf{\small \textbf{Definizione: } L'\textbf{Heap} è una \emph{struttura dati} basata sugli \emph{alberi} che soddisfa la \textbf{proprietà degli heap}: } \\
+
+\textsf{\small In un \textbf{max heap}: } \\
+
+\begin{itemize}
+	\item \textsf{\small le chiavi (il valore) di ciascun nodo padre son sempre maggiori o uguali a quelle dei nodi figli.}
+	\item \textsf{\small La chiave (il valore) dal valore massimo appartiene alla radice (detta \emph{root node}).}
+\end{itemize}
+
+\textsf{\small In un \textbf{min heap}: } \\
+
+\begin{itemize}
+	\item \textsf{\small Le chiavi (il valore) di ciascun nodo sono minori o uguali a quelle dei figli.}
+	\item \textsf{\small La chiave del valore minimo appartiene alla radice. }
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\textwidth, height=1\textheight, keepaspectratio]{./imgs/Algorithm_Library/Max-Heap.png}
+	\caption{Max Heap}
+	\label{fig:max-heap}
+\end{figure}
+
+\textsf{\small Le operazioni disponibili sugli heap sono: \textbf{std::push\_heap}, \textbf{std::pop\_heap}, \textbf{std::make\_heap}, \textbf{std::sort\_heap}, \textbf{std::is\_heap}, \textbf{std::is\_heap\_until}.} \\
+
+\begin{lstlisting}
+	#include <iostream>
+	#include <algorithm>
+	#include <vector>
+	#include <random>
+	#include <functional>
+	
+	// Funzione per mostrare gli elementi di un std::vector
+	template<typename T>
+	void printVec(const std::vector<T>& v)
+	{
+		for(const auto& i : v)
+		{
+			std::cout << i << " ";
+		}
+		std::cout << '\n';
+	}
+	
+	int main()
+	{
+		// ESEMPIO MAKE\_HEAP, SORT\_HEAP
+		std::mt19937 rng{ std::random_device{}() };
+		std::uniform_real_distribution<float> dist{0.0f, 99.0f};
+		auto rnd = std::bind(dist, rng);
+		
+		std::vector<int> v( 22 );
+		std::generate_n( v.begin(), v.size(), rnd);
+		
+		std::make_heap( v.begin(), v.end()); // se qui avessi messo std::make\_heap( v.begin(), v.end(), std::greater<int>{}); avremmo fatto un min-heap
+		std::sort_heap( v.begin(), v.end());
+		
+		printVec(v); //Output: 2 2 8 15 23 23 30 38 52 53 64 64 64 66 68 71 73 74 77 78 87 92
+		
+		// ESEMPIO IS\_HEAP, MAKE\_HEAP
+		
+		std::vector<int> v2 = { 7, 12, 8, 9, 18, 36, 44, 52, 90, 11, 5};
+		
+		printVec(v2); //Output: 7 12 8 9 18 36 44 52 90 11 5
+		
+		std::cout << std::boolalpha << "is_heap: " << std::is_heap(v2.begin(), v2.end()) << '\n'; //Output: is\_heap: false
+		
+		if(!std::is_heap(v2.begin(), v2.end()))
+		{
+			std::make_heap(v2.begin(), v2.end(), std::greater{}); // Col std::greater faccio un min heap.
+		}
+	
+		printVec(v2); //Output: 5 7 8 9 11 36 44 52 90 12 18
+	
+		std::cout << std::boolalpha << "is_heap: " << std::is_heap(v2.begin(), v2.end()) << '\n'; //Output: is\_heap: true
+		
+		// ESEMPIO PUSH\_HEAP, POP\_HEAP
+		
+		std::vector<int> v3 = { 8, 10, 4, 7, 5, 6, 3, 1, 0, 2};
+		
+		std::make_heap(v3.begin(), v3.end());
+		
+		v3.push_back(9);
+		
+		std::cout << "Prima del push_heap: ";
+		printVec(v3); //Output: Prima del push\_heap: 10 8 6 7 5 4 3 1 0 2 9
+		
+		std::push_heap(v3.begin(), v3.end());
+		
+		std::cout << "Dopo il push_heap: ";
+		printVec(v3); //Output: Dopo il push\_heap: 10 9 6 7 8 4 3 1 0 2 5
+		
+		std::pop_heap(v3.begin(), v3.end());
+		std::cout << "Dopo la pop_heap: ";
+		printVec(v3); //Output: Dopo la pop\_heap: 9 8 6 7 5 4 3 1 0 2 10 (abbiamo rimosso l'ultimo elemento)
+		
+		// ESEMPIO IS\_HEAP\_UNTIL
+		std::vector<int> v4{2,6,9,3,8,4,5,1,7};
+		
+		std::sort(v4.begin(),v4.end());
+		std::reverse(v4.begin(),v4.end());
+		
+		auto last = std::is_heap_until (v4.begin(),v4.end());
+		
+		std::cout << "I primi " << (last - v4.begin()) << " elementi sono un heap valido: ";
+		printVec(foo); //Output: I primi 9 elementi sono un heap valido: 9 8 7 6 5 4 3 2 1
+		
+		return 0;
+	}
+\end{lstlisting}
+
+% ------------------------- SECTION: OPERAZIONI DI MIN/MAX ---------------------------
+
+\newpage
+
+\section{Operazioni di min/max}
+
+\textsf{\small \textbf{Definizione: } } \\
+
 \begin{lstlisting}
 	#include <iostream>
 	#include <algorithm>
@@ -883,39 +1413,138 @@
 		return 0;
 	}
 \end{lstlisting}
-\end{comment}
 
 \fleuron
 
 \textsf{\small Per tutte queste operazioni c'è un equivalente per \emph{ranges} del C++20 a pag. \pageref{ranges}} \\
 
-% --------------------- SECTION: OPERAZIONI DI ORDINAMENTO ---------------------------
-
-% ------------ SECTION: OPERAZIONI DI RICERCA BINARIA (BINARY SEARCH) ----------------
-
-% --------------- SECTION: ALTRE OPERAZIONI DI ORDINAMENTO SUI RANGES ----------------
-
-%TODO: questa parte nella sezione sul C++20
-
-% ------------------------ SECTION: OPERAZIONI SUGLI INSIEMI -------------------------
-
-% ------------------------- SECTION: OPERAZIONI SU HEAP ------------------------------
-
-% ------------------------- SECTION: OPERAZIONI DI MIN/MAX ---------------------------
-
 % ----------------------- SECTION: OPERAZIONI DI COMPARAZIONE ------------------------
+
+\newpage
+
+\section{Operazioni di comparazione}
+
+\textsf{\small \textbf{Definizione: } } \\
+
+\begin{lstlisting}
+	#include <iostream>
+	#include <algorithm>
+	#include <vector>
+	
+	int main()
+	{
+		return 0;
+	}
+\end{lstlisting}
+
+\fleuron
+
+\textsf{\small Per tutte queste operazioni c'è un equivalente per \emph{ranges} del C++20 a pag. \pageref{ranges}} \\
 
 % ---------------------- SECTION: OPERAZIONI SU PERMUTAZIONI -------------------------
 
+\newpage
+
+\section{Operazioni su permutazioni}
+
+\textsf{\small \textbf{Definizione: } } \\
+
+\begin{lstlisting}
+	#include <iostream>
+	#include <algorithm>
+	#include <vector>
+	
+	int main()
+	{
+		return 0;
+	}
+\end{lstlisting}
+
+\fleuron
+
+\textsf{\small Per tutte queste operazioni c'è un equivalente per \emph{ranges} del C++20 a pag. \pageref{ranges}} \\
+
 % -------------------------- SECTION: OPERAZIONI NUMERICHE ---------------------------
+
+\newpage
+
+\section{Operazioni numeriche}
+
+\textsf{\small \textbf{Definizione: } } \\
+
+\begin{lstlisting}
+	#include <iostream>
+	#include <numeric>
+	#include <vector>
+	
+	int main()
+	{
+		return 0;
+	}
+\end{lstlisting}
+
+\fleuron
+
+\textsf{\small Per tutte queste operazioni c'è un equivalente per \emph{ranges} del C++20 a pag. \pageref{ranges}} \\
 
 % ------------------ SECTION: OPERAZIONI SU MEMORIA INIZIALIZZATA --------------------
 
+\newpage
+
+\section{Operazioni su memoria inizializzata}
+
+\textsf{\small \textbf{Definizione: } } \\
+
+\begin{lstlisting}
+	#include <iostream>
+	#include <algorithm>
+	#include <vector>
+	
+	int main()
+	{
+		return 0;
+	}
+\end{lstlisting}
+
+\fleuron
+
+\textsf{\small Per tutte queste operazioni c'è un equivalente per \emph{ranges} del C++20 a pag. \pageref{ranges}} \\
+
 % ------------------------------ SECTION: OPTIONALS ----------------------------------
 
+\newpage
+
+\section{Optionals}
+
 %TODO: optionals in default parameters in functions.
+%TODO: Questi non fanno parte della libreria degli Algoritmi, ma possono comunque essere utili in correlazione agli algoritmi.
+
+\textsf{\small \textbf{Definizione: } } \\
+
+\begin{lstlisting}
+	#include <iostream>
+	#include <vector>
+	
+	int main()
+	{
+		return 0;
+	}
+\end{lstlisting}
 
 % ------------------------- SECTION: EXECUTION POLICIES ------------------------------
+
+\begin{comment}
+	\begin{lstlisting}
+		#include <iostream>
+		#include <algorithm>
+		#include <vector>
+		
+		int main()
+		{
+			return 0;
+		}
+	\end{lstlisting}
+\end{comment}
 
 % -------------------------------- SECTION: C++20 ------------------------------------
 
@@ -925,5 +1554,7 @@
 %TODO: ranges, concepts, constrained algorithms, coroutines, template parameter list, modules, ecc..
 %TODO: non tutte queste c'entrano con la libreria degli algoritmi, le altre le potrei trattare nel capitolo 'Concetti Avanzati' (visto che è anche il più corto)
 %TODO: tipo la libreria <coroutine>, <concepts>, ecc..
+
+%TODO: Il C++20 ha introdotto una nuova serie di funzionalità, tra queste: ...
 
 % ------------------------------ FINE CAPITOLO ---------------------------------------
