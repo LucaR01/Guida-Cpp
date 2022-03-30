@@ -256,6 +256,49 @@
 	// Output: Gli elementi del vettore con gli elementi aggiunti.
 \end{lstlisting}
 
+\subsection{Range-based for loop | Foreach}
+
+\label{foreach}
+
+\textsf{\small Questo tipo di loop, usufruisce sempre della keyword \textbf{for}, itera su un contenitore.} \\
+
+\begin{lstlisting}
+	#include <iostream>
+	#include <vector>
+	
+	for(tipo nomeVariabile : nomeContenitore)
+	{
+		// Corpo del range-based for loop o foreach
+	}
+
+	std::vector<int> v{ 3, 7, 9, 12};
+	
+	// La i (avremmo potuto darci qualsiasi altro nome apparte lo stesso nome del contenitore) è la variabile che rappresenta un elemento del contenitore v ad ogni iterazione del ciclo.
+	// Quindi alla prima iterazione i corrisponderà al primo elemento del contenitore, alla seconda il secondo elemento, così via finchè i corrisponderà all'ultimo elemento + 1 del contenitore v.
+	for(const int &i : v)
+	{
+		std::cout << i << " ";
+	}
+
+	//Output: 3 7 9 12
+\end{lstlisting}
+
+\textsf{\small i è la variabile che rappresenta ad ogni iterazione del ciclo un elemento del \emph{container} in questo esempio.} \\
+
+\textsf{\small Se non si conosce la tipologia del contenitore o per far prima si può anche utilizzare la keyword \textbf{auto}.} \break
+
+\textsf{\small Questo è un loop molto efficiente quando utilizzato con i contenitore della libreria standard.} \\
+
+\subsubsection{Ottenere l'elemento per valore o per referenza a costante}
+
+\textsf{\small Quando è meglio utilizzare il \textbf{range-based for loop} per valore, per referenza e costante? } \\
+
+\begin{itemize}
+	\item \textsf{\small \textbf{auto x} : quando si vuole lavorare con le copie.}
+	\item \textsf{\small \textbf{auto \&x} : quando si vuole lavorare con gli elementi originali e li si vuole modificare.}
+	\item \textsf{\small \textbf{const auto \&x} : quando si vuole lavorare con gli elementi originali, ma non si vuole modificarli.}
+\end{itemize}
+
 %TODO: Iterable Interface?
 
 \subsection{begin vs cbegin}
