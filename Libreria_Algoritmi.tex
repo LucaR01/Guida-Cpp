@@ -1401,7 +1401,7 @@
 
 \section{Operazioni di min/max}
 
-\textsf{\small \textbf{Definizione: } } \\
+\textsf{\small \textbf{Definizione: } Le \textbf{operazioni di min/max} servono per ottenere il minimo o il massimo da una data espressione: \textbf{std::max}, \textbf{std::min}, \textbf{std::minmax}, \textbf{std::min\_element}, \textbf{std::max\_element}, \textbf{std::minmax\_element}, \textbf{std::clamp}.} \\
 
 \begin{lstlisting}
 	#include <iostream>
@@ -1410,6 +1410,58 @@
 	
 	int main()
 	{
+		// ESEMPIO MIN, MAX
+		const int a = 25;
+		const int b = 82;
+		
+		std::cout << "Elemento minore: " << std::min(a, b) << std::endl; //Output: 25
+		std::cout << "Elemento maggiore: " << std::min(a, b) << std::endl; //Output: 82
+		
+		// ESEMPIO MINMAX
+		int x = 18;
+		int y = 22;
+		
+		auto mm = std::minmax( x, y );
+		
+		std::cout << mm.first << std::endl; //Output: 18
+		std::cout << mm.second << std::endl; //Output: 22
+		
+		// Oppure si poteva fare anche:
+		
+		auto[min, max] = std::minmax(x,y); // Se usiamo la reference, auto\&[min, max] a delle temporanee ci porterà ad un \emph{undefined behaviour}.
+		
+		std::cout << min << std::endl; //Output: 18
+		std::cout << max << std::endl; //Output: 22
+		
+		// ESEMPIO MIN\_ELEMENT, MAX\_ELEMENT, MINMAX\_ELEMENT
+		std::vector<int> v = { 8, 77, 42, 54, 3};
+		
+		auto minElement = std::min_element( v.begin(), v.end() );
+		
+		std::cout << "Elemento minore: " << minElement << std::endl; //Output: 3
+		
+		auto maxElement = std::max_element( v.begin(), v.end() ); 
+		
+		std::cout << "Elemento maggiore: " << maxElement << std::endl; //Output: 77
+		
+		auto minMaxElement = std::minmax_element(v.begin(), v.end());
+		
+		std::cout << "Elemento minore con minmax: " << minMaxElement.first << std::endl; //Output: 3
+		
+		std::cout << "Elemento maggiore con minmax: " << minMaxElement.second << std::endl; //Output: 77
+		
+		// ESEMPIO CLAMP
+		// Blocca, fissa il valore dentro i boundaries
+		// In questo caso il valore è 1.5f ed i boundaries sono tra 0.0f e 1.0f
+		// 1.5f supera il boundary sopra lo 1.0 quindi il valore della variabile sarà 1.0f
+		auto clamped = std::clamp(1.5f, 0.0f, 1.0f);
+		
+		std::cout << clamped << std::endl; //Output: 1
+		
+		clamped = std::clamp(-2.0f, 0.0f, 1.0f);
+		
+		std::cout << clamped << std::endl; //Output: 0
+		
 		return 0;
 	}
 \end{lstlisting}
@@ -1424,18 +1476,59 @@
 
 \section{Operazioni di comparazione}
 
-\textsf{\small \textbf{Definizione: } } \\
+\textsf{\small \textbf{Definizione: } Queste operazioni ci permettono di comparare elementi delle sequenze: \textbf{std::equal}, \textbf{std::lexicographical\_compare}, \textbf{std::lexicographical\_compare\_three\_way}.} \\
 
 \begin{lstlisting}
 	#include <iostream>
 	#include <algorithm>
 	#include <vector>
+	#include <string>
+	#include <string_view>
+	
+	// ESEMPIO EQUAL
+	// Palindromo: sequenza di caratteri, che letta al contrario, rimane invariata.
+	// std::string\_view serve per evitare di copiare dati che sono già posseduti da qualche altra parte.
+	bool isPalindrome(const std::string_view& s)
+	{
+		return std::equal(s.begin(), s.begin() + s.size()/2, s.rbegin());
+	}
+	
+	void check(const std::string_view& s)
+	{
+		std::cout << s << (isPalindrome(s) ? " è" : " non è")
+		<< " un palindromo\n";
+	}
 	
 	int main()
 	{
+	
+		check("ANNA"); //Output: ANNA è un palindromo
+		
+		// ESEMPIO LEXICOGRAPHICAL\_COMPARE
+		std::vector<std::string> a = { 7, 9, 0, 8, 5 };
+		std::vector<std::string> b = { 7, 9, 8, 0, 5 };
+		
+		std::cout << std::lexicographical_compare(a.begin(), a.end(), b.begin(), b.end()) << std::endl; //Output: false
+		
+		// ESEMPIO LEXICOGRAPHICAL\_COMPARE 2
+		std::vector<std::string> v1 = {"One", "Two", "Three"};
+		std::vector<std::string> v2 = {"one", "two", "three"};
+		
+		bool compare = std::lexicographical_compare(v1.begin(), v1.end(), v2.begin(), v2.end());
+		
+		std::cout << (compare ? "v1 è minore di v2" : "v1 non è minore di v2") << std::endl; //Output: v1 è minore di v2
+		
+		v1[0] = "two";
+		
+		compare = std::lexicographical_compare(v1.begin(), v1.end(), v2.begin(), v2.end());
+		
+		std::cout << (compare ? "v1 è minore di v2" : "v1 non è minore di v2") << std::endl; //Output: v1 non è minore di v2
+		
 		return 0;
 	}
 \end{lstlisting}
+
+%TODO: volendo aggiungere un esempio per std::lexicographical_compare_three_way
 
 \fleuron
 
@@ -1447,15 +1540,38 @@
 
 \section{Operazioni su permutazioni}
 
-\textsf{\small \textbf{Definizione: } } \\
+\textsf{\small \textbf{Definizione: } Queste servono per usufruire di operazioni su permutazioni: \textbf{std::is\_permutation}, \textbf{std::next\_permutation}, \textbf{std::prev\_permutation}.} \\
+
+\textsf{\small Una \textbf{permutazione} è un modo di ordinare in successione degli oggetti distinti.} \\
 
 \begin{lstlisting}
 	#include <iostream>
 	#include <algorithm>
 	#include <vector>
+	#include <string>
 	
 	int main()
 	{
+		// ESEMPIIO IS\_PERMUTATION
+		std::string s1 = "abcd";
+		std::string s2 = "bdac";
+		std::string s3 = "bdbc";
+		
+		std::cout << std::boolalpha << std::is_permutation(s1.begin(), s1.end(), s2.begin()) << std::endl; //Output: true
+		
+		std::cout << std::boolalpha << std::is_permutation(s1.begin(), s1.end(), s3.begin()) << std::endl; //Output: false
+		
+		// ESEMPIO PREV\_PERMUTATION, NEXT\_PERMUTATION
+		std::cout << s1 << std::endl; //Output: 
+		
+		std::prev_permutation(s1.begin(), s1.end());
+		
+		std::cout << "prev_permutation: " << s1 << std::endl; //Output: dcba
+		
+		std::next_permutation(s1.begin(), s1.end());
+		
+		std::cout << "next_permutation: " << s1 << std::endl; //Output: abcd
+		
 		return 0;
 	}
 \end{lstlisting}
@@ -1470,7 +1586,11 @@
 
 \section{Operazioni numeriche}
 
-\textsf{\small \textbf{Definizione: } } \\
+\textsf{\small \textbf{Definizione: } Le \textbf{operazioni numeriche} mettono a disposizione una serie di comuni funzioni matematiche su delle sequenze numeriche ed anche altre.} \\
+
+\textsf{\small Questi operazioni rispetto alle altre, anche se appartenenti alla \emph{Libreria degli Algoritmi} sono definite nell'header \textbf{<numeric>}.} \\
+
+\textsf{\small Queste operazioni sono: \textbf{std::accumulate}, \textbf{std::reduce}, \textbf{std::inner\_product}, \textbf{std::adjacent\_difference}, \textbf{std::partial\_sum}, \textbf{std::exclusive\_scan}, \textbf{std::inclusive\_scan}, \textbf{std::transform\_reduce}, \textbf{std::transform\_exclusive\_scan}, \textbf{std::transform\_inclusive\_scan}, \textbf{std::iota}.} \\
 
 \begin{lstlisting}
 	#include <iostream>
@@ -1479,19 +1599,39 @@
 	
 	int main()
 	{
+		// ESEMPIO ACCUMULATE
+		std::vector<int> v = { 24, 77, -6, 14, 22, -90, 12, 3};
+		// Lo 0 nel std::accumulate è il valore di partenza, in questo caso parte da un valore di partenza di zero e somma tutti gli elementi del vettore v.
+		std::cout << std::accumulate(v.begin(), v.end(), 0) << std::endl; //Output: 56
+		
+		// ESEMPIO ACCUMULATE 2
+		std::vector<std::string> s = {"ciao", " a ", "tutti"};
+		std::cout << std::accumulate(s.begin(), s.end(), std::string("")); //Output: ciao a tutti 
 		return 0;
 	}
 \end{lstlisting}
+
+\subsubsection{Differenza tra std::accumulate vs std::reduce}
+
+\begin{tabular}{|c|c|}
+	\hline
+	\textbf{accumulate} & \textbf{reduce} \\
+	\hline
+	\textsf{\small Ordina da sinistra a destra.} & \textsf{\small Non garantisce l'ordine.} \\
+	\hline
+	\textsf{\small Non ha le \emph{execution policies}.} & \textsf{\small Ha le \emph{execution policies}.} \\
+	\hline
+\end{tabular}
 
 \fleuron
 
 \textsf{\small Per tutte queste operazioni c'è un equivalente per \emph{ranges} del C++20 a pag. \pageref{ranges}} \\
 
-% ------------------ SECTION: OPERAZIONI SU MEMORIA INIZIALIZZATA --------------------
+% --------------- SECTION: OPERAZIONI SU MEMORIA NON INIZIALIZZATA -------------------
 
 \newpage
 
-\section{Operazioni su memoria inizializzata}
+\section{Operazioni su memoria non inizializzata}
 
 \textsf{\small \textbf{Definizione: } } \\
 
