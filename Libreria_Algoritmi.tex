@@ -52,8 +52,8 @@
 	\item \textsf{\small \textbf{Operazioni di Comparazione} }
 	\item \textsf{\small \textbf{Operazioni su permutazioni} }
 	\item \textsf{\small \textbf{Operazioni numeriche} }
-	\item \textsf{\small \textbf{Operazioni su Memoria Inizializzata} }
-	\item \textsf{\small \textbf{Execution Policies} }
+	%\item \textsf{\small \textbf{Operazioni su Memoria Inizializzata} }
+	%\item \textsf{\small \textbf{Execution Policies} }
 	%\item \textsf{\small \textbf{} }
 \end{itemize}
 
@@ -999,7 +999,7 @@
 
 \newpage
 
-\section{Operazioni di ricerca binaria}
+\section{Operazioni di Ricerca Binaria}
 
 \textsf{\small \textbf{Definizione: } Queste servono per operazioni su ricerche binarie: \textbf{std::lower\_bound}, \textbf{std::upper\_bound}, \textbf{std::equal\_range}, \textbf{std::binary\_search}.} \\
 
@@ -1085,7 +1085,7 @@
 
 \newpage
 
-\section{Operazioni di Fusione (Merge)}
+\section{Operazioni di Fusione | Merge}
 
 \textsf{\small \textbf{Definizione: } Le \textbf{operazioni di merge} permettono di combinare, di fondere gli elementi di due sequenze: \textbf{std::merge}, \textbf{std::inplace\_merge}.} \\
 
@@ -1195,7 +1195,7 @@
 
 \newpage
 
-\section{Operazioni sugli insiemi}
+\section{Operazioni sugli Insiemi}
 
 \textsf{\small \textbf{Definizione: } Le \textbf{operazioni sugli insiemi} permettono di attuare le tipiche operazioni matematiche: \emph{unione} : \textbf{std::set\_union}, \emph{intersezione} : \textbf{std::set\_intersection}, \emph{differenza} : \textbf{std::set\_difference}, \emph{simmetria differenza} : \textbf{std::set\_symmetric\_difference}.} \\
 
@@ -1399,7 +1399,7 @@
 
 \newpage
 
-\section{Operazioni di min/max}
+\section{Operazioni di Min/Max}
 
 \textsf{\small \textbf{Definizione: } Le \textbf{operazioni di min/max} servono per ottenere il minimo o il massimo da una data espressione: \textbf{std::max}, \textbf{std::min}, \textbf{std::minmax}, \textbf{std::min\_element}, \textbf{std::max\_element}, \textbf{std::minmax\_element}, \textbf{std::clamp}.} \\
 
@@ -1474,7 +1474,7 @@
 
 \newpage
 
-\section{Operazioni di comparazione}
+\section{Operazioni di Comparazione}
 
 \textsf{\small \textbf{Definizione: } Queste operazioni ci permettono di comparare elementi delle sequenze: \textbf{std::equal}, \textbf{std::lexicographical\_compare}, \textbf{std::lexicographical\_compare\_three\_way}.} \\
 
@@ -1538,7 +1538,7 @@
 
 \newpage
 
-\section{Operazioni su permutazioni}
+\section{Operazioni su Permutazioni}
 
 \textsf{\small \textbf{Definizione: } Queste servono per usufruire di operazioni su permutazioni: \textbf{std::is\_permutation}, \textbf{std::next\_permutation}, \textbf{std::prev\_permutation}.} \\
 
@@ -1584,7 +1584,7 @@
 
 \newpage
 
-\section{Operazioni numeriche}
+\section{Operazioni Numeriche}
 
 \textsf{\small \textbf{Definizione: } Le \textbf{operazioni numeriche} mettono a disposizione una serie di comuni funzioni matematiche su delle sequenze numeriche ed anche altre.} \\
 
@@ -1596,20 +1596,100 @@
 	#include <iostream>
 	#include <numeric>
 	#include <vector>
+	#include <iterator>
 	
 	int main()
 	{
-		// ESEMPIO ACCUMULATE
+		// ESEMPIO ACCUMULATE, REDUCE
 		std::vector<int> v = { 24, 77, -6, 14, 22, -90, 12, 3};
 		// Lo 0 nel std::accumulate è il valore di partenza, in questo caso parte da un valore di partenza di zero e somma tutti gli elementi del vettore v.
 		std::cout << std::accumulate(v.begin(), v.end(), 0) << std::endl; //Output: 56
 		
-		// ESEMPIO ACCUMULATE 2
+		std::cout << std::reduce(v.begin(), v.end(), 0) << std::endl; //Output: 56
+		
+		// ESEMPIO ACCUMULATE, REDUCE 2
 		std::vector<std::string> s = {"ciao", " a ", "tutti"};
 		std::cout << std::accumulate(s.begin(), s.end(), std::string("")); //Output: ciao a tutti 
+		
+		std::cout << std::reduce(s.begin(), s.end(), std::string("")); //Output: ciao a tutti 
+		
+		// ESEMPIO INNER\_PRODUCT
+		std::vector<int> a = { 7, 3, 2 };
+		std::vector<int> b = { 5, 8, 6 };
+		
+		std::cout << std::inner_product( a.begin(), a.end(), b.begin(), 0) << std::endl; //Output: 71
+		
+		std::cout << std::inner_product( a.begin(), a.end(), b.begin(), 0, std::minus<int>{}, std::multiplies<int>{}) << std::endl; //Output: -71
+		
+		// ESEMPIO ADJACENT\_DIFFERENCE, PARTIAL\_SUM
+		std::vector<int> vec = { 13, 2, 5, 4, 7, 9};
+		std::vector<int> vec2;
+		std::vector<int> vec3;
+		
+		// Fa una differenza tra il secondo e il primo di ogni coppia di elementi della sequenza. 
+		std::adjacent_difference( vec.begin(), vec.end(), std::back_inserter( vec2 ));
+		
+		for(const auto& i : vec2)
+		{
+			std::cout << i << " ";
+		}
+		
+		std::cout << '\n';
+		
+		//Output: 13 -11 3 -1 3 2 
+		
+		std::partial_sum( vec.begin(), vec.end(), std::back_inserter( vec3 ));
+		
+		for(const auto& i : vec3)
+		{
+			std::cout << i << " ";
+		}
+		
+		std::cout << '\n';
+		
+		//Output: 13 15 20 24 31 40
+		
+		// ESEMPIO INCLUSIVE\_SCAN, EXCLUSIVE\_SCAN
+		std::vector<int> v1 = { 12, 3, 7, 8, 44, 9};
+		std::vector<int> v2;
+		std::vector<int> v3;
+		
+		// Esegue una operazione di somma di prefisso inclusiva con \emph{binary\_op}.
+		std::inclusive_scan( v1.begin(), v1.end(), std::back_inserter( v2 ));
+		
+		for(const auto& i : v2)
+		{
+			std::cout << i << " ";
+		}
+		
+		std::cout << '\n';
+		
+		//Output: 12 15 22 30 74 83
+		
+		// Esegue una operazione di somma di prefisso esclusiva con \emph{binary\_op}.
+		std::exclusive_scan( v1.begin(), v1.end(), std::back_inserter( v3 ), 0);
+		
+		for(const auto& i : v3)
+		{
+			std::cout << i << " ";
+		}
+		
+		std::cout << '\n';
+		
+		//Output: 0 12 15 22 30 74
+		
+		// ESEMPIO TRANSFORM\_REDUCE
+		std::vector<double> xvalues(567, 1.0), yvalues(567, 1.0);
+		
+		double result = std::transform_reduce(xvalues.begin(), xvalues.end(), yvalues.begin(), 0.0);
+		std::cout << result << '\n'; //Output: 567
+		
 		return 0;
 	}
 \end{lstlisting}
+
+%TODO: spiegare cosa fanno: la inclusive ed esclusive, transform, ecc..
+%TODO: volendo aggiungere esempi sulla transform_exclusive_scan, transform_inclusive_scan.
 
 \subsubsection{Differenza tra std::accumulate vs std::reduce}
 
@@ -1623,18 +1703,20 @@
 	\hline
 \end{tabular}
 
-\fleuron
-
-\textsf{\small Per tutte queste operazioni c'è un equivalente per \emph{ranges} del C++20 a pag. \pageref{ranges}} \\
+%TODO: per queste non c'è il ranges sembra..
 
 % --------------- SECTION: OPERAZIONI SU MEMORIA NON INIZIALIZZATA -------------------
 
-\newpage
+%\newpage
 
-\section{Operazioni su memoria non inizializzata}
+%TODO: non fanno parte della libreria degli algoritmi o si?
+%TODO: definite in <memory>
 
-\textsf{\small \textbf{Definizione: } } \\
+%\section{Operazioni su memoria non inizializzata}
 
+%\textsf{\small \textbf{Definizione: } } \\
+
+\begin{comment}
 \begin{lstlisting}
 	#include <iostream>
 	#include <algorithm>
@@ -1649,6 +1731,7 @@
 \fleuron
 
 \textsf{\small Per tutte queste operazioni c'è un equivalente per \emph{ranges} del C++20 a pag. \pageref{ranges}} \\
+\end{comment}
 
 % ------------------------------ SECTION: OPTIONALS ----------------------------------
 
@@ -1656,39 +1739,360 @@
 
 \section{Optionals}
 
-%TODO: optionals in default parameters in functions.
-%TODO: Questi non fanno parte della libreria degli Algoritmi, ma possono comunque essere utili in correlazione agli algoritmi.
+\textsf{\small \textbf{Definizione: } Gli \textbf{optionals} permettono di definire valori opzionali che per dunque possono esistere come no.} \\
 
-\textsf{\small \textbf{Definizione: } } \\
+\textsf{\small Questi non fanno parte della \emph{Libreria degli Algoritmi}, ma possono comunque essere utili in correlazione ad essa.} \\
+
+\textsf{\small Per ottenere il valore del \textbf{std::optional} utilizziamo l'operatore \textbf{*}, a meno che } \\
+
+\textsf{\small Sono definiti nel file di intestazione: \textbf{<optional>}.} \\
 
 \begin{lstlisting}
 	#include <iostream>
-	#include <vector>
+	#include <optional>
+	#include <string>
+	#include <fstream>
+	
+	// Al posto di std::nullopt si poteva anche mettere {}.
+	// Quelli nell'uguale sono i valori di default se i parametri non vengono passati quando viene chiamata la funzione.
+	int foo(int x, std::optional<int> y = std::nullopt, int z = 0)
+	{
+		return x * y.value_or( 17 ) + z;
+	}
+
+	// Funzione che ritorna std::pair con  std::optional
+	std::pair<bool, std::string> loadFile()
+	{
+		std::ifstream file{ "test.txt" };
+		if( file )
+		{
+			return { true, std::string{ 
+					std::istreambuf_iterator{ file },
+					std::istreambuf_iterator<char>{}
+			}};
+		}
+		return { false, {} };
+	}
 	
 	int main()
 	{
-		return 0;
+		// ESEMPIO OPTIONAL
+		struct Point {
+			float x, y;
+			Point(float x, float y) : x( x ), y( y ) {} 
+		};
+	
+		// Questi sono tutti tipi di optionals empty (vuoti).
+		std::optional<int> oEmpty;
+		std::optional<int> oEmpty2{};
+		std::optional<int> oEmpty3 = {};
+		std::optional<float> oEmpty4 = std::nullopt;
+		
+		// Qui assegniamo un valore direttamente
+		std::optional<int> oInt = 34;
+		std::optional<int> oInt2( 9 );
+		std::optional oP( Point{ 7.2f, 4.1f } );
+		
+		// make\_optional
+		auto oDouble = std::make_optional( 3.69 );
+		auto oPoint = std::make_optional<Point>( 3.2f, 1.4f);
+		
+		// emplacement
+		std::optional<Point> oEmpty5;
+		oEmpty5.emplace( 4.5f, 1.7f );
+		
+		// in\_place
+		std::optional<Point> oEmpty6{ std::in_place, 2.2f, 4.4f };
+		
+		std::cout << *oInt << std::endl; //Output: 34
+		
+		// Si può evitare di mettere il * per fare i paragoni oppure lo si può anche mettere.
+		if(oInt > oInt2)
+		{
+			std::cout << *oInt << " è maggiore di " << *oInt2 << std::endl;
+		}
+	
+		//Output: 34 è maggiore di 9
+	
+		// Nelle funzioni
+	
+		std::cout << foo(5, 23, 8) << std::endl; //Output: 123
+		
+		std::cout << foo(5, {}, 8) << std::endl; //Output: 93
+		
+		std::cout << foo(5, {}) << std::endl; //Output: 85
+		
+		std::cout << foo(5, 23) << std::endl; //Output: 115
+		
+		return 0; 
 	}
 \end{lstlisting}
 
 % ------------------------- SECTION: EXECUTION POLICIES ------------------------------
 
-\begin{comment}
-	\begin{lstlisting}
-		#include <iostream>
-		#include <algorithm>
-		#include <vector>
+\newpage
+
+\section{Execution Policies}
+
+\textsf{\small \textbf{Definizione: } Le \textbf{execution policies} servono per l'esecuzione parallelizzata di un programma. } \\
+
+\textsf{\small La \emph{parallelizzazione} è quando molteplici calcoli vengono eseguiti simultaneamente da più \emph{threads}. } \break
+
+\textsf{\small Queste non fanno parte della \emph{Libreria degli Algoritmi}, ma possono essere utili soprattutto se si eseguono programmi con le threads.} \\
+
+\textsf{\small Alcuni degli algoritmi della \emph{Libreria degli Algoritmi} usufruiscono delle \textbf{execution policies}, quindi può essere utile fare chiarezza su quest'ultime.} \\
+
+\textsf{\small Le \textbf{execution policies} sono definite nell'header \textbf{<execution>}.} \\
+
+\textsf{\small Utilizzeremo questa classe \emph{Timer} per tenere traccia di quanto tempo è stato necessario per eseguire una porzione di codice.} \\
+
+\begin{lstlisting}
+	// Nell'header file: Timer.h
+	#pragma once
+	#include <chrono>
+	
+	class Timer {
+		public:
+			Timer() noexcept;
+			
+			float mark() noexcept;
+			
+			float peek() const noexcept;
+			
+		private:
+			std::chrono::steady_clock::time_point last;
+	};
+
+	// Nel file di implementazione: Timer.cpp
+	#include "Timer.h"
+	
+	Timer::Timer() noexcept
+	{
+		last = std::chrono::steady_clock::now();
+	}
+	
+	float Timer::mark() noexcept
+	{
+		const auto old = last;
+		last = std::chrono::steady_clock::now();
+		const std::chrono::duration<float> frameTime = last - old;
+		return frameTime.count();
+	}
+	
+	float Timer::peek() const noexcept
+	{
+		return std::chrono::duration<float>( std::chrono::steady_clock::now() - last).count();
+	}
+\end{lstlisting}
+
+\textsf{\small Un primo esempio dell'efficienza delle \textbf{execution policies}: } \\
+
+\begin{lstlisting}
+	#include <iostream>
+	#include <execution>
+	#include <vector>
+	#include <random>
+	#include <algorithm>
+	#include <chrono>
+	#include "Timer.h"
+
+	void test()
+	{
+		std::mt19937 rne{ 72 };
+		std::uniform_real_distribution<float> d(-10., 10. );
+		auto rng = [&rne, &d]() {return d( rne ); };
 		
-		int main()
+		constexpr size_t n = 60000000;
+		std::vector<float> v( n );
+		std::generate( v.begin(), v.end(), rng ); 
+		
+		Timer timer;
+		timer.mark();
+		std::sort( v.begin(), v.end() );
+		auto t = timer.peek();
+		
+		std::cout << t << std::endl;
+	}
+	
+	void testWithExecPolicies()
+	{
+		std::mt19937 rne{ 72 };
+		std::uniform_real_distribution<float> d(-10., 10. );
+		auto rng = [&rne, &d]() {return d( rne );};
+		
+		constexpr size_t n = 60000000;
+		std::vector<float> v( n );
+		std::generate( v.begin(), v.end(), rng ); 
+		
+		Timer timer;
+		timer.mark();
+		std::sort( std::execution::par, v.begin(), v.end() );
+		auto t = timer.peek();
+		
+		std::cout << t << std::endl;
+	}
+	
+	int main()
+	{
+		test(); //Output: ~6sec tempo diverso per tutti ma maggiore rispetto all'altro test. (l'output è sempre diverso, in base al tuo computer, alla sequenza, ecc..)
+		
+		testWithExecPolicies(); //Output: ~1.3sec tempo diverso per tutti, ma minore rispetto all'altro test. (l'output è sempre diverso, in base al tuo computer, alla sequenza, ecc..)
+		
+		return 0;
+	}
+\end{lstlisting}
+
+%TODO: errori nei compilatori: Mi dava un errore nell'inclusione di <execution> indicando che mancasse una libreria ttb/blocked_range, oppure che mancasse proprio l'header <execution>.
+
+\textsf{\small Con \emph{par} eseguiamo la parte di codice indicata in modo \emph{parallelo}.} \\
+
+\begin{lstlisting}
+	#include <iostream>
+	#include <execution>
+	#include <vector>
+	#include <algorithm>
+	#include "Timer.h"
+	
+	void test()
+	{
+		std::mt19937 rne{ 54 };
+		std::uniform_real_distribution<double> d( 1., 10. ); // I valori negativi potrebbero causare dei problemi.
+		auto rng = [&rne, &d]() { return d( rne ); };
+		
+		constexpr size_t n = 30000000;
+		std::vector<double> v( n );
+		std::generate( v.begin(), v.end(), rng );
+		
+		Timer timer;
+		timer.mark();
+		
+		std::transform( std::execution::par, v.begin(), v.end(), v.begin(), [](double a)
 		{
-			return 0;
-		}
-	\end{lstlisting}
-\end{comment}
+			const auto b = std::acos( 1.0 / a);
+			return std::pow(b, b);
+		});
+		auto t = timer.peek();
+		
+		std::cout << t << std::endl;
+	}
+	
+	int main()
+	{
+		test();
+		return 0;
+	}
+\end{lstlisting}
+
+\textsf{\small Un terzo esempio, in cui però senza la \emph{mutua esclusione} (mutex) per evitare la \emph{race condition} il programma non darebbe lo stesso risultato. } \\
+
+\textsf{\small La \emph{race condition} è quando due \emph{threads} (flussi di istruzioni che può essere eseguito in modo concorrente) arrivano entrambe alla stessa variabile ed entrambe cambiano il valore di essa nello stesso momento. Quindi una stessa variabile di valore 9 potrebbe essere aumentata di 1 da due \emph{threads} portando il valore di suddetta variabile a 10, al posto di 11.} \\
+
+\begin{lstlisting}
+	#include <iostream>
+	#include <execution>
+	#include <vector>
+	#include <thread>
+	#include <mutex>
+	#include <algorithm>
+	#include "Timer.h"
+	
+	void testWithoutMutex()
+	{
+		std::mt19937 rne{ 72 };
+		std::uniform_real_distribution<double> d( 1., 10. );
+		auto rng = [&rne, &d]() { return d( rne ); };
+		
+		constexpr size_t n = 30000000;
+		std::vector<double> v( n );
+		std::vector<double> q( n );
+		std::generate( v.begin(), v.end(), rng );
+		
+		Timer timer;
+		timer.mark();
+		
+		std::for_each( v.begin(), v.end(), [&rng](double& a))
+		{
+			a = rng();
+		});
+		auto t1 = timer.peek();
+		
+		rne.seed( 72 );
+		
+		timer.mark();
+		std::for_each( std::execution::par, v.begin(), v.end(), [&rng](double& a))
+		{
+			a = rng();
+		});
+		auto t2 = timer.peek();
+		
+		std::sort( std::execution::par, v.begin(), v.end());
+		std::sort( std::execution::par, q.begin(), q.end());
+		
+		std::cout << std::boolalpha << (v == q) << std::endl; //Output: viene false se non li ordini (col sort), ma senza la mutex verrebbe comunque false
+	}
+
+	void testWithMutex()
+	{
+		std::mt19937 rne{ 72 };
+		std::uniform_real_distribution<double> d( 1., 10. );
+		auto rng = [&rne, &d]() { return d( rne ); };
+		
+		constexpr size_t n = 30000000;
+		std::vector<double> v( n );
+		std::vector<double> q( n );
+		std::generate( v.begin(), v.end(), rng );
+		
+		Timer timer;
+		timer.mark();
+		
+		std::for_each( v.begin(), v.end(), [&rng](double& a))
+		{
+			a = rng();
+		});
+		auto t1 = timer.peek();
+		
+		rne.seed( 72 );
+		std::mutex mutex;
+		
+		timer.mark();
+		std::for_each( std::execution::par, v.begin(), v.end(), [&rng, &mutex](double& a))
+		{
+			// In questo modo con la mutex, solo una thread alla volta ha accesso alla variabile e può modificarla, poi quando ha finito rilascia la risorsa e anche le altre threads possono lockare la variabile ed utilizzarla.
+			std::lock_guard<std::mutex> lock(mutex);
+			a = rng();
+		});
+		auto t2 = timer.peek();
+		
+		std::cout << std::boolalpha << (v == q) << std::endl; //Output: false (non sono la stessa sequenza, ma sono gli stessi numeri è per questo che riordinandoli ci da true poi)
+		
+		std::sort( std::execution::par, v.begin(), v.end());
+		std::sort( std::execution::par, q.begin(), q.end());
+		
+		std::cout << std::boolalpha << (v == q) << std::endl; //Output: true
+	}
+	
+	int main()
+	{
+		testWithoutMutex();
+		
+		testWithMutex();
+		return 0;
+	}
+\end{lstlisting}
+
+\textsf{\small Per la questione del \emph{Multithreading} servirebbe un intero capitolo a parte per spiegare, approfondire il funzionamento, cosa sono i \emph{threads}, cos'è la \emph{mutex}, cosa sono le \emph{condition variables}, i \emph{semaphore}, eccetera..} \\
+
+%TODO: casomai scrivessi il capitolo sul Multithreading, allora aggiungere la \pageref qui a quel capitolo.
+
+\fleuron
+
+\textsf{\small Per tutte queste operazioni c'è un equivalente per \emph{ranges} del C++20 a pag. \pageref{ranges}} \\
 
 % -------------------------------- SECTION: C++20 ------------------------------------
 
 \label{ranges}
+
+%TODO: constrained algorithms C++20
 
 %TODO: La roba del C++20 come ultimo argomento del capitolo.
 %TODO: ranges, concepts, constrained algorithms, coroutines, template parameter list, modules, ecc..
@@ -1696,5 +2100,18 @@
 %TODO: tipo la libreria <coroutine>, <concepts>, ecc..
 
 %TODO: Il C++20 ha introdotto una nuova serie di funzionalità, tra queste: ...
+
+\begin{comment}
+\begin{lstlisting}
+	#include <iostream>
+	#include <algorithm>
+	#include <vector>
+	
+	int main()
+	{
+		return 0;
+	}
+\end{lstlisting}
+\end{comment}
 
 % ------------------------------ FINE CAPITOLO ---------------------------------------

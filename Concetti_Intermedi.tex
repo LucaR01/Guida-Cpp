@@ -80,7 +80,7 @@
 	}
 \end{lstlisting}
 
-\textsf{\small C'è un problema, se ora volessimo usare la stessa funzione, ma con i float? o con i char? Certo potremmo fare dei casts, ma così perderemmo dei dati, ma sopratutto ripeteremmo lo stesso codice più e più volte semplicemente per avere la stessa identica funzione, ma per tipologie diverse.} \\
+\textsf{\small C'è un problema, se ora volessimo usare la stessa funzione, ma con i float? o con i char? Certo potremmo fare dei casts, ma così perderemmo dei dati, ma soprattutto ripeteremmo lo stesso codice più e più volte semplicemente per avere la stessa identica funzione, ma per tipologie diverse.} \\
 
 \textsf{\small Inoltre, fare questo, continuare a ripetere lo stesso codice, violerebbe un'importante principio in programmazione, ovvero \textbf{DRY}: \emph{Don't repeat yourself}, in italiano, non ripeterti.} \break 
 
@@ -3648,5 +3648,51 @@
 	\item \textsf{\small argv[0] tiene il nome del programma.}
 	\item \textsf{\small argv[1] punta al primo argomento e argv[argc - 1] all'ultimo.}
 \end{itemize}
+
+% -------------------------- SECTION: UNIFORM REAL DISTRIBUTION ----------------------
+
+\newpage
+
+\section{Uniform Real Distribution}
+
+\textsf{\small \textbf{Definizione: } La \textbf{uniform real distribution}, in probabilità, si riferisce alla distribuzione nella quale le probabilità sono definite da una variabile casuale continua, una che può prendere qualsiasi valore tra due numeri, così la distribuzione è detta essere una distribuzione probabilistica continua. } \\
+
+\textsf{\small Per poter usufruire della \textbf{uniform real distribution} sarà necessario includere \textbf{<random>}.} \\ 
+
+\textsf{\small Questa ha diverse funzioni: } \\
+
+\begin{itemize}
+	\item \textsf{\small \textbf{a()} : restituisce il limite inferiore.}
+	\item \textsf{\small \textbf{b()} : restituisce il limite superiore.}
+	\item \textsf{\small \textbf{min()} : restituisce il valore minimo che la funzione può restituire.}
+	\item \textsf{\small \textbf{max()} : restituisce il valore massimo che la funzione può restituire.}
+	\item \textsf{\small \textbf{reset()} : si resetta la distribuzione affinché la prossima non sia basata sui valori precedenti.}
+	%\item \textsf{\small \textbf{} : }
+\end{itemize}
+
+\begin{lstlisting}
+	#include <iostream>
+	#include <random>
+	
+	int main()
+	{
+		double a = 0, b = 2.0;
+		
+		std::uniform_real_distribution<double> distribution(a, b);
+		
+		std::cout << "limite inferiore: " << distribution.a() << std::endl; //Output: limite inferiore: 0
+		std::cout << "limite superiore: " << distribution.b() << std::endl; //Output: limite superiore 2.0
+		
+		std::cout << "distribuzione min: " << distribution.min() << std::endl; //distribuzione min: 0
+		std::cout << "distribuzione max: " << distribution.max() << std::endl; //distribuzione max: 2.0
+		
+		distribution.reset(); 
+		return 0;
+	}
+\end{lstlisting}
+
+\textsf{\small Come detto, in precedenza, può essere utile nella generazione di numeri casuali.} \\
+
+%TODO: magari approfondire, aggiungere un esempio in cui si generano numeri casuali.
 
 % ------------------------------ FINE CAPITOLO ---------------------------------------

@@ -817,56 +817,6 @@
 
 \textsf{\small Uno \textbf{shared pointer} ha un \textbf{control block} che conta il numero di \textbf{shared pointers} e di \textbf{weak pointers}. Quando il contatore degli \textbf{shared pointers} arriva a 0, l'oggetto viene eliminato, ma il \emph{control block} resta vivo finché il contatore dei \textbf{weak pointers} non raggiunge 0.} \\
 
-%TODO: altre subsections
-
-% -------------------------- SECTION: UNIFORM REAL DISTRIBUTION ----------------------
-
-\newpage
-
-%TODO: forse da mettere nel capitolo degli Algoritmi.
-
-\section{Uniform Real Distribution}
-
-\textsf{\small \textbf{Definizione: } La \textbf{uniform real distribution}, in probabilità, si riferisce alla distribuzione nella quale le probabilità sono definite da una variabile casuale continua, una che può prendere qualsiasi valore tra due numeri, così la distribuzione è detta essere una distribuzione probabilistica continua. } \\
-
-\textsf{\small Per poter usufruire della \textbf{uniform real distribution} sarà necessario includere \textbf{<random>}.} \\ 
-
-\textsf{\small Questa ha diverse funzioni: } \\
-
-\begin{itemize}
-	\item \textsf{\small \textbf{a()} : restituisce il limite inferiore.}
-	\item \textsf{\small \textbf{b()} : restituisce il limite superiore.}
-	\item \textsf{\small \textbf{min()} : restituisce il valore minimo che la funzione può restituire.}
-	\item \textsf{\small \textbf{max()} : restituisce il valore massimo che la funzione può restituire.}
-	\item \textsf{\small \textbf{reset()} : si resetta la distribuzione affinché la prossima non sia basata sui valori precedenti.}
-	%\item \textsf{\small \textbf{} : }
-\end{itemize}
-
-\begin{lstlisting}
-	#include <iostream>
-	#include <random>
-	
-	int main()
-	{
-		double a = 0, b = 2.0;
-		
-		std::uniform_real_distribution<double> distribution(a, b);
-		
-		std::cout << "limite inferiore: " << distribution.a() << std::endl; //Output: limite inferiore: 0
-		std::cout << "limite superiore: " << distribution.b() << std::endl; //Output: limite superiore 2.0
-		
-		std::cout << "distribuzione min: " << distribution.min() << std::endl; //distribuzione min: 0
-		std::cout << "distribuzione max: " << distribution.max() << std::endl; //distribuzione max: 2.0
-		
-		distribution.reset(); 
-		return 0;
-	}
-\end{lstlisting}
-
-\textsf{\small Come detto, in precedenza, può essere utile nella generazione di numeri casuali.} \\
-
-%TODO: magari approfondire, aggiungere un esempio in cui si generano numeri casuali.
-
 % -------------------------- SECTION: COPY-AND-SWAP IDIOM ----------------------------
 
 \section{Copy-And-Swap Idiom}
