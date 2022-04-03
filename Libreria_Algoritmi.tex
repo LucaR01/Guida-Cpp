@@ -235,7 +235,7 @@
 
 \fleuron %TODO: oppure \ornament
 
-\textsf{\small Per tutte queste operazioni c'è un equivalente per \emph{ranges} del C++20 a pag. \pageref{ranges}} \\
+\textsf{\small Per tutte queste operazioni c'è un equivalente per \emph{ranges} del C++20 a pag. \pageref{ranges_seq_non_modificabili}} \\
 
 % ------------------ SECTION: OPERAZIONI SU SEQUENZE MODIFICABILI --------------------
 
@@ -761,7 +761,7 @@
 
 \fleuron
 
-\textsf{\small Per tutte queste operazioni c'è un equivalente per \emph{ranges} del C++20 a pag. \pageref{ranges}} \\
+\textsf{\small Per tutte queste operazioni c'è un equivalente per \emph{ranges} del C++20 a pag. \pageref{ranges_seq_modificabili}} \\
 
 % ---------------------- SECTION: OPERAZIONI SU PARTIZIONI ---------------------------
 
@@ -1707,31 +1707,166 @@
 
 % --------------- SECTION: OPERAZIONI SU MEMORIA NON INIZIALIZZATA -------------------
 
-%\newpage
+\newpage
 
-%TODO: non fanno parte della libreria degli algoritmi o si?
-%TODO: definite in <memory>
+\section{Operazioni su memoria non inizializzata}
 
-%\section{Operazioni su memoria non inizializzata}
+\textsf{\small \textbf{Definizione: } Queste operazioni servono per eseguire operazioni su memorie non inizializzate: \textbf{std::uninitialized\_copy}, \textbf{std::uninitialized\_copy\_n}, \textbf{std::uninitialized\_fill}, \textbf{std::uninitialized\_fill\_n}, \textbf{std::uninitialized\_move}, \textbf{std::uninitialized\_move\_n}, \textbf{std::uninitialized\_default\_construct}, \textbf{std::uninitialized\_default\_construct\_n}, \textbf{std::uninitialized\_value\_construct}, \textbf{std::uninitialized\_value\_construct\_n}, \textbf{std::construct}, \textbf{std::destroy}, \textbf{std::destroy\_at}, \textbf{std::construct\_at}, \textbf{std::destroy\_n}.} \\
 
-%\textsf{\small \textbf{Definizione: } } \\
+\textsf{\small Per quanto riguarda \textbf{std::get\_temporary\_buffer} e \textbf{std::return\_temporary\_buffer} sono state rimosse col \textbf{C++20}.} \break
 
-\begin{comment}
+\textsf{\small Non fanno parte della \emph{Libreria degli Algoritmi}, ma sono comunque molto utili legate ad essa.} \\ %TODO: Oppure fanno parte?
+
+\textsf{\small Sono definite nell'header \textbf{<memory>}.} \\
+
 \begin{lstlisting}
 	#include <iostream>
-	#include <algorithm>
-	#include <vector>
+	#include <memory>
+	#include <new> // Per std::launder
+	#include <cstring>
+	#include <string>
+	
+	class A {
+		public:
+			int value;
+			~A() { std::cout << value << " distrutto\n"; }
+	};
 	
 	int main()
 	{
-		return 0;
+		// ESEMPIO DESTROY, DESTROY\_N, DESTROY\_AT
+		// \textbf{alignas} forza l'allineamento al numero di bytes specificato.
+		alignas(A) unsigned char buffer[sizeof(A) * 8];
+		
+		for (int i = 0; i < 8; ++i)
+		{
+			new(buffer + sizeof(A) * i) A{i}; //costruisco gli oggetti manualmente
+		}
+		
+		// std::launder performa il \emph{Memory Laundering}, questo previene il compilatore dal tracciare da dove hai preso questo oggetto, così evitando ottimizzazioni che potrebbero non essere più applicabili.
+		auto ptr = std::launder(reinterpret_cast<A*>(buffer));
+		
+		std::destroy(ptr, ptr + 8);
+		
+		// Al posto di std::destroy si potrebbe usare std::destroy\_n: 
+		std::destroy_n(ptr, 8);
+		
+		// Al posto di std::destroy\_n si potrebbe usare std::destroy\_at: 
+		for (int i = 0; i < 8; ++i)
+		{
+			std::destroy_at(ptr + i);
+		}
+	
+		//Output: 0 distrutto
+		//Output: 1 distrutto
+		//Output: 2 distrutto
+		//Output: 3 distrutto
+		//Output: 4 distrutto
+		//Output: 5 distrutto
+		//Output: 6 distrutto
+		//Output: 7 distrutto
+	
+		// ESEMPIO UNINITIALIZED\_DEFAULT\_CONSTRUCT, UNINITIALIZED\_DEFAULT\_CONSTRUCT\_N
+		
+		class S { 
+			public:
+				std::string m{ "Valore di default"}; 
+		};
+		
+		constexpr int n {3};
+		// \textbf{alignof} restituisce l'allineamento del dato passato come parametro.
+		alignas(alignof(S)) unsigned char mem[n * sizeof(S)];
+		
+		try
+		{
+			auto first {reinterpret_cast<S*>(mem)};
+			auto last {first + n};
+			
+			std::uninitialized_default_construct(first, last);
+			
+			for (auto it {first}; it != last; ++it) {
+				std::cout << it->m << '\n';
+			}
+			
+			std::destroy(first, last);
+		}
+		catch(...) // In questo modo con ... (ellissi) prendiamo qualsiasi eccezione.
+		{
+			std::cout << "Eccezione!\n";
+		}
+		
+		// Da notare che per "i tipi triviali"
+		// il uninitialized\_default\_construct generalmente non riempie di zero la data area di memoria non inizializzata.
+		int v[] { 1, 2, 3, 4 };
+		const int original[] { 1, 2, 3, 4 };
+		std::uninitialized_default_construct(std::begin(v), std::end(v));
+		
+		// Oppure al posto di std::uninitialized\_default\_construct si poteva usare:
+		std::uninitialized_default_construct_n(std::begin(v), std::size(v));
+		
+		std::cout << (std::memcmp(v, original, sizeof(v)) == 0 ? "Non modificato\n" : "Modificato\n");
+		// Il risultato non è specificato.
+		
+		//Output: Valore di default
+		//Output: Valore di default
+		//Output: Valore di default
+		//Output: Non modificato
+		
+		// ESEMPIO UNINITIALIZED\_VALUE\_CONSTRUCT, UNINITIALIZED\_VALUE\_CONSTRUCT\_N
+		class Z { 
+			public:
+				std::string m{ "Valore di default" }; 
+		};
+		
+		constexpr int n {3};
+		alignas(alignof(Z)) unsigned char mem[n * sizeof(Z)];
+		
+		try
+		{
+			auto first {reinterpret_cast<Z*>(mem)};
+			auto last {first + n};
+			
+			std::uninitialized_value_construct(first, last);
+			
+			for (auto it {first}; it != last; ++it) {
+				std::cout << it->m << '\n';
+			}
+			
+			std::destroy(first, last);
+		}
+		catch(...)
+		{
+			std::cout << "Eccezione!\n";
+		}
+		
+		// Da notare che per "i tipi triviali" il uninitialized\_value\_construct
+		// non riempie di zero la data area di memoria non inizializzata.
+		int v[] { 1, 2, 3, 4 };
+		for (const int i : v) { std::cout << i << ' '; }
+		std::cout << '\n';
+		std::uninitialized_value_construct(std::begin(v), std::end(v));
+		
+		// Oppure al posto std::uninitialized\_value\_construct si può usare:
+		std::uninitialized_value_construct_n(std::begin(v), std::size(v));
+		
+		for (const int i : v) { std::cout << i << ' '; }
+		std::cout << '\n';
+		
+		//Output: Valore di default
+		//Output: Valore di default
+		//Output: Valore di default
+		//Output: 1 2 3 4 
+		//Output: 0 0 0 0
+		
 	}
 \end{lstlisting}
+
+%TODO: magari approfondire l'argomento in generale, visto che non ho detto molto.
+%TODO: approfondire std::launder?
 
 \fleuron
 
 \textsf{\small Per tutte queste operazioni c'è un equivalente per \emph{ranges} del C++20 a pag. \pageref{ranges}} \\
-\end{comment}
 
 % ------------------------------ SECTION: OPTIONALS ----------------------------------
 
@@ -2090,22 +2225,183 @@
 
 % -------------------------------- SECTION: C++20 ------------------------------------
 
+\newpage
+
+%TODO: metterlo in un capitolo a parte?
+
+\section{C++20}
+
+\textsf{\small \textbf{Definizione: } Il \textbf{C++20} ha introdotto nel linguaggio diverse funzionalità utili agli algoritmi, formando così la versione \emph{Constrained Algorithms} della maggior parte degli algoritmi nel namespace \textbf{std::ranges}. } \\
+
+\textsf{\small Questa versione del linguaggio ha introdotto una serie di funzionalità, alcune di queste sono: \textbf{Ranges}, \textbf{Concepts}, \textbf{Modules}, \textbf{Coroutine} e altro ancora..} \\
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1.2\textwidth, height=1.2\textheight, keepaspectratio]{./imgs/TimelineCpp20_3.png}
+	\caption{C++20 Timeline}
+	\label{fig:TimelineCpp20_3}
+\end{figure}
+
+\subsection{Ranges}
+
 \label{ranges}
 
-%TODO: constrained algorithms C++20
+%TODO: ranges view
 
-%TODO: La roba del C++20 come ultimo argomento del capitolo.
+\textsf{\small \textbf{Definizione: } I \textbf{ranges} sono, concettualmente, un paio di iteratori, all'inizio ed alla fine della sequenza ( o una \emph{sentinel} sentinella in certi casi).} \\
+
+\textsf{\small I \textbf{ranges} velocizzano la chiamata alle funzioni della \emph{Libreria degli Algoritmi} in cui al posto di dover passare un iteratore (.begin(), .end()) con i \textbf{ranges} possiamo semplicemente passare l'oggetto, la sequenza stessa.} \break
+
+\subsubsection{Tipi di Ranges}
+
+\textsf{\small I ranges possono essere \emph{input ranges} (possono essere letti), \emph{output ranges} (ci si può scrivere) o entrambi.} \\
+
+\textsf{\small Gli \emph{input ranges}: } \\
+
+\begin{tabular}{|c|c|}
+	\hline
+	\textbf{Concetto} & \textbf{Descrizione} \\
+	\hline
+	\textsf{\small \textbf{std::ranges::input\_range}} & \textsf{\small può essere iterato } \\
+	\textsf{\small \textbf{}} & \textsf{\small dall'inizio alla fine almeno una volta.} \\
+	\hline
+	\textsf{\small \textbf{std::ranges::forward\_range}} & \textsf{\small può essere iterato } \\
+	\textsf{\small \textbf{}} & \textsf{\small dall'inizio alla fine molteplici volte.} \\
+	\hline
+	\textsf{\small \textbf{std::ranges::bidirectional\_range}} & \textsf{\small può muoversi all'indietro con \textbf{- -}.} \\
+	\hline
+	\textsf{\small \textbf{std::ranges::random\_access\_range}} & \textsf{\small si possono saltare gli elementi con \textbf{[]}.} \\
+	\hline
+	\textsf{\small \textbf{std::ranges::contiguous\_range}} & \textsf{\small gli elementi vengono } \\
+	\textsf{\small \textbf{}} & \textsf{\small memorizzati consecutivamente in memoria.} \\
+	\hline
+\end{tabular}
+
+\textsf{\small Questi concetti sono derivati direttamente dai rispettivi concetti negli iteratori.} \\
+
+\textsf{\small Ci sono anche dei \textbf{ranges} che sono indipendenti dall'\emph{input} o \emph{output}, per esempio \textbf{std::ranges::sized\_range} che richiede che lo spazio di un range sia recuperabile da \textbf{std::ranges::size()}.} \\
+
+\textsf{\small Le \textbf{ranges::views} sono dei \textbf{ranges} che trasformano il \textbf{range} attraverso degli algoritmi o delle operazioni. Le \textbf{views} non possiedono alcuna data eccetto il loro algoritmo e il tempo di costruzione, distruzione o copiatura non dovrebbe dipendere dal numero di elementi che rappresentano.} \\
+
+\textsf{\small I \textbf{ranges} sono definiti nel file di intestazione: \textbf{<ranges>}.} \\
+
+\subsubsection{Operazioni su sequenze non modificabili}
+
+\label{ranges_seq_non_modificabili}
+
+\begin{lstlisting}
+	#include <iostream>
+	#include <algorithm>
+	#include <string_view>
+	#include <ranges>
+	
+	// Palindromo: sequenza di caratteri che letta al contrario rimane invariata.
+	constexpr bool isPalindrome(const std::string_view s)
+	{
+		namespace views = std::views;
+		auto forward = s | views::take(s.size() / 2);
+		auto backward = s | views::reverse | views::take(s.size() / 2);
+		return std::ranges::equal(forward, backward);
+	}
+	
+	void test(const std::string_view s)
+	{
+		std::cout << s << (isPalindrome(s) ? " è" : " non è") << " un palindromo\n";
+	}
+	
+	int main()
+	{
+		// ESEMPIO RANGES::EQUAL
+		test("radar"); //Output: radar è un palindromo
+		test("ciao"); //Output: ciao non è un palindromo
+		
+		// ESEMPIO RANGES::STARTS\_WITH
+		std::cout << std::boolalpha << std::ranges::starts_with("luce", "lucertola") << '\n'; //Output: true
+		std::cout << std::boolalpha << std::ranges::starts_with("const", "cast") << '\n'; //Output: false
+		
+		// ESEMPIO RANGES::ENDS\_WITH
+		std::cout << std::boolalpha << std::ranges::ends_with("ter", "computer") << '\n'; //Output: true
+		std::cout << std::boolalpha << std::ranges::ends_with("asse", "casse") << '\n'; //Output: true
+		std::cout << std::boolalpha << std::ranges::ends_with("ada", "scheda") << '\n'; //Output: false
+		return 0;
+	}
+\end{lstlisting}
+
+\subsubsection{Operazioni su sequenze modificabili}
+
+\label{ranges_seq_modificabili}
+
+\begin{lstlisting}
+	#include <iostream>
+	#include <algorithm>
+	#include <vector>
+	#include <ranges>
+	
+	int main()
+	{
+		// ESEMPIO RANGES::VIEWS::TRANSFORM
+		namespace rn = std::ranges;
+		namespace vi = std::ranges::views;
+		
+		std::vector<int> numbers = { 7, 8, 1, 2, 5, 3 };
+		
+		auto result = numbers | vi::filter([](int n) {return n % 2 == 0; })
+		| vi::transform([](int n) {return n * 2; });
+		
+		for(const int& n : result)
+		{
+			std::cout << n << ' ';
+		}
+	
+		//Output: 16 4
+	
+		return 0;
+	}
+\end{lstlisting}
+
+\subsubsection{Operazioni su Partizioni}
+\subsubsection{Operazioni di Ordinamento}
+\subsubsection{Operazioni su ricerca binaria}
+\subsubsection{Operazioni sugli Insiemi}
+\subsubsection{Operazioni su Heap}
+\subsubsection{Operazioni su Min/Max}
+\subsubsection{Operazioni su Permutazioni}
+\subsubsection{Operazioni numeriche}
+\subsubsection{Operazioni su memoria non inizializzata}
+\subsubsection{Tipi di Ritorno}
+
+\newpage
+
+\subsection{Concepts}
+
+%TODO: <concepts>
+
+\textsf{\small \textbf{Definizione: } } \\
+
+\newpage
+
+\subsection{Modules}
+
+\textsf{\small \textbf{Definizione: } } \\
+
+\newpage
+
+\subsection{Coroutines}
+
+%TODO: <coroutine>
+
+\textsf{\small \textbf{Definizione: } } \\
+
 %TODO: ranges, concepts, constrained algorithms, coroutines, template parameter list, modules, ecc..
 %TODO: non tutte queste c'entrano con la libreria degli algoritmi, le altre le potrei trattare nel capitolo 'Concetti Avanzati' (visto che è anche il più corto)
 %TODO: tipo la libreria <coroutine>, <concepts>, ecc..
-
-%TODO: Il C++20 ha introdotto una nuova serie di funzionalità, tra queste: ...
 
 \begin{comment}
 \begin{lstlisting}
 	#include <iostream>
 	#include <algorithm>
 	#include <vector>
+	#include <ranges>
 	
 	int main()
 	{
