@@ -1616,6 +1616,8 @@
 
 \subsection{SFINAE}
 
+\label{SFINAE}
+
 \textsf{\small \textbf{Definizione: } \textbf{SFINAE} (\emph{\textbf{S}ubstitution \textbf{F}ailure \textbf{I}s \textbf{N}ot \textbf{A}n \textbf{E}rror}) ha lo scopo di filtrare le funzioni che non producono delle istanze template valide da un insieme di funzioni \emph{overloaded}.} \\
 
 \textsf{\small Otteniamo questo in maniera automatica dal compilatore oppure sfruttando \textbf{std::enable\_if}.} \break
@@ -1705,6 +1707,8 @@
 	\caption{SFINAE}
 	\label{fig:SFINAE}
 \end{figure}
+
+\textsf{\small \textbf{SFINAE} è stato praticamente rimpiazzato dai \textbf{Concepts} del \textbf{C++20} che fanno la stessa cosa, ma molto meglio. Guardare pag.\textbf{\pageref{concepts}} del capitolo \emph{Le gemme degli Algoritmi}.} \\ %TODO: dovrei forse metterlo all'inizio della subsection?
 
 \subsection{Proxy}
 

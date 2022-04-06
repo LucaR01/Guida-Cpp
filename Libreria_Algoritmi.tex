@@ -3027,9 +3027,212 @@
 
 \subsection{Concepts}
 
-%TODO: <concepts>
+\label{concepts}
 
-\textsf{\small \textbf{Definizione: } } \\
+\textsf{\small \textbf{Definizione: } I \textbf{Concepts} sono un nuovo approccio rivoluzionario del \textbf{C++20} per trattare i \textbf{templates}. Permettono di porre dei vincoli (\emph{constraints}) ai parametri dei \textbf{template} per migliorare la leggibilità del codice, la velocità al momento della compilazione e fornire dei migliori messaggi d'errore.} \\
+
+\textsf{\small Il \textbf{C++20} fornisce due nuove keywords: \textbf{concept} e \textbf{requires} ed un insieme di \textbf{concepts} predefiniti dalla \emph{Libreria Standard}.} \\
+
+\textsf{\small Per poter usufruire di queste funzionalità sarà necessario includere \textbf{<concepts>}.} \\
+
+\subsubsection{concept}
+
+\begin{lstlisting}
+	#include <iostream>
+	#include <concepts>
+	#include <type_traits>
+	#include <string>
+	
+	// template<typename T>
+	// concept conceptName = conceptExpression;
+	
+	template<class T>
+	concept integral = std::is_integral_v<T>; // std::is\_integral\_v da <type\_traits> restituisce true o false se il parametro passato è di tipo intero.
+	
+	template<integral T> // Questo al posto del tipico typename T
+	class MyClass {
+		public:
+			MyClass(T x)
+			{
+				this->x = x;   
+			}
+		
+		private:
+			T x;
+	};
+
+	template<typename T>
+	class MyClass2 {
+		public:
+			MyClass(T x)
+			{
+				this->x = x;   
+			}
+		
+		private:
+			T x;
+	};
+
+	int main()
+	{
+		std::string s = "ciao";
+		
+		int x = 5;
+		
+		MyClass<int> instance(s); //Errore template argument deduction/substitution failed. (passiamo una stringa, quando invece c'è il vincolo che i parametri T siano interi)
+		
+		MyClass<double> instance2(7.12); //Errore requires integral<T> (il tipo della classe è double quando noi invece vogliamo un tipo intero)
+		
+		MyClass instance3(x); // Questo va bene. (soddisfa il vincolo che sia intero)
+		
+		MyClass<int> instance4(x); // Questo va bene. (soddisfa il vincolo che sia intero)
+		
+		MyClass2<double> myClass2Instance(5.55); // Non da errore perché stiamo usando la classe senza il vincolo.
+		
+		MyClass2 myClass2Instance2(s); // Non da errore perché stiamo usando la classe senza il vincolo.
+		
+		return 0;
+	}
+\end{lstlisting}
+
+\textsf{\small In questo esempio, abbiamo usato la keyword \textbf{concept} per definire una classe template con un vincolo, in questo caso il vincolo che la classe sia di tipo integrale, ovvero sia un numero intero e quindi non andavano bene nè le istanze double nè string nè qualsiasi altri tipo diverso dagli interi.} \\
+
+\begin{lstlisting}
+	#include <iostream>
+	#include <concepts>
+	
+	template<typename T>
+	concept hasStringDataMember = requires(T v) { 
+		{ v.name } -> std::convertible_to<std::string>; 
+	};
+	
+	class Person {
+		public:
+		int age { 0 };
+		std::string name;
+	};
+	
+	class Box {
+		public:
+		double weight { 0.0 };
+		double volume { 0.0 };
+	};
+	
+	int main()
+	{
+		static_assert(hasStringDataMember<Person>);
+		static_assert(!hasStringDataMember<Box>); // Qui non da errore perché abbiamo messo ! altrimenti lo darebbe perché Box non ha un membro di tipo std::string chiamato name.
+		return 0;
+	}
+\end{lstlisting}
+
+\subsubsection{requires}
+
+\begin{lstlisting}
+	#include <iostream>
+	#include <concepts>
+	#include <string>
+	#include <numeric> // per std::accumulate
+	#include <type_traits>
+	
+	// ESEMPIO REQUIRES 1
+	template <typename T>
+	requires std::convertible_to<T, std::string>
+	void func(const T& x) {
+		std::string s = x;
+	}
+
+	// ESEMPIO REQUIRES 2
+	template<typename T>
+	requires std::integral<T> || std::floating_point<T> // o numeri interi o con la virgola (std::integral e std::floating\_point vengono dal'header <concepts>)
+	constexpr double average(const std::vector<T> &vec) {
+		const double sum = std::accumulate(vec.cbegin(), vec.cend(), (T)0);        
+		return sum / vec.size();
+	}
+
+	int main()
+	{
+		// ESEMPIO REQUIRES 1
+		const std::string s = "ciao";
+		const int x = 7;
+		
+		func(x); //Errore: perché x è di tipo intero e invece noi abbiamo bisogno di un tipo convertibile a std::string.
+		
+		func(s); // Questo va bene.
+		
+		// ESEMPIO REQUIRES 2
+		std::vector<int> v = { 7, 8, 12, 5};
+		
+		std::cout << average(v) << std::endl; //Output: 8 (funziona perché è intero)
+		
+		std::vector<float> v2 = { 5.7, 12.4, 8.8, 9.1 };
+		
+		std::cout << average(v2) << std::endl; //Output: 9 (funziona perché è un numero con la virgola) (funziona anche il double, non solo il float)
+		
+		std::vector<bool> v3 = { true, false, true, true, false };
+		
+		std::cout << average(v3) << std::endl; //Output: 0.2 (funziona perché i booleani sono dei numeri, ovvero true = 1; false = 0)
+		
+		std::vector<std::string> v4 = { "ciao", "a", "tutti" };
+		
+		std::cout << average(v4) << std::endl; //Output: Errore constraints not satisfied (vincoli non soddisfatti perché non è nè un intero nè un numero con la virgola)
+		return 0;
+	}
+\end{lstlisting}
+
+\textsf{\small In questo esempio abbiamo visto come \textbf{requires} ci permette di validare che un data variabile sia dia una determinata tipologia.} \\
+
+\begin{lstlisting}
+	#include <iostream>
+	#include <concepts>
+	
+	// ESEMPIO REQUIRES 1
+	template <typename T>
+	concept addable = requires (T a, T b) {
+		a+b;
+	};
+	
+	void function(addable auto x) {
+		std::cout << x << " è sommabile!" << std::endl;    
+	}
+
+	// ESEMPIO REQUIRES 2
+	template <typename T>
+	requires std::integral<T> ||
+	(std::invocable<T> &&
+	std::integral<typename std::invoke_result<T>::type>)
+	void function2(const T& x) {
+		if constexpr (std::invocable<T>) {
+			std::cout << "Il risultato della chiamata è: " << x() << "\n";
+		} else {
+			std::cout << "Il valore è: " << x << "\n";
+		}
+	}
+	
+	int main()
+	{
+		// ESEMPIO REQUIRES 1
+		function(3); //Output: 3 è sommabile!
+		
+		function("Hello World!"); //Output: Errore
+		
+		// ESEMPIO REQUIRES 2
+		function2(6); //Output: Il valore è: 6 (va bene perché è un intero, quindi va nell'else)
+		function2( []() { return 3; } ); //Output: (va bene perché è invocabile, restituisce un intero, va nell'if)
+		
+		function2(3.3); //Output: Errore perchè non è un intero nè un invocabile
+		function2( []() { return 3.3; } ); //Output: Errore perchè è un invocabile, ma restituisce un valore non intero.
+		return 0;
+	}
+\end{lstlisting}
+
+\textsf{\small La \emph{Libreria Standard} fornisce vari \textbf{concepts} predefiniti nell'header \textbf{<concepts>}, come quelli visti \textbf{std::integral} e \textbf{std::floating\_point} e tanti altri.} \\
+
+%TODO: volendo potrei elencarli, però senza spiegarli è un po' inutile.
+
+\subsubsection{Concepts fixano, sposano e rimpiazzano SFINAE}
+
+\textsf{\small \textbf{SFINAE} (\emph{Substitution Failure Is Not An Error}), concetto trattato nel capitolo \emph{Concetti Avanzati} a pag.\textbf{\pageref{SFINAE}} viene praticamente sostituito dai \textbf{Concepts} che possono fare la stessa cosa, ma molto meglio.} \\
 
 \newpage
 
