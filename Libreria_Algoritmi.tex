@@ -7,25 +7,6 @@
 %TODO: C++20:
 %TODO: ranges, concepts, constrained algorithms, coroutines, template parameter list, modules, ecc..
 
-%TODO: execution policies
-%TODO: optionals
-%TODO: heap, set, queue, priority_queue
-%TODO: std::accumulate, std::any_of, find, search
-%TODO: copy_if, copy_n_code
-%TODO: std_count, count_if
-%TODO: scan, equal code, fill_if, fill_n_code
-%TODO: std_generate, inner product, iota, permutations
-%TODO: sort
-%TODO: lexicographic compare
-%TODO: minmax, max, min
-%TODO: mismatch
-%TODO: std_transform
-%TODO: std_unique_code
-%TODO: SFINAE e concepts
-
-%TODO: std::clamp
-%TODO: normal distribution, uniform real distribution? (non sono in <algorithm> quindi non ha senso metterli qui).
-
 % ----------------------------- SECTION: INTRODUZIONE --------------------------------
 
 \section{Introduzione}
@@ -3238,32 +3219,604 @@
 
 \subsection{Modules}
 
-\textsf{\small \textbf{Definizione: } } \\
+\textsf{\small \textbf{Definizione: } I \textbf{Modules} permettono di velocizzare un programma attraverso l'importazione di \textbf{moduli}, porzioni di codice, invece di \textbf{includere} un \textbf{header}.} \\
+
+\textsf{\small Quindi, in un certo senso i \textbf{modules} servono in parte, ma non del tutto sostituire gli \textbf{headers}.} \\
+
+\textsf{\small I \textbf{Modules} forniscono due nuove keywords: \textbf{export} e \textbf{import}.} \break
+
+\textsf{\small Negli \textbf{headers} il \emph{preprocessore} essenzialmente copierà ed incollerà i contenuti dell'\textbf{header} al posto dell'\textbf{include} e questo per ogni file di implementazione nel programma.} \\
+
+\textsf{\small I \textbf{Modules} sono come gli \textbf{headers}, ma sono anche una \textbf{unità di traduzione} (\emph{translation unit}), proprio per questo viene compilata separatamente e solo una volta. La keyword \textbf{import} ci permette di ottenere accesso alle dichiarazioni della libreria. } \\
+
+\textsf{\small Il vantaggio principale è che i \textbf{modules} vengono \emph{parsati} a livello di \textbf{abstract syntax tree} (\emph{ABT}) dal compilatore.} \\
+
+\textsf{\small Questo ci permette una serie di vantaggi: } \\
+
+\begin{enumerate}
+	\item \textsf{\small \textbf{Isolamento} : perché un'unità di modulo è una unità di traduzione separata: possiede la sua serie di macros, dichiarazioni, direttive che non influenzano chi lo \emph{importa}.}
+	\item \textsf{\small \textbf{Controllo dell'Interfaccia} : perché può dichiarare entità con un link interno, con l'\textbf{export}.}
+	\item \textsf{\small \textbf{Deduplicazione} : perché in molti casi non sarà più necessario fornire una dichiarazione in un header file.}
+	\item \textsf{\small \textbf{One Definition Rule violation avoidance} (\emph{ODR}) : un modulo può definire un'entità solo una volta e fornire quella definizione ai clienti.}
+	\item \textsf{\small \textbf{Ordine di inizializzazione delle variabili non-locali} : perché l'\textbf{import} stabilisce un ordine di dipendenza tra le \emph{unità di traduzione} che contengono (uniche) definizioni di variabili.}
+	\item \textsf{\small \textbf{Dichiarazioni di moduli privati} : le entità dichiarate in un modulo che non sono esportate e non hanno un link interno sono usabili dalle \emph{unità di traduzione} stesse nel modulo.}
+	\item \textsf{\small \textbf{Stabilità ABI} : le regole dell'\textbf{inline} sono state aggiustate per supportare una strategia d'implementazione dove le funzioni \emph{non-inline} possono servire come frontiera \emph{ABI} per gli aggiornamenti delle librerie condivise.}
+	\item \textsf{\small \textbf{Velocità di compilazione} : perché i contenuti dei moduli non devono essere \emph{riparsati}, in molti casi questo velocizza i tempi di compilazione.}
+	%\item \textsf{\small \textbf{Strumentazione} : }
+\end{enumerate}
+
+\begin{lstlisting}
+	// Mathematics.cpp
+	export module Mathematics;
+	export auto plus(auto x, auto y) -> decltype(x+y) {
+		return x + y;
+	}
+	export namespace Mathematics {
+		auto minus(auto x, auto y) -> decltype(x-y) {
+			return x - y;  
+		}   
+	}
+	void this_function_will_not_be_exported() {}
+	
+	// In un altro file: main.cpp
+	import <iostream>;
+	import Mathematics;
+	int main() {
+		std::cout << "1+2 = " <<  plus(1,2) << "\n"; //Output: 3
+		std::cout << "3-2 = " << Mathematics::minus(3,2) 
+		<< "\n"; //Output: 1
+		return 0;
+	}
+\end{lstlisting}
+
+\textsf{\small Abbiamo importato il modulo \emph{Mathematics} e abbiamo usufruito delle sue funzioni nel file \emph{main.cpp}. La funzione \emph{plus} l'abbiamo chiamata direttamente, mentre la \emph{minus} l'abbiamo chiamata con \emph{Mathematics::} visto che si trovava all'interno del \emph{namespace}.} \\
+
+\begin{lstlisting}
+	export module helloworld;
+	
+	export const char* getHelloWorld()
+	{
+		return "Hello World!";
+	}
+
+	// In un altro file: main.cpp
+	#import helloworld;
+	
+	#include <iostream>
+	
+	int main()
+	{
+		std::cout << getHelloWorld() << std::endl; //Output: Hello World!
+		return 0;
+	}
+\end{lstlisting}
+
+\textsf{\small In questo esempio, abbiamo il nostro modulo \emph{helloworld} con una singola funzione che restituisce un \emph{const char*} e lo abbiamo importato in un file con la keyword \textbf{import} ed abbiamo usato la funzione al suo interno.} \\
+
+\subsubsection{Modules Partitions}
+
+\textsf{\small Le \textbf{modules partitions} servono per suddividere in più file un \textbf{module}. Le partizioni sono accessibili solo dal modulo principale, devono essere una singola unità (un singolo file), ma possono essere delle unità di interfaccia (gli \emph{export}) o una solo un'unità. Ma se l'unità è un'unità di interfaccia allora deve essere riesportata nel modulo principale \emph{export import :partition;}. Il modulo principale avrà accesso a tutte le partizioni, anche se non sono segnate come \emph{export}.} \\
+
+\begin{lstlisting}
+	// helloworld.cpp
+	export module helloworld;
+	
+	export import :english;
+	export import :spanish;
+	export import :italian;
+	
+	// helloworld\_english.cpp
+	export module helloworld:english;
+	
+	export const char* getHelloWorldEng()
+	{
+		return "Hello World!";
+	}
+
+	// helloworld\_spanish.cpp
+	export module helloworld:spanish;
+	
+	export const char* getHelloWorldEs()
+	{
+		return "¡Hola Mundo!";
+	}
+
+	// helloworld\_italian.cpp
+	export module helloworld:italian;
+
+	export const char* getHelloWorldIta()
+	{
+		return "Ciao Mondo!";
+	}
+
+	// In un altro file: main.cpp
+	import helloworld;
+	
+	#include <iostream>
+	#include <cstdlib>
+	
+	int main()
+	{
+		int scelta;
+		std::cout << "0. Inglese" << '\n';
+		std::cout << "1. Spagnolo" << '\n';
+		std::cout << "2. Italiano" << '\n';
+		std::cout << "Scelta: ";
+		std::cin >> scelta;
+		
+		switch(scelta)
+		{
+			case 1:
+				std::cout << getHelloWorldEs() << std::endl;
+				break;
+			case 2:
+				std::cout << getHelloWorldIta() << std::endl;
+				break;
+			case 0:
+			default:
+				std::cout << getHelloWorldEng() << std::endl;
+				break;
+		}
+		return 0;
+	}
+\end{lstlisting}
+
+\textsf{\small Qui abbiamo creato un modulo chiamato \emph{helloworld} con tre partizioni: \emph{english}, \emph{spanish}, \emph{italian}. } \\ 
+
+\textsf{\small La sintassi \emph{export module <nome-modulo>:<nome-partizione>} dichiara che il dato modulo è una partizione d'interfaccia appartenente a \emph{<nome-modulo>} con la partizione chiamata \emph{<nome-partizione>}.} \\
+
+\textsf{\small La sintassi \emph{import :<nome-partizione>} importa la partizione chiamata \emph{<nome-partizione>}.} \\
+
+\textsf{\small La sintassi \emph{export import :<nome-partizione>} rende l'entità esportata nel modulo partizione visibile come parte del modulo interfaccia.} \\
+
+\subsubsection{Module Implementation}
+
+\textsf{\small È un modulo che non ha la keyword \emph{export} prima della keyword \emph{module} nel suo modulo.} \\
+
+\textsf{\small Le entità dichiarate in una unità d'implementazione sono visibili solo nel modulo in cui fanno parte.} \\
+
+\begin{lstlisting}
+	// helloworld.cpp
+	export module helloworld;
+	
+	import :english;
+	import :spanish;
+	import :italian;
+	
+	export const char* getHelloWorldEng();
+	export const char* getHelloWorldEs();
+	export const char* getHelloWorldIta();
+	
+	// helloworld\_english.cpp
+	module helloworld:english;
+	
+	const char* getHelloWorldEng() 
+	{
+		return "Hello world!";
+	}
+
+	// helloworld\_spanish.cpp
+	module helloworld:spanish;
+	
+	const char* getHelloWorldEs() 
+	{
+		return "¡Hola Mundo!";
+	}
+
+	// helloworld\_italian.cpp
+	module helloworld:italian;
+	
+	const char* getHelloWorldIta() 
+	{
+		return "Ciao Mondo";
+	}
+\end{lstlisting}
+
+\textsf{\small Questo era il nostro precedente esempio se usiamo le \emph{unità d'implementazione}.} \\
+
+\textsf{\small Abbiamo visto qui solo uno spunto dell'importanza e della potenza dei \textbf{Modules}, ma è possibile approfondire molto di più l'argomento.} \\
 
 \newpage
 
 \subsection{Coroutines}
 
-%TODO: <coroutine>
+\textsf{\small \textbf{Definizione: } Le \textbf{coroutines} sono delle funzioni che sospendono l'esecuzione per poi riprenderla più tardi.} \\
 
-\textsf{\small \textbf{Definizione: } } \\
+\textsf{\small Sono una struttura generale di controllo dove il flusso di controllo è passato tra due differenti routine senza ritorno.} \\
 
-%TODO: ranges, concepts, constrained algorithms, coroutines, template parameter list, modules, ecc..
-%TODO: non tutte queste c'entrano con la libreria degli algoritmi, le altre le potrei trattare nel capitolo 'Concetti Avanzati' (visto che è anche il più corto)
-%TODO: tipo la libreria <coroutine>, <concepts>, ecc..
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\textwidth, height=1\textheight, keepaspectratio]{./imgs/C++20-Coroutine-Under-The-Hood.png}
+	\caption{C++20 Coroutines in general}
+	\label{fig:coroutines_in_general}
+\end{figure}
 
-\begin{comment}
+\begin{itemize}
+	\item \textsf{\small Una \textbf{coroutine} è una funzione che: }
+	\begin{enumerate}
+		\item \textsf{\small Contiene le keywords: \textbf{co\_await}, \textbf{co\_yield} e/o \textbf{co\_return}.}
+		\item \textsf{\small Usano un tipo di ritorno per specificare una \emph{promessa}.}
+	\end{enumerate}
+	\item \textsf{\small Più in generale, le \textbf{coroutine} del \textbf{C++20} consistono in:}
+	\begin{itemize}
+		\item \textsf{\small Promise (Promessa)}
+		\begin{itemize}
+			\item \textsf{\small Definisce il comportamento della coroutine nel complesso.}
+			\item \textsf{\small Agisce come comunicatore tra il chiamante e la coroutine chiamata.}
+		\end{itemize}
+		\item \textsf{\small Awaiter}
+		\begin{itemize}
+			\item \textsf{\small Controlla il comportamento di sospensione e di ripresa.}
+		\end{itemize}
+		\item \textsf{\small Coroutine Handle}
+		\begin{itemize}
+			\item \textsf{\small Controlla il comportamento di esecuzione.}
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{A cosa servono le coroutines?}
+
+\textsf{\small  Le \textbf{coroutines} forniscono un alto livello di \emph{concorrenza} con molto poco \emph{overhead}.} \\
+
+\textsf{\small Una \textbf{coroutine} si può sospendere in un predeterminato punto, quindi si può evitare di \emph{lockare} (bloccare) le strutture dati condivise.} \\
+
+\textsf{\small Con i \emph{threads} ogni \emph{thread} necessita di un proprio stack, quindi l'utilizzo di memoria cresce linearmente, mentre con le \textbf{coroutines}, il numero di esse che si ha non ha una diretta relazione con l'utilizzo di memoria. Per la maggior parte dei casi, i \textbf{coroutines} sono una scelta ottimale visto che son più veloci rispetto ai \emph{threads}. } \\
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\textwidth, height=1\textheight, keepaspectratio]{./imgs/C++20-Coroutine.png}
+	\caption{C++20 Coroutines}
+	\label{fig:coroutines}
+\end{figure}
+
+\subsubsection{Terminologia delle Coroutine}
+
+\textsf{\small \textbf{Awaitable}} \\
+
+\begin{itemize}
+	\item \textsf{\small È un tipo che supporta l'operatore \emph{co\_await}.}
+	%\item \textsf{\small }
+\end{itemize}
+
 \begin{lstlisting}
-	#include <iostream>
-	#include <algorithm>
-	#include <vector>
-	#include <ranges>
-	
-	int main()
+	class dummy { // Awaitable
+		public:
+			std::suspend_always operator co_await(){ return {}; }
+	};
+
+	HelloWorldCoro print_hello_world() 
 	{
-		return 0;
+		std::cout << "Hello ";
+		co_await dummy{}; 
+		std::cout << "World!" << std::endl;
 	}
 \end{lstlisting}
-\end{comment}
+
+\textsf{\small \textbf{Awaiter}} \\
+
+\begin{itemize}
+	\item \textsf{\small È un tipo che implementa tre speciali funzioni che sono chiamate come parte dell'espressione \emph{co\_await}: \emph{await\_ready()}, \emph{await\_suspend()}, \emph{await\_resume()}. Per esempio, la \emph{Libreria Standard} ha definito degli \emph{awaiters}: \emph{std::suspend\_always} e \emph{std::suspend\_never}.}
+	\item \textsf{\small Un tipo può essere sia di tipo \textbf{Awaitable} che \textbf{Awaiter}.}
+\end{itemize}
+
+\begin{lstlisting}
+	class MyAwaiter {
+		public:
+			bool await_ready() { return false; } 
+			void await_suspend(std::coroutine_handle<>) {} 
+			void await_resume() {}
+	};
+	
+	HelloWorldCoro print_hello_world() 
+	{
+		std::cout << "Hello ";
+		co_await MyAwaiter{};
+		std::cout << "World!" << std::endl;
+	}
+\end{lstlisting}
+
+\textsf{\small \textbf{co\_await}: } \\
+
+\begin{itemize}
+	\item \textsf{\small è un operatore unario che sospende la \textbf{coroutine} e restituisce il controllo al chiamante. Il suo operando è una espressione il cui l'operatore deve definire \textbf{co\_await} o \textbf{Awaitable}.}
+\end{itemize}
+
+\begin{lstlisting}
+	class dummy { }; // Awaitable
+	
+	class HelloWorldCoro {
+		public:
+			class promise_type {
+				public:
+					// . . .
+					auto await_transform(const dummy&) 
+					{
+						return std::suspend_always{};
+					}
+			};
+			// . . .
+	};
+	
+	HelloWorldCoro print_hello_world() {
+		std::cout << "Hello ";
+		co_await dummy{}; 
+		std::cout << "World!" << std::endl;
+	}
+\end{lstlisting}
+
+\textsf{\small \textbf{Promise}: } \\
+
+\begin{itemize}
+	\item \textsf{\small Un tipo strettamente chiamato \emph{promise\_type}.}
+	\item \textsf{\small È usato dentro al \textbf{coroutine}. La \textbf{coroutine} sottomette il proprio risultato o eccezione attraverso questo oggetto.}
+	\item \textsf{\small La tipologia del \emph{promise type} è determinato dal compilatore dal tipo di ritorno del \textbf{coroutine} usando \emph{std::coroutine\_traits}.}
+\end{itemize}
+
+\textsf{\small \textbf{Coroutine Handle}: } \\
+
+\begin{itemize}
+	\item \textsf{\small È usato per riprendere l'esecuzione della \textbf{coroutine} o per distruggerla. Indica anche lo stato della \textbf{coroutine} usando \emph{std::coroutine\_handle::done()}.}
+\end{itemize}
+
+\textsf{\small \textbf{Coroutine State}: } \\
+
+\begin{itemize}
+	\item \textsf{\small È un oggetto generato dal compilatore, memorizzato sull'heap che contiene: }
+	\begin{itemize}
+		\item \textsf{\small L'oggetto \emph{promise} (promessa).}
+		\item \textsf{\small I parametri (tutti copiati per valore).}
+		\item \textsf{\small Le variabili locali.}
+		\item \textsf{\small La rappresentazione del punto di sospensione attuale, così che la \emph{resume} sappia da dove continuare e la destroy sa quali variabili si trovano nello scope (nella portata).}
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Esempi di coroutines}
+
+\textsf{\small Per usufruire delle \textbf{coroutines} è necessario includere \textbf{<coroutine>}.} \break
+
+\textsf{\small Sospendere una \textbf{coroutine}: } \\
+
+\begin{lstlisting}
+	// Flags compilatore: -std=c++20 -fcoroutines -fno-exceptions
+	#include <iostream>
+	#include <coroutine>
+	
+	class HelloWorldCoro {
+		public:
+		class promise_type { // compiler looks for `promise\_type`
+			public:
+			HelloWorldCoro get_return_object() { return this; }    
+			std::suspend_always initial_suspend() { return {}; }        
+			std::suspend_always final_suspend() { return {}; }
+		};
+		
+		HelloWorldCoro(promise_type* p) : m_handle(std::coroutine_handle<promise_type>::from_promise(*p)) {}
+		~HelloWorldCoro() { m_handle.destroy(); }
+		
+		std::coroutine_handle<promise_type>      m_handle;
+	};
+	
+	HelloWorldCoro print_hello_world() {
+		std::cout << "Hello ";
+		co_await std::suspend_always{};
+		std::cout << "World!" << std::endl;
+	}
+	
+	int main() {
+		HelloWorldCoro mycoro = print_hello_world();
+		
+		mycoro.m_handle.resume();
+		mycoro.m_handle(); // Equal to mycoro.m\_handle.resume();
+		return EXIT_SUCCESS;
+	}
+\end{lstlisting}
+
+\textsf{\small Una \textbf{coroutine} può essere ripresa da una funzione membro del \emph{std::coroutine\_handle} o invocando la funzione operatore dell'oggetto \emph{std::coroutine\_handle}.} \\
+
+\textsf{\small Come detto in precedenza, la \textbf{coroutine} consiste in: } \\
+
+\begin{itemize}
+	\item \textsf{\small La \emph{promessa}, nel nostro esempio \emph{promise\_type}.}
+	\item \textsf{\small \emph{Awaiter}, nel nostro esempio \emph{std::suspend\_always}.}
+	\item \textsf{\small \emph{Coroutine Handle}, nel nostro esempio \emph{std::coroutine\_handle}.}
+\end{itemize}
+
+%\textsf{\small } \\
+
+\textsf{\small Restituire un valore dalla \textbf{coroutine}: } \\
+
+\begin{lstlisting}
+	// Flags compilatore: -std=c++20 -fcoroutines -fno-exceptions
+	#include <iostream>
+	#include <coroutine>
+	#include <cassert>
+	
+	class HelloWorldCoro {
+		public:
+		class promise_type {
+			public:
+			int m_value;
+			
+			HelloWorldCoro get_return_object() { return this; }
+			std::suspend_always initial_suspend() { return {}; }
+			std::suspend_always final_suspend() { return {}; }
+			
+			void return_value(int val) { m_value = val; }
+		};
+		
+		HelloWorldCoro(promise_type* p) : m_handle(std::coroutine_handle<promise_type>::from_promise(*p)) {}
+		~HelloWorldCoro() { m_handle.destroy(); }
+		
+		std::coroutine_handle<promise_type>      m_handle;
+	};
+	
+	HelloWorldCoro print_hello_world() {
+		std::cout << "Hello ";
+		co_await std::suspend_always{ };
+		std::cout << "World!" << std::endl;
+		
+		co_return -1;
+	}
+	
+	
+	int main() {
+		HelloWorldCoro mycoro = print_hello_world();
+		
+		mycoro.m_handle.resume();
+		mycoro.m_handle.resume();
+		assert(mycoro.m_handle.promise().m_value == -1);
+		
+		//Output: Hello World!
+		
+		return EXIT_SUCCESS;
+	}
+\end{lstlisting}
+
+\textsf{\small Per restituire un valore dalla \textbf{coroutine}, c'è bisogno di fornire la funzione \emph{return\_value} al \emph{promise type}.} \\
+
+\textsf{\small Rendere (\emph{Yielding}) un valore dalle \textbf{coroutines}: } \\
+
+\begin{lstlisting}
+	// Flags compilatore: -std=c++20 -fcoroutines -fno-exceptions
+	#include <iostream>
+	#include <coroutine>
+	#include <cassert>
+	
+	class HelloWorldCoro {
+		public:
+		class promise_type {
+			public:
+			int m_val;
+			
+			HelloWorldCoro get_return_object() { return this; } 
+			std::suspend_always initial_suspend() { return {}; } 
+			std::suspend_always final_suspend() { return {}; } 
+			
+			std::suspend_always yield_value(int val) {
+				m_val = val; 
+				return {};
+			}
+		};
+		
+		HelloWorldCoro(promise_type* p) : m_handle(std::coroutine_handle<promise_type>::from_promise(*p)) {}
+		~HelloWorldCoro() { m_handle.destroy(); }
+		
+		std::coroutine_handle<promise_type>      m_handle;
+	};
+	
+	HelloWorldCoro print_hello_world() {
+		std::cout << "Hello ";
+		co_yield 1;
+		std::cout << "World!" << std::endl;
+	}
+	
+	int main() {
+		HelloWorldCoro mycoro = print_hello_world();
+		
+		mycoro.m_handle.resume();
+		assert(mycoro.m_handle.promise().m_val == 1);
+		mycoro.m_handle.resume();
+		
+		//Output: Hello World!
+		return EXIT_SUCCESS;
+	}
+\end{lstlisting}
+
+\textsf{\small Per poter rendere, produrre (\emph{yielding}) un valore dalla \textbf{coroutine} è necessario fornire la funzione \emph{yield\_value()} al \emph{promise\_type} che restituisce il \emph{awaitable\_type}. } \\
+
+\textsf{\small Generando una sequenza di numeri interi con le \textbf{coroutine}: } \\
+
+\begin{lstlisting}
+	// Flags compilatore: -std=c++20 -fcoroutines -fno-exceptions
+	#include <iostream>
+	#include <coroutine>
+	
+	class Generator {
+		public:
+		class promise_type {
+			public:
+			int m_val;
+			
+			Generator get_return_object() { return this; }
+			std::suspend_never initial_suspend() { return {}; }
+			std::suspend_always final_suspend() { return {}; }
+			
+			std::suspend_always yield_value(int val) {
+				m_val = val; 
+				return {};
+			}
+		};
+		
+		class iterator {
+			public:
+			bool operator!=(const iterator& rhs) { return not m_h_ptr->done(); }
+			iterator& operator++() { 
+				m_h_ptr->resume(); 
+				return *this; 
+			}
+			int operator*() { return m_h_ptr->promise().m_val; }
+			
+			std::coroutine_handle<promise_type> *m_h_ptr;
+		};
+		
+		iterator begin() { return iterator{&m_handle}; }
+		iterator end() { return iterator{nullptr}; }
+		
+		Generator(promise_type* p) : m_handle(std::coroutine_handle<promise_type>::from_promise(*p)) {}
+		~Generator() { m_handle.destroy(); }
+		
+		std::coroutine_handle<promise_type>      m_handle;
+	};
+	
+	
+	Generator range(uint32_t start, uint32_t end) {
+		while(start != end)
+		co_yield start++;
+	}
+	
+	int main() {
+		for (auto &&no : range(0, 10)) { 
+			std::cout<< no <<std::endl;
+		}
+		//Output: 0
+		//Output: 1
+		//Output: 2
+		//Output: 3
+		//Output: 4
+		//Output: 5
+		//Output: 6
+		//Output: 7
+		//Output: 8
+		//Output: 9
+		
+		return EXIT_SUCCESS;
+	}
+\end{lstlisting}
+
+\textsf{\small Questo è in breve cosa sono e a cosa servono le \textbf{coroutines} del \textbf{C++20}, anche qui si potrebbe estendere e approfondire l'argomento, ma per il momento vediamo soltanto un piccolo assaggio. } \\
+
+\subsubsection{Stackfull \& Stackless Coroutines}
+
+\textsf{\small Cosa sono le \textbf{stackfull} e le \textbf{stackless coroutines}?} \\
+
+\begin{itemize}
+	\item \textsf{\small \textbf{Stackfull} : Le \textbf{stackfull coroutines} hanno bisogno di uno \emph{stack} separato per essere eseguite.}
+	\item \textsf{\small \textbf{Stackless} : Le \textbf{stackless coroutines} usano lo stesso \emph{stack} del chiamante.}
+\end{itemize}
+
+\subsubsection{Differenza tra threads vs coroutines}
+
+\begin{itemize}
+	\item \textsf{\small Le \textbf{coroutines} riguardano il \emph{programming model} (modello di programmazione) mentre le \textbf{threads} riguardano l'\emph{execution model} (modello d'esecuzione).} \\
+	\item \textsf{\small Le \textbf{coroutines} possono ancora fare \emph{concorrenza} senza l'\emph{overhead} (sovraccarico) dello scheduler, semplicemente gestisce lo \emph{context-switching} stesso.} \\
+	\item \textsf{\small Un altro beneficio delle \textbf{coroutine} è il loro minore uso di memoria. Con i \textbf{thread}, ognuno di essi ha bisogno di allocare il proprio \emph{stack} e così la memoria cresce linearmente, mentre il numero di \textbf{coroutines} non ha una relazione diretta con l'utilizzo di memoria. } \\
+\end{itemize}
+
+\break
+
+\textsf{\small Queste sono le \emph{4 Big} \emph{features} del \textbf{C++20} che cambieranno il modo di scrivere C++.} \\
+
+\textsf{\small Le abbiamo soltanto trattate in modo breve e coinciso, ma sono 4 argomenti fondamentali del \textbf{C++20}.} \\
 
 % ------------------------------ FINE CAPITOLO ---------------------------------------
