@@ -4,9 +4,6 @@
 
 %TODO: Argomenti ancora da trattare in questo capitolo:
 
-%TODO: C++20:
-%TODO: ranges, concepts, constrained algorithms, coroutines, template parameter list, modules, ecc..
-
 % ----------------------------- SECTION: INTRODUZIONE --------------------------------
 
 \section{Introduzione}
@@ -19,7 +16,7 @@
 
 \textsf{\small Qui una lista di argomenti della libreria degli Algoritmi che tratteremo: } \\
 
-%TODO: forse qui dovrei aggiungere anche quelle del C++20.
+%TODO: forse qui dovrei aggiungere anche quelle del C++20. (tanto son le stesse, ma con ranges:: davanti)
 \begin{itemize}
 	\item \textsf{\small \textbf{Operazioni su sequenze non modificabili} }
 	\item \textsf{\small \textbf{Operazioni su sequenze modificabili} }
@@ -46,12 +43,6 @@
 	\caption{Algorithm Library}
 	\label{fig:algorithms}
 \end{figure}
-
-%TODO: L'importanza della libreria degli algoritmi.
-%TODO: Mettere in un itemize la lista di tutte le operazioni: operazioni su sequenze non modificabili, oprazioni su sequeunze modificabili, ecc... (magari in parantesi come è scritto in inglese)
-%TODO: dire che non le tratterò proprio tutte tutte, alcune sono molto simili.
-
-%TODO: Inoltre, dire che tratterò argomenti anche che non fanno parte della libreria degli Algoritmi, ma che possono essere utili da utilizzare assieme agli algoritmi.
 
 % ------------------ SECTION: OPERAZIONI SU SEQUENZE NON-MODIFICABILI  ---------------
 
@@ -855,7 +846,7 @@
 
 \fleuron
 
-\textsf{\small Per tutte queste operazioni c'è un equivalente per \emph{ranges} del C++20 a pag. \pageref{ranges}} \\
+\textsf{\small Per tutte queste operazioni c'è un equivalente per \emph{ranges} del C++20 a pag. \pageref{ranges_partition}} \\
 
 % --------------------- SECTION: OPERAZIONI DI ORDINAMENTO ---------------------------
 
@@ -974,7 +965,7 @@
 
 \fleuron
 
-\textsf{\small Per tutte queste operazioni c'è un equivalente per \emph{ranges} del C++20 a pag. \pageref{ranges}} \\
+\textsf{\small Per tutte queste operazioni c'è un equivalente per \emph{ranges} del C++20 a pag. \pageref{ranges_sorting}} \\
 
 % ------------ SECTION: OPERAZIONI DI RICERCA BINARIA (BINARY SEARCH) ----------------
 
@@ -1056,7 +1047,7 @@
 
 \fleuron
 
-\textsf{\small Per tutte queste operazioni c'è un equivalente per \emph{ranges} del C++20 a pag. \pageref{ranges}} \\
+\textsf{\small Per tutte queste operazioni c'è un equivalente per \emph{ranges} del C++20 a pag. \pageref{ranges_binary_search}} \\
 
 % --------------- SECTION: ALTRE OPERAZIONI DI ORDINAMENTO SUI RANGES ----------------
 
@@ -1170,7 +1161,7 @@
 
 \fleuron
 
-\textsf{\small Per tutte queste operazioni c'è un equivalente per \emph{ranges} del C++20 a pag. \pageref{ranges}} \\
+\textsf{\small Per tutte queste operazioni c'è un equivalente per \emph{ranges} del C++20 a pag. \pageref{ranges_merge}} \\
 
 % ------------------------ SECTION: OPERAZIONI SUGLI INSIEMI -------------------------
 
@@ -1258,7 +1249,7 @@
 
 \fleuron
 
-\textsf{\small Per tutte queste operazioni c'è un equivalente per \emph{ranges} del C++20 a pag. \pageref{ranges}} \\
+\textsf{\small Per tutte queste operazioni c'è un equivalente per \emph{ranges} del C++20 a pag. \pageref{ranges_set}} \\
 
 % ------------------------- SECTION: OPERAZIONI SU HEAP ------------------------------
 
@@ -1449,7 +1440,7 @@
 
 \fleuron
 
-\textsf{\small Per tutte queste operazioni c'è un equivalente per \emph{ranges} del C++20 a pag. \pageref{ranges}} \\
+\textsf{\small Per tutte queste operazioni c'è un equivalente per \emph{ranges} del C++20 a pag. \pageref{ranges_minmax}} \\
 
 % ----------------------- SECTION: OPERAZIONI DI COMPARAZIONE ------------------------
 
@@ -1513,7 +1504,7 @@
 
 \fleuron
 
-\textsf{\small Per tutte queste operazioni c'è un equivalente per \emph{ranges} del C++20 a pag. \pageref{ranges}} \\
+\textsf{\small Per tutte queste operazioni c'è un equivalente per \emph{ranges} del C++20 a pag. \pageref{ranges_compare}} \\
 
 % ---------------------- SECTION: OPERAZIONI SU PERMUTAZIONI -------------------------
 
@@ -1559,7 +1550,7 @@
 
 \fleuron
 
-\textsf{\small Per tutte queste operazioni c'è un equivalente per \emph{ranges} del C++20 a pag. \pageref{ranges}} \\
+\textsf{\small Per tutte queste operazioni c'è un equivalente per \emph{ranges} del C++20 a pag. \pageref{ranges_permutation}} \\
 
 % -------------------------- SECTION: OPERAZIONI NUMERICHE ---------------------------
 
@@ -1684,7 +1675,9 @@
 	\hline
 \end{tabular}
 
-%TODO: per queste non c'è il ranges sembra..
+\fleuron
+
+\textsf{\small Per tutte queste operazioni c'è un equivalente per \emph{ranges} del C++20 a pag. \pageref{ranges_numeric}} \\
 
 % --------------- SECTION: OPERAZIONI SU MEMORIA NON INIZIALIZZATA -------------------
 
@@ -1847,11 +1840,13 @@
 
 \fleuron
 
-\textsf{\small Per tutte queste operazioni c'è un equivalente per \emph{ranges} del C++20 a pag. \pageref{ranges}} \\
+\textsf{\small Per tutte queste operazioni c'è un equivalente per \emph{ranges} del C++20 a pag. \pageref{ranges_uninitialized_memory}} \\
 
 % ------------------------------ SECTION: OPTIONALS ----------------------------------
 
 \newpage
+
+\label{optionals}
 
 \section{Optionals}
 
@@ -2758,7 +2753,7 @@
 
 \subsubsection{Operazioni su Min/Max}
 
-\label{ranges_min_max}
+\label{ranges_minmax}
 
 \begin{lstlisting}
 	#include <iostream>
@@ -2874,6 +2869,8 @@
 
 \subsubsection{Operazioni numeriche}
 
+\label{ranges_numeric}
+
 \begin{lstlisting}
 	#include <iostream>
 	#include <algorithm>
@@ -2911,6 +2908,8 @@
 \end{lstlisting}
 
 \subsubsection{Operazioni su memoria non inizializzata}
+
+\label{ranges_uninitialized_memory}
 
 \begin{lstlisting}
 	#include <iostream>

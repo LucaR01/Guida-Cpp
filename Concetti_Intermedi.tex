@@ -478,7 +478,7 @@
 
 \textsf{\small La keyword \textbf{virtual} può essere posta sia prima che dopo \textbf{public}.} \\
 
-%TODO: queste volendo vanno bene anche a 1 di width e height
+%TODO: queste volendo vanno bene anche a 1 di width e height (lasciamole così, così si legge meglio)
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=1.2\textwidth, height=1.2\textheight, keepaspectratio]{./imgs/virtual_functions_recap_terminology_and_concepts1.png}
@@ -1430,6 +1430,21 @@
 	\item \textsf{\small Non possono mettere assieme delle referenze rvalue di tipo '\textbf{int\&\&}' con dei lvalues di tipo '\textbf{int}'.}
 \end{itemize}
 
+\subsection{xvalue, glvalue, prvalue}
+
+\textsf{\small Un \textbf{xvalue} (\emph{eXpring}) riferisce anche ad un oggetto, di solito vicino la fine del suo tempo di vita. Un \textbf{xvalue} è il risultato di certi tipi di espressioni riguardanti le referenze \textbf{rvalues}.} \\
+
+\textsf{\small Un \textbf{gvalue} (\emph{generalized lvalue}) è un \textbf{lvalue} o un \textbf{xvalue}.} \\
+
+\textsf{\small Un \textbf{prvalue} (\emph{pure rvalue}) è un \textbf{rvalue} che non è un \textbf{xvalue}. (Per esempio: il risultato di chiamare una funzione il cui tipo di ritorno non è una reference è un \textbf{prvalue}).} \\
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1.2\textwidth, height=1.2\textheight, keepaspectratio]{./imgs/values_categories2.png}
+	\caption{Categorie di valori}
+	\label{fig:values_categories}
+\end{figure}
+
 \subsection{Move Assignment Operator}
 
 \textsf{\small \textbf{Definizione: } Similmente al copy assignment in cui possiamo copiare un lvalue, possiamo anche muovere valori da un oggetto ad un altro senza costruirne uno nuovo. Chiamiamo questo: \textbf{Move Assignment}. Muoviamo i valori da un oggetto ad un altro oggetto esistente.} \\
@@ -1509,6 +1524,13 @@
 
 \textsf{\small \textbf{std::move(obj)} non cambia il contenuto dell'oggetto, ma \textbf{auto obj2 = std::move(obj)} possibilmente sì.} \\
 
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1.2\textwidth, height=1.2\textheight, keepaspectratio]{./imgs/value_categories.png}
+	\caption{Value Categories}
+	\label{fig:value_categories}
+\end{figure}
+
 \subsection{Fallbacks of move semantics}
 
 \begin{enumerate}
@@ -1520,7 +1542,7 @@
 	\item \textsf{\small La semantica della copiatura è un ripiego soltanto se la semantica della copiatura è supportata.}
 	\item \textsf{\small Se non c'è implementazione che prenda l'\textbf{rvalue} come argomento allora ci sarà l'ordinario e costante \textbf{lvalue} che verrà usato.}
 	\item \textsf{\small Se una funzione non prende un \textbf{rvalue} e \textbf{lvalue} allora un errore a compile-time verrà generato.}
-	\item \textsf{\small }
+	%\item \textsf{\small }
 \end{enumerate}
 
 \subsection{syntax vs semantics}
@@ -1583,6 +1605,13 @@
 	\item \textsf{\small \textbf{std::move()} significa \emph{non ho più bisogno di questo valore}.}
 	\item \textsf{\small Un oggetto segnato con \textbf{std::move()} non è mai parzialmente distrutto. Il distruttore verrà chiamato per distruggere l'oggetto appropriatamente.}
 \end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\textwidth, height=1\textheight, keepaspectratio]{./imgs/value_categories2.png}
+	\caption{Value Categories}
+	\label{fig:value_categories2}
+\end{figure}
 
 % -------------------------- SECTION: CLASSI ASTRATTE --------------------------------
 
@@ -1868,7 +1897,7 @@
 	\centering
 	\includegraphics[width=1\textwidth, height=1\textheight, keepaspectratio]{./imgs/exceptions_recap2.png}
 	\caption{Recap Eccezioni}
-	\label{fig:"exceptions_recap2}
+	\label{fig:exceptions_recap2}
 \end{figure}
 
 \subsection{Assertions}
@@ -3437,6 +3466,14 @@
 
 \textsf{\small Un buon utilizzo delle funzioni \textbf{inline} possono essere di ottimo valore, ma un uso inappropriato non porterà a risultati migliori. Non porre tutte le funzioni \textbf{inline}. È meglio avere il minor numero di funzioni \textbf{inline} possibili.} \\
 
+\subsection{Funzioni Inline vs Funzioni constexpr}
+
+\textsf{\small Sono entrambi per migliorare le \emph{performance}.} \\
+
+\textsf{\small Le \textbf{funzioni inline} richiedono al compilatore di espandere a tempo di compilazione e di risparmiare gli \emph{overhead} delle chiamate alle funzioni. } \\
+
+\textsf{\small Nelle \textbf{funzioni inline} le espressioni sono sempre valutate a \emph{run time}, mentre le \textbf{funzioni constexpr} vengono valutate a \emph{compile time}.} \\
+
 % -------------------------- SECTION: COPY ELISION -----------------------------------
 
 \section{Copy Elision}
@@ -3596,7 +3633,7 @@
 
 \newpage
 
-\section{Command Line Arguments} %TODO: questo non è necessariamente un argomento avanzato.
+\section{Command Line Arguments}
 
 \textsf{\small \textbf{Definizione: } È possibile passare degli argomenti da linea di comando nei terminali dei sistemi operativi. Per fare questo definiamo il \textbf{main()} con due parametri: il primo corrisponde al numero di comandi da linea di comando e il secondo è la lista degli argomenti passati da linea di comando.} \\
 
