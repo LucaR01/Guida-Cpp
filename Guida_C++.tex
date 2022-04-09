@@ -94,6 +94,32 @@
 
 % ---- ornamenti (distaccamenti) end ---------
 
+% ----- firma (signature) begin ----------------
+
+%\usepackage{emerald} %questo non lo trova
+\usepackage{frcursive}
+\usepackage{inslrmin}
+
+\usepackage{soul} % per la sottolineatura.
+\usepackage{setspace} % prima aveva anche l'option [doublespacing], ma dava errore.
+
+% ----- firma (signature) end ----------------
+
+% ----- empty page command begin -------------
+
+\newcommand\blankpage{% comando pagina vuota
+	\clearpage
+	\begingroup
+	\null
+	\thispagestyle{empty}%
+	\addtocounter{page}{-1}%
+	\hypersetup{pageanchor=false}%
+	\clearpage
+	\endgroup
+}
+
+% ----- empty page command end -------------
+
 % ----- code ----------------
 
 \usepackage{listingsutf8}
@@ -351,19 +377,18 @@
 	
 	\include{Concetti_Intermedi} 
 	
-	\include{Concetti_Avanzati} % Concetti avanzati del linguaggio, C++20, concepts, ranges, ec..
+	\include{Concetti_Avanzati}
 	
-	% Capitolo, possibili nomi: I maghi degli Algoritmi, Le gemme degli Algoritmi, La libreria degli Algoritmi, Le gemme della libreria degli Algoritmi.
+	\include{Libreria_Algoritmi} 
 	
-	\include{Libreria_Algoritmi} % prima o dopo Concetti_Avanzati?
-	
-	%\include{Conclusioni} % oppure è meglio semplicemente una section? oppure faccio lo stesso questo file, ma senza creare un capitolo per le conclusioni, non avrebbe senso, piuttosto faccio soltanto una section.
+	\include{Conclusioni}
 	
 	%TODO: ci starebbe anche un capitolo a parte per:
 	%TODO: - Algoritmi (questo lo faccio)
 	%TODO: - Multithreading
 	%TODO: - Performance, clean code
 	%TODO: - Design Patterns
+	%TODO: - C++23
 	
 \end{document}
 
