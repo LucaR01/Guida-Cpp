@@ -11,18 +11,18 @@ Una semplice guida in italiano per programmare in C++.
 ![GitHub last commit](https://img.shields.io/github/last-commit/LucaR01/Guida-Cpp)
 ![GitHub contributors](https://img.shields.io/github/contributors/LucaR01/Guida-Cpp)
 
-Questa guida presenta 4 capitoli:
-- Basi del Linguaggio
-- Concetti Intermedi
-- Concetti Avanzati
-- Le gemme degli Algoritmi
-
 ## Che cos'è questa guida?
 Questa è un piccola e semplice guida che ho voluto scrivere per ripassare, approfondire e imparare meglio a mia volta questo meraviglioso linguaggio che è **C++**.
 
 Questa non è una narrazione è più una raccolta di frammenti di codice, brevi spiegazioni e semplici esempi sulle componenti del linguaggio.
 
 ## Cosa presenta questa guida:
+
+Questa guida presenta 4 capitoli:
+- Basi del Linguaggio
+- Concetti Intermedi
+- Concetti Avanzati
+- Le gemme degli Algoritmi
 
 ### Basi del Linguaggio
 Questo capitolo tratta i concetti basilari del linguaggio, quali: variabili, costanti, tipologie, operatori, costrutti, if else, loops, arrays, matrici, enums, caratteri e stringhe, funzioni, header files, namespaces, strutture, union, classi, convenzioni del linguaggio e tanto altro..
