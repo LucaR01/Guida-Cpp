@@ -24,7 +24,7 @@
 
 \section{STL | Standard Template Library}
 
-\textsf{\small \textbf{Definizione: } La \textbf{Standard Template Library} (\emph{STL}) è un insieme di classi template che forniscono le classiche strutture dati e funzioni come: liste, stacks, arrays, eccetera..} \break
+\textsf{\small \textbf{Definizione: } La \textbf{Standard Template Library} (\emph{STL}) è un insieme di classi template che forniscono le classiche strutture dati e funzioni come: liste, stacks, arrays, eccetera.} \break
 
 \textsf{\small È una libreria di contenitori (containers) di classi, algoritmi e iteratori. È una libreria generalizzata, i suoi componenti sono parametrizzati.} \\
 
@@ -82,9 +82,9 @@
 	}
 \end{lstlisting}
 
-\textsf{\small C'è un problema, se ora volessimo usare la stessa funzione, ma con i float? o con i char? Certo potremmo fare dei casts, ma così perderemmo dei dati, ma soprattutto ripeteremmo lo stesso codice più e più volte semplicemente per avere la stessa identica funzione, ma per tipologie diverse.} \\
+\textsf{\small C'è un problema: se ora volessimo usare la stessa funzione, ma con i float? o con i char? Certo potremmo fare dei casts, ma così perderemmo dei dati, ma soprattutto ripeteremmo lo stesso codice più e più volte semplicemente per avere la stessa identica funzione, ma per tipologie diverse.} \\
 
-\textsf{\small Inoltre, fare questo, continuare a ripetere lo stesso codice, violerebbe un'importante principio in programmazione, ovvero \textbf{DRY}: \emph{Don't repeat yourself}, in italiano, non ripeterti.} \break 
+\textsf{\small Inoltre, fare questo, continuare a ripetere lo stesso codice, violerebbe un'importante principio di programmazione, ovvero \textbf{DRY}: \emph{Don't repeat yourself}, in italiano, non ripeterti.} \break 
 
 \textsf{\small Vogliamo cercare di ripetere lo stesso codice \textbf{il meno possibile} e \textbf{cercare di riutilizzare} codice che già abbiamo per altre funzionalità.} \\
 
@@ -138,7 +138,7 @@
 
 \section{std::vector<>}
 
-\textsf{\small \textbf{Definizione:} I \textbf{vectors} sono un contenitore rappresentante una array che può cambiare in size (spazio). Sono degli array dinamici.} \\
+\textsf{\small \textbf{Definizione:} Un \textbf{vector} è un contenitore rappresentante un array che può cambiare in size (spazio). Sono degli array dinamici.} \\
 
 \textsf{\small I vectors memorizzano i dati in locazioni contigue di memoria e permettono l'accesso diretto a qualsiasi elemento usando l'operatore []. Supportano la riduzione e l'ampiamento dello spazio a runtime (ovvero eseguite mentre il tuo programma è in esecuzione).} \\
 
@@ -169,7 +169,7 @@
 
 \textsf{\small \textbf{Definizione: } Gli \textbf{iteratori} sono degli oggetti (come puntatori) che puntano ad un elemento all'interno di un contenitore. Usiamo gli \textbf{iteratori} per muoverci nel contenitore } \break
 
-\textsf{\small Ci sono diversi tipi di iteratori: } \\
+\textsf{\small Ci sono diversi tipi di iteratori: }
 
 \begin{itemize}
 	\item \textsf{\small \textbf{Input Iterators} : Sono i più deboli fra tutti per via delle loro limitate funzionalità. Può essere usato solo in algoritmi single-pass ovvero quelli che processano il contenitore in modo sequenziale.}
@@ -183,7 +183,7 @@
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=1.2\textwidth, height=1.2\textheight, keepaspectratio]{./imgs/iterators.jpg}
+	\includegraphics[width=1\textwidth, height=1\textheight, keepaspectratio]{./imgs/iterators.jpg}
 	%\caption{Iteratori}
 	\label{fig:iterators}
 \end{figure}
@@ -194,7 +194,7 @@
 
 \textsf{\small Possono essere utili per la riusabilità del codice, visto che anche se cambiamo vettore, il codice riguardante gli \textbf{iteratori} non dovrebbe cambiare.} \\
 
-\textsf{\small Gli \textbf{iteratori} ci permettono una manipolazione dinamica dei contenitori, permettendoci di aggiungere e rimuovere elementi in modo dinamico a nostro piacimento.} \break
+\textsf{\small Gli \textbf{iteratori} ci permettono una manipolazione dinamica dei contenitori, fornendoci la possibilità di aggiungere e rimuovere elementi in modo dinamico a nostro piacimento.} \break
 
 \textsf{\small Per poter usare gli iteratori è necessario includere \textbf{\#include <iterator>}.} \\
 
@@ -434,7 +434,7 @@
 
 \subsection{Virtual Inheritance}
 
-\textsf{\small \textbf{Definizione:} La \textbf{Ereditarietà virtuale} è usata per risolvere il problema del \textbf{DDD} (\emph{Dreadful Diamond on Derivation}), ovvero quando una classe deriva molteplici classi che derivano dalla stessa classe.} \\
+\textsf{\small \textbf{Definizione:} L' \textbf{ereditarietà virtuale} è usata per risolvere il problema del \textbf{DDD} (\emph{Dreadful Diamond on Derivation}), ovvero quando una classe deriva molteplici classi che derivano dalla stessa classe.} \\
 
 \begin{figure}[H]
 	\centering
@@ -443,7 +443,7 @@
 	\label{fig:diamond_problem}
 \end{figure}
 
-\textsf{\small Come possiamo notare i dati e le funzioni della \textbf{classe A} è ereditata due volte dalla \textbf{classe D}, una volta per via della \textbf{classe B} e una volta per via della \textbf{classe C}.} \\
+\textsf{\small Come possiamo notare i dati e le funzioni della \textbf{classe A} sono ereditati due volte dalla \textbf{classe D}, una volta per via della \textbf{classe B} e una volta per via della \textbf{classe C}.} \\
 
 \textsf{\small Quando qualsiasi dato o funzione della \textbf{classe A} viene acceduto dalla \textbf{classe D}, nasce dell'ambiguità su quale dato/funzione chiamare. Quella ereditata da \textbf{B} o da \textbf{C}? Questo confonde i compilatori e mostrano errori.}
 
@@ -481,21 +481,21 @@
 %TODO: queste volendo vanno bene anche a 1 di width e height (lasciamole così, così si legge meglio)
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=1.2\textwidth, height=1.2\textheight, keepaspectratio]{./imgs/virtual_functions_recap_terminology_and_concepts1.png}
+	\includegraphics[width=1\textwidth, height=1\textheight, keepaspectratio]{./imgs/virtual_functions_recap_terminology_and_concepts1.png}
 	\caption{Recap Virtual Functions}
 	\label{fig:virtual_functions_recap_terminology_and_concepts1}
 \end{figure}
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=1.2\textwidth, height=1.2\textheight, keepaspectratio]{./imgs/virtual_functions_recap_terminology_and_concepts2.png}
+	\includegraphics[width=1\textwidth, height=1\textheight, keepaspectratio]{./imgs/virtual_functions_recap_terminology_and_concepts2.png}
 	\caption{Recap Virtual Functions}
 	\label{fig:virtual_functions_recap_terminology_and_concepts2}
 \end{figure}
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=1.2\textwidth, height=1.2\textheight, keepaspectratio]{./imgs/virtual_functions_implementation.png}
+	\includegraphics[width=1\textwidth, height=1\textheight, keepaspectratio]{./imgs/virtual_functions_implementation.png}
 	\caption{Virtual Functions Implementazione}
 	\label{fig:virtual_functions_implementation}
 \end{figure}
@@ -668,6 +668,8 @@
 
 % -------------------------- SECTION: TIPI DI CAST -----------------------------------
 
+\label{cast_types}
+
 \newpage
 
 \section{Tipi di Casts}
@@ -689,7 +691,7 @@
 \subsection{const\_cast<>}
 
 \begin{itemize}
-	\item \textsf{\small \textbf{const\_cast<> :} Serve per aggiungere o rimuovere il \textbf{const} ad una variabile. Se la variabile che stiamo cercando di modificare era già const allora questo produce un valore indefinito. Se lo si usa per qualcosa che non era dichiarato come const allora è safe (sicuro farlo, non ci saranno problemi).  }
+	\item \textsf{\small \textbf{const\_cast<> :} Serve per aggiungere o rimuovere il \textbf{const} ad una variabile. Se la variabile che stiamo cercando di modificare era già const allora questo produce un valore indefinito. Se lo si usa per qualcosa che non era dichiarato come const allora è safe (sicuro farlo, non ci saranno problemi). }
 \end{itemize}
 
 \begin{lstlisting}
@@ -712,7 +714,7 @@
 \subsection{dynamic\_cast<>}
 
 \begin{itemize}
-	\item \textsf{\small \textbf{dynamic\_cast<> :} Serve esclusivamente per i casts riguardanti il polimorfismo. Puoi castare un puntatore o una reference a qualsiasi altro tipo di classe. Non solo si può fare un casting verso il basso, ma anche in alto e a lato. Il dynamic\_cast cercherà di ritorna l'oggetto desiderato se possibile, altrimenti ritornerà \textbf{nullptr} in caso di un puntatore e \textbf{std::bad\_cast} nel caso di una reference.}
+	\item \textsf{\small \textbf{dynamic\_cast<> :} Serve esclusivamente per i casts riguardanti il polimorfismo. Puoi castare un puntatore o una reference a qualsiasi altro tipo di classe. Non solo si può fare un casting verso il basso, ma anche verso l'alto e a lato. Il dynamic\_cast cercherà di ritorna l'oggetto desiderato se possibile, altrimenti ritornerà \textbf{nullptr} in caso di un puntatore e \textbf{std::bad\_cast} nel caso di una reference.}
 	\item \textsf{\small Ha delle limitazioni. Non funzionerà nel caso in cui diversi oggetti ereditano tutti dallo stessa classe. (il famoso problema del \emph{dreaded diamond}.) e non stai usando l'ereditarietà \textbf{virtual}.}
 	\item \textsf{\small Inoltre può soltanto funzionare con l'ereditarietà pubblica, fallirà con l'ereditarietà \textbf{protected} o \textbf{private}. Comunque questi tipi di ereditarietà sono rare.}
 \end{itemize}
@@ -768,7 +770,7 @@
 \subsection{reinterpret\_cast<>}
 
 \begin{itemize}
-	\item \textsf{\small \textbf{reinterpret\_cast<> :} È quello più pericoloso di tutti e quindi bisogna utilizzarlo con moderazione. Trasforma un tipo direttamente in un altro come cast da un puntatore ad un altro o memorizzare un puntatore in un int, ecc..}
+	\item \textsf{\small \textbf{reinterpret\_cast<> :} È quello più pericoloso di tutti e quindi bisogna utilizzarlo con moderazione. Trasforma un tipo direttamente in un altro come cast da un puntatore ad un altro o memorizzare un puntatore in un int, ecc.}
 	\item \textsf{\small L'unica cosa garantita con questo tipo di cast è che se torni indietro al tipo originale riotterrai lo stesso valore (non succederà se il tipo era più piccolo del tipo originale.)}
 \end{itemize}
 
@@ -813,11 +815,13 @@
 	\hline
 	\textbf{Cast} & \textbf{Definizione} \\
 	\hline
-	\textbf{dynamic\_cast} & \textsf{\small per convertire puntatori/references in una gerarchia di ereditarietà.} \\
+	\textbf{dynamic\_cast} & \textsf{\small per convertire puntatori/references } \\
+	\textbf{} & \textsf{\small in una gerarchia di ereditarietà.} \\
 	\hline
 	\textbf{static\_cast} & \textsf{\small per le conversioni di tipi ordinari.} \\
 	\hline
-	\textbf{reinterpret\_cast} & \textsf{\small per reinterpretare bit patterns di basso livello. Usare con cauzione.} \\
+	\textbf{reinterpret\_cast} & \textsf{\small per reinterpretare bit patterns di basso livello. } \\
+	\textbf{} & \textsf{\small Usare con cauzione.} \\
 	\hline
 	\textbf{const\_cast} & \textsf{\small per aggiungere/rimuovere \textbf{const} al cast.} \\
 	\hline
@@ -825,14 +829,14 @@
 
 \begin{figure}[ht]
 	\centering
-	\includegraphics[width=1.2\textwidth, height=1.2\textheight, keepaspectratio]{./imgs/typecasting.png}
+	\includegraphics[width=1\textwidth, height=1\textheight, keepaspectratio]{./imgs/typecasting.png}
 	\caption{Typecasting}
 	\label{fig:typecasting}
 \end{figure}
 
 \begin{figure}[ht]
 	\centering
-	\includegraphics[width=1.2\textwidth, height=1.2\textheight, keepaspectratio]{./imgs/cast_types_recap_static_dynamic_reinterpret_const_c-style2.png}
+	\includegraphics[width=1\textwidth, height=1\textheight, keepaspectratio]{./imgs/cast_types_recap_static_dynamic_reinterpret_const_c-style2.png}
 	\caption{Recap Cast Types}
 	\label{fig:cast_types_recap_static_dynamic_reinterpret_const_c-style2}
 \end{figure}
@@ -870,7 +874,7 @@
 	\hline
 	\textsf{\small [\&]} & \textsf{\small accedere a tutte le variabili per reference.} \\
 	\hline
-	\textsf{\small [nomeVariabile1, \&nomeVariabile2]} & \textsf{\small "cattura" nomeVariabile per valore } \\
+	\textsf{\small [nomeVariabile1, \&nomeVariabile2]} & \textsf{\small "cattura" nomeVariabile1 per valore } \\
 	\textsf{\small } & \textsf{\small e nomeVariabile2 per referenza.} \\
 	\hline
 \end{tabular} \\
@@ -947,18 +951,25 @@
 
 \section{Memoria dinamica}
 
-\textsf{\small \textbf{Definizione: } Riguarda l'allocazione di memoria manualmente da parte del programmatore. La memoria allocata dinamicamente è allocata nell' \textbf{Heap} mentre le variabili locali e la memoria non statica viene allocata nello \textbf{Stack}.}
+\textsf{\small \textbf{Definizione: } Riguarda l'allocazione di memoria allocata manualmente da parte del programmatore. La memoria allocata dinamicamente è allocata nell' \textbf{Heap} mentre le variabili locali e la memoria non statica viene allocata nello \textbf{Stack}.}
 
 \begin{itemize}
 	\item \textsf{\small \textbf{Heap} : memoria dinamica.}
 	\item \textsf{\small \textbf{Stack} : variabili locali e non-statiche.}
 \end{itemize}
 
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=.9\textwidth, height=.9\textheight, keepaspectratio]{./imgs/allocate_and_deallocate_memory2.png}
+	\caption{Memoria}
+	\label{fig:allocate_and_deallocate_memory}
+\end{figure}
+
 \subsection{Memoria Dinamica in C}
 
-\textsf{\small In C per l'allocazione dinamica della memoria usufruivamo di 4 diverse funzioni: \textbf{malloc()} (per allocare), \textbf{calloc()}, \textbf{realloc()} (per riallocare), \textbf{free()} (per liberare la memoria).} \\
+\textsf{\small In C per l'allocazione dinamica della memoria usufruivamo di 4 diverse funzioni: \textbf{malloc()} (per allocare), \textbf{calloc() (alloca e setta la memoria a zero a differenza della malloc)}, \textbf{realloc()} (per riallocare), \textbf{free()} (per liberare la memoria).} \\
 
-\textsf{\small Tutte questi funzioni del C, esistono anche nel C++, ma questo ha un suo modo per l'allocazione dinamica della memoria.} \break
+\textsf{\small Tutte questi funzioni del C, esistono anche nel C++, ma questo ha un suo modo per allocare memoria dinamicamente.} \break
 
 \subsection{new e delete}
 
@@ -1020,7 +1031,7 @@
 
 \textsf{\small \textbf{Definizione: } \textbf{RAII} (\emph{Resource Acquisition is Initialization}) è un idioma comune della programmazione e della gestione delle risorse. Ogni allocazione della risorsa è fatta alla creazione dell'oggetto da parte del \textbf{costruttore} mentre la deallocazione (rilascio della memoria) viene fatto dal \textbf{distruttore}. Quindi se non ci sono leaks all'oggetto, non ci sono leaks nemmeno alla risorse. } \\
 
-\begin{figure}[ht]
+\begin{figure}[H]
 	\centering
 	\includegraphics[width=1\textwidth, height=1\textheight, keepaspectratio]{./imgs/RAII.png}
 	\caption{RAII}
@@ -1054,7 +1065,7 @@
 	NomeDellaClasse(const NomeDellaClasse &vecchioOggetto);
 \end{lstlisting}
 
-\textsf{\small Un copy constructor potrebbe essere chiamato per:}
+\textsf{\small Un copy constructor potrebbe essere chiamato:}
 
 \begin{enumerate}
 	\item \textsf{\small Quando un oggetto della classe è ritornato per valore.}
@@ -1075,7 +1086,7 @@
 			}
 			
 			// Copy Constructor
-			// Assiegnamo i valori di x ed y in base ai valori di un'istanza p della classe Point.
+			// Assegniamo i valori di x ed y in base ai valori di un'istanza p della classe Point.
 			Point(const Point &p)
 			{
 				this->x = p.x;
@@ -1220,7 +1231,7 @@
 \textsf{\small \textbf{Ma qual è l'utilità di far ciò?}} \\
 
 \begin{enumerate}
-	\item \textsf{\small Previene il compilatore dal generare le \textbf{special member functions} (costruttori, distruttori, copy constructor, ecc..) che non vogliamo.} \\
+	\item \textsf{\small Previene il compilatore dal generare le \textbf{special member functions} (costruttori, distruttori, copy constructor, ecc.) che non vogliamo.} \\
 	\item \textsf{\small Il disabilitare le normali funzioni membro o non-membro previene problemi di promozioni di tipo dal causare una chiamata involontaria alla funzione.} \\
 	%\item \textsf{\small } \\
 \end{enumerate}
@@ -1252,8 +1263,8 @@
 	int main()
 	{
 		Base b1(10);
-		Base b2(b1); // Chiama il copy constructor, da errore perché abbiamo messo \textbf{= delete} per non permettiamo la copiatura di oggetti.
-		b2 = b1; //Chiama il copy assignment operator, da errore perché abbiamo messo \textbf{= delete} per non permettiamo la copiatura di oggetti.
+		Base b2(b1); // Chiama il copy constructor; da errore perché abbiamo messo \textbf{= delete} per non permettere la copiatura di oggetti.
+		b2 = b1; //Chiama il copy assignment operator; da errore perché abbiamo messo \textbf{= delete} per non permettere la copiatura di oggetti.
 		return 0;
 	}
 \end{lstlisting}
@@ -1297,7 +1308,7 @@
 
 \textsf{\small \textbf{Definizione: } I \textbf{Move Constructor} lavorano con le referenze \textbf{rvalue} e le \textbf{move semantics}(le move semantics riguardano il puntare ad un oggetto già esistente in memoria). Fa puntare il puntatore del nuovo oggetto ai dati dell'oggetto temporaneo e pone a null il puntatore degli oggetti temporanei.} \\
 
-\textsf{\small I \textbf{Move Constructors} spostano le risorse nell'\emph{heap} e l'assegnano al nuovo oggetto. A differenza dei \textbf{copy constructors} i \textbf{move constructors} prevengono dall'inutile copiatura di dati di memoria.} \\
+\textsf{\small I \textbf{Move Constructors} spostano le risorse nell'\emph{heap} e le assegnano al nuovo oggetto. A differenza dei \textbf{copy constructors} i \textbf{move constructors} prevengono dall'inutile copiatura di dati di memoria.} \\
 
 \begin{lstlisting}
 	#include <iostream>
@@ -1408,7 +1419,7 @@
 		std::cout << "rref: " << lref << "\n"; // Output: rref: 24
 		
 		// Questa riga genererà un erorre perché l-value non può
-		// essere assegnata al r-value 
+		// essere assegnato al r-value 
 		// int \&\&ref = a;
 		return 0;
 	}
@@ -1432,7 +1443,7 @@
 
 \subsection{xvalue, glvalue, prvalue}
 
-\textsf{\small Un \textbf{xvalue} (\emph{eXpring}) riferisce anche ad un oggetto, di solito vicino la fine del suo tempo di vita. Un \textbf{xvalue} è il risultato di certi tipi di espressioni riguardanti le referenze \textbf{rvalues}.} \\
+\textsf{\small Un \textbf{xvalue} (\emph{eXpring}) riferisce ad un oggetto, di solito vicino la fine del suo tempo di vita. Un \textbf{xvalue} è il risultato di certi tipi di espressioni riguardanti le referenze \textbf{rvalues}.} \\
 
 \textsf{\small Un \textbf{gvalue} (\emph{generalized lvalue}) è un \textbf{lvalue} o un \textbf{xvalue}.} \\
 
@@ -1440,7 +1451,7 @@
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=1.2\textwidth, height=1.2\textheight, keepaspectratio]{./imgs/values_categories2.png}
+	\includegraphics[width=1\textwidth, height=1\textheight, keepaspectratio]{./imgs/values_categories2.png}
 	\caption{Categorie di valori}
 	\label{fig:values_categories}
 \end{figure}
@@ -1526,7 +1537,7 @@
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=1.2\textwidth, height=1.2\textheight, keepaspectratio]{./imgs/value_categories.png}
+	\includegraphics[width=1\textwidth, height=1\textheight, keepaspectratio]{./imgs/value_categories.png}
 	\caption{Value Categories}
 	\label{fig:value_categories}
 \end{figure}
@@ -1574,7 +1585,7 @@
 	
 	int main()
 	{
-		// Dichiarazione di ritorno prima del cout
+		// Dichiarazione di cout dopo il return.
 		return 0;
 		
 		std::cout << "Hello World!" << std::endl; // Output: nessun output perché è dopo il return statement.
@@ -1588,23 +1599,26 @@
 	\textsf{\small Si riferisce alle regole di } & \textsf{\small Si riferisce al significato associato } \\
 	\textsf{\small qualsiasi riga di codice.} & \textsf{\small a qualsiasi riga di codice.} \\
 	\hline
-	\textsf{\small Errori di sintassi. Occorrono a compile time} & \textsf{\small Si riferisce ad un errore semantico. } \\
-	\textsf{\small Alcuni esempi: } & \textsf{\small Occorre quando delle righe di codice } \\
-	\textsf{\small mancanza di un punto e virgola.} & \textsf{\small sono valide sintatticamente,} \\
-	\textsf{\small } & \textsf{\small ma non fanno quello che } \\
-	\textsf{\small } & \textsf{\small il programmatore volesse che facessero.} \\
+	\textsf{\small Errori di sintassi. } & \textsf{\small Si riferisce ad un errore semantico. } \\
+	\textsf{\small Occorrono a compile time } & \textsf{\small Occorre quando delle righe di codice } \\
+	\textsf{\small Alcuni esempi: } & \textsf{\small sono valide sintatticamente,} \\
+	\textsf{\small mancanza di un punto e virgola.} & \textsf{\small ma non fanno quello che } \\
+	\textsf{\small } & \textsf{\small il programmatore } \\
+	\textsf{\small } & \textsf{\small volesse che facessero.} \\
 	\hline
 \end{tabular}
 
 \subsubsection{Ricapitolando le Move Semantics}
 
-\textsf{\small Ricapitolando: } \\
+\textsf{\small Ricapitolando: }
 
 \begin{itemize}
 	\item \textsf{\small Le \textbf{Move Semantics} ci permettono di ottimizzare la copiatura di oggetti. È usato spesso implicitamente (per gli oggetti temporanei) o esplicitamente con \textbf{std::move()}.}
 	\item \textsf{\small \textbf{std::move()} significa \emph{non ho più bisogno di questo valore}.}
 	\item \textsf{\small Un oggetto segnato con \textbf{std::move()} non è mai parzialmente distrutto. Il distruttore verrà chiamato per distruggere l'oggetto appropriatamente.}
 \end{itemize}
+
+\newpage %TODO: questo newpage mi serve perché altrimenti si scombina tutto e vengono fuori troppi spazi bianchi.
 
 \begin{figure}[H]
 	\centering
@@ -1681,8 +1695,8 @@
 	\item \textsf{\small Non può essere instanziata, ma si possono creare puntatori e referenze della classe astratta.}
 	\item \textsf{\small Le classi astratte sono usate principalmente per \textbf{Upcasting} così che la classe derivata possa usare la sua interfaccia.}
 	\item \textsf{\small Se una \textbf{classe astratta} ha una classe derivata, essa deve implementare tutte le \textbf{pure virtual functions} altrimenti diventeranno anch'essi una classe \textbf{astratta}.}
-	\item \textsf{\small }
-	\item \textsf{\small }
+	%\item \textsf{\small }
+	%\item \textsf{\small }
 \end{itemize}
 
 \begin{lstlisting}
@@ -1743,7 +1757,7 @@
 
 \subsection{Abstract class vs Interface}
 
-\textsf{\small In un certo senso, possono quasi essere definite come, quelle che in altri linguaggi, si chiamano \textbf{Interfacce}, ovvero un'interfaccia mette semplicemente a disposizione le funzioni, ovvero le loro dichiarazioni e lascia a chi \textbf{implementa} l'interfaccia implementare queste funzioni. Il C++ non ha \textbf{Interfacce}, ma possiamo quasi dire che le \textbf{classi astratte} sono le \textbf{interfacce} del C++.} \break
+\textsf{\small In un certo senso, possono quasi essere definite come, quelle che in altri linguaggi, si chiamano \textbf{Interfacce}, ovvero un'interfaccia mette semplicemente a disposizione le funzioni, ovvero le loro dichiarazioni e lascia a chi \textbf{implementa} l'interfaccia definire (implementare) queste funzioni. Il C++ non ha \textbf{Interfacce}, ma possiamo quasi dire che le \textbf{classi astratte} sono le \textbf{interfacce} del C++.} \break
 
 \textsf{\small Quindi si può simulare un'interfaccia in C++ ponendo tutte le funzioni della classe \textbf{astratta} come \textbf{pure virtual functions}.} \\
 
@@ -1769,7 +1783,7 @@
 
 \subsection{try|catch|throw}
 
-\textsf{\small \textbf{try, catch, throw}: Queste sono le keywords per \emph{Exception Handling} (Gestione delle eccezioni):}
+\textsf{\small \textbf{try, catch, throw}: Queste sono le keywords per l' \emph{Exception Handling} (Gestione delle eccezioni):}
 
 \subsubsection{try}
 
@@ -1777,7 +1791,7 @@
 
 \subsubsection{catch}
 
-\textsf{\small Il \textbf{catch} ti permette di definire un blocco di codice che verrà eseguito se un errore sarà accorso nel \textbf{try}.} \\
+\textsf{\small Il \textbf{catch} ti permette di definire un blocco di codice che verrà eseguito soltanto se un errore sarà accorso nel \textbf{try}.} \\
 
 \begin{lstlisting}
 	try {
@@ -1787,7 +1801,7 @@
 	}
 \end{lstlisting}
 
-\textsf{\small C'è uno special catch chiamato \emph{catch all} che permette di "catturare" tutte le eccezioni. Si fa in questo modo: \textbf{catch(...) (quindi un catch con l'ellissi, ovvero i tre puntini).}}
+\textsf{\small C'è uno speciale catch chiamato \emph{catch all} che permette di "catturare" tutte le eccezioni. Si fa in questo modo: \textbf{catch(...) (quindi un catch con l'ellissi, ovvero i tre puntini).}}
 
 \subsubsection{std::throw exception}
 
@@ -1830,7 +1844,7 @@
 	\item \textsf{\small Mancanza di un punto e virgola.}
 \end{itemize}
 
-\textsf{\small Gli errori a \textbf{runtime} sono quegli errori che occorrono durante l'esecuzione del programma dopo che la compilazione sia avvenuta con successo.} \break
+\textsf{\small Gli errori a \textbf{runtime} sono quegli errori che occorrono durante l'esecuzione del programma dopo che la compilazione sia avvenuta con successo.} \break %TODO: quei o quegli?
 
 \begin{tabular}{|c|c|}
 	\hline
@@ -1838,7 +1852,8 @@
 	\hline
 	\textsf{\small Errori di sintassi.} & \textsf{\small Non sono rilevati dal compilatore.} \\
 	\hline
-	\textsf{\small Prevengono l'esecuzione del codice.} & \textsf{\small Prevengono il codice dalla completa esecuzione.} \\
+	\textsf{\small Prevengono l'esecuzione } & \textsf{\small Prevengono il codice dalla } \\
+	\textsf{\small del codice.} & \textsf{\small completa esecuzione.} \\
 	\hline
 	\textsf{\small Vengono rilevati dal compilatore } & \textsf{\small Vengono fixati (sistemati) solo dopo} \\
 	\textsf{\small e possono essere corretti} & \textsf{\small che il codice viene} \\
@@ -1902,12 +1917,12 @@
 
 \subsection{Assertions}
 
-\textsf{\small \textbf{Definizione: } Le \textbf{assertions} sono delle dichiarazioni usate per testare delle assunzioni fatte dal programmatore.} \\
+\textsf{\small \textbf{Definizione: } Le \textbf{assertions} (asserzioni) sono delle dichiarazioni usate per testare delle assunzioni fatte dal programmatore.} \\
 
 \textsf{\small Se la condizione nell'\textbf{assert} fosse valutata falsa, allora il programma fermerebbe l'esecuzione.} \\
 
 \begin{lstlisting}
-	#include <assert.h>
+	#include <assert.h> // si potrebbe anche usare <cassert>, ma sembra non avere molto senso utilizzarlo (dal C++11 meglio non inquinare il namespace globale con qualsiasi "c.." header file).
 	
 	int length = 7;
 	
@@ -1929,7 +1944,7 @@
 
 \section{Operazioni di Input/Output}
 
-\textsf{\small \textbf{Definizione: } La libreria standard del C++ mette a disposizioni diverse funzioni per le operazioni di input ed output di dati in streams (flussi di dati), in files, ecc...} \\
+\textsf{\small \textbf{Definizione: } La libreria standard del C++ mette a disposizioni diverse funzioni per le operazioni di input ed output di dati in streams (flussi di dati), in files, ecc.} \\
 
 \subsection{Input-Output stream}
 
@@ -2024,12 +2039,12 @@
 	\hline
 	\textsf{\small È supportata solo in C++.} & \textsf{\small È supportata sia in C che in C++.} \\
 	\hline
-	\textsf{\small Continua a ripulire il buffer.} & \textsf{\small Ripulisce il buffer solo alla fine del programma.} \\
-	%\textsf{\small } & \textsf{\small } \\
+	\textsf{\small Continua a ripulire } & \textsf{\small Ripulisce il buffer solo } \\
+	\textsf{\small il buffer.} & \textsf{\small alla fine del programma.} \\
 	\hline
 \end{tabular}
 
-\textsf{\small Quindi, in conclusione, usare \textbf{$\backslash$n} sembra migliore in termini di prestazioni rispetto \textbf{std::endl} a meno che non sia necessario ripulire il buffer dello stream.} \break
+\textsf{\small Quindi, in conclusione, usare \textbf{$\backslash$n} sembra migliore in termini di prestazioni rispetto \textbf{std::endl} a meno che non sia necessario ripulire il buffer dello stream.}
 
 \subsubsection{Meglio '$\backslash$n' oppure "$\backslash$n"}
 
@@ -2095,7 +2110,7 @@
 			\item \textsf{\small \textbf{setw(val)} : usato per impostare la larghezza dello spazio negli operatori di output.}
 			\item \textsf{\small \textbf{setfill(c)} : usato per riempire lo stream di output con il carattere 'c'.}
 			\item \textsf{\small \textbf{setprecision(val)} : Imposta val come nuovo valore di precisione dei valori floating-point.}
-			\item \textsf{\small \textbf{setbase(val)} : Per impostare la base dei valori numerici. (es: base 2 (binario), base 16, esadecimale, base 8, ottale, ecc...)}
+			\item \textsf{\small \textbf{setbase(val)} : Per impostare la base dei valori numerici. (es: base 2 (binario), base 16, esadecimale, base 8, ottale, ecc.)}
 			\item \textsf{\small \textbf{setioflags(flag)} : Usato per impostare i flag di formato specificati dal parametro di maschera.}
 			\item \textsf{\small \textbf{resetiosflags(m)} : Usato per resettare i flags di formato specificati dal parametro di maschera.}
 		\end{itemize}
@@ -2156,7 +2171,7 @@
 
 \begin{figure}[ht]
 	\centering
-	\includegraphics[width=1.2\textwidth, height=1.2\textheight, keepaspectratio]{./imgs/Stream_iomanip_setw.png}
+	\includegraphics[width=1\textwidth, height=1\textheight, keepaspectratio]{./imgs/Stream_iomanip_setw.png}
 	\caption{Stream iomanip}
 	\label{fig:Stream_iomanip_setw}
 \end{figure}
@@ -2247,14 +2262,14 @@
 
 \begin{figure}[ht]
 	\centering
-	\includegraphics[width=1.2\textwidth, height=1.2\textheight, keepaspectratio]{./imgs/fstream_file_size.png}
+	\includegraphics[width=1\textwidth, height=1\textheight, keepaspectratio]{./imgs/fstream_file_size.png}
 	\caption{Ottenere il file size}
 	\label{fig:fstream_file_size}
 \end{figure}
 
 \begin{figure}[ht]
 	\centering
-	\includegraphics[width=1.2\textwidth, height=1.2\textheight, keepaspectratio]{./imgs/fstream_file_size2.png}
+	\includegraphics[width=1\textwidth, height=1\textheight, keepaspectratio]{./imgs/fstream_file_size2.png}
 	\caption{Ottenere il file size}
 	\label{fig:fstream_file_size2}
 \end{figure}
@@ -2265,16 +2280,16 @@
 
 \section{std::chrono}
 
-\textsf{\small \textbf{Definizione: } La libreria \textbf{chrono} è usata per occuparsi delle date e del tempo. Questa libreria è progettata col fatto che i timers e gli orologi potrebbero essere diversi su sistemi operativi differenti.} \\
+\textsf{\small \textbf{Definizione: } La libreria \textbf{chrono} è usata per occuparsi delle date e del tempo. Questa libreria è progettata sul fatto che i timers e gli orologi potrebbero essere diversi su sistemi operativi differenti.} \\
 
-\textsf{\small Fornisce una \emph{precisione neutrale}, attraverso la separazione le durate e il tempo.} \\
+\textsf{\small Fornisce una \emph{precisione neutrale}, attraverso la separazione delle durate e il tempo.} \\
 
 \textsf{\small Tutti gli elementi di questo header non sono definiti sotto il namespace std, ma sotto il \textbf{std::chrono namespace}.} \break
 
 \textsf{\small Si occupa del tempo attraverso principalmente 3 concetti: } \\
 
 \begin{itemize}
-	\item \textsf{\small \textbf{Duration (Durata)} : Un oggetto durata esprime un intervallo di tempo come 3 minuti, 3 ore, 3 millisecondi, ecc.. Per esempio 33 secondi potrebbe essere rappresentato dalla durata di 33 ticks ciascuno di 1 secondo.}
+	\item \textsf{\small \textbf{Duration (Durata)} : Un oggetto durata esprime un intervallo di tempo come 3 minuti, 3 ore, 3 millisecondi, ecc. Per esempio 33 secondi potrebbe essere rappresentato dalla durata di 33 ticks ciascuno di 1 secondo.}
 	\item \textsf{\small \textbf{Clock (Orologio)} : Un orologio consiste in un punto di partenza (o epoch) e un tick rate.}
 	\item \textsf{\small \textbf{Time point (Punto nel tempo)} : Un oggetto di tipo \emph{time\_point} esprime un punto nel tempo relativo ad un epoch di un clock. Internamente, l'oggetto memorizza un oggetto di tipo durata (\emph{duration}) e usa il clock come referenza per via del suo epoch.}
 \end{itemize}
@@ -2355,7 +2370,7 @@
 
 \begin{figure}[ht]
 	\centering
-	\includegraphics[width=1.2\textwidth, height=1.2\textheight, keepaspectratio]{./imgs/chrono_steady_clock_per_misurare_il_tempo_tra_una_operazione_e_l_altra_col_using.png}
+	\includegraphics[width=1\textwidth, height=1\textheight, keepaspectratio]{./imgs/chrono_steady_clock_per_misurare_il_tempo_tra_una_operazione_e_l_altra_col_using.png}
 	\caption{Calcolo tempo trascorso per eseguire un blocco di codice}
 	\label{fig:chrono_steady_clock_per_misurare_il_tempo_tra_una_operazione_e_l_altra_col_using}
 \end{figure}
@@ -2417,7 +2432,7 @@
 	// Esempio 3
 	#include <iostream>
 	#include <cstdlib>
-	#include <time.h>
+	#include <time.h> // si può anche includere <ctime>.
 	
 	// Questo programma genererà un numero nel range 25 e 50.
 	int main()
@@ -2441,7 +2456,7 @@
 
 \subsection{Cosa vuol dire e perché pseudo-random?}
 
-\textsf{\small Gli \textbf{pseudorandom number generator} (\emph{PRNG}), anche chiamati \textbf{deterministic random bit generator} (\emph{DRBG}, ovvero generatori di bit casuali deterministici) sono degli algoritmi per generare sequenze di numeri le quali proprietà sono simili a quelle delle sequenze di numeri casuali.} \\
+\textsf{\small Gli \textbf{pseudorandom number generator} (\emph{PRNG}), anche chiamati \textbf{deterministic random bit generator} (\emph{DRBG}, ovvero generatori di bit casuali deterministici) sono degli algoritmi per generare sequenze di numeri, le quali proprietà sono simili a quelle delle sequenze di numeri casuali.} \\
 
 \textsf{\small I \emph{PRNG} non generano vere sequenze casuali perché è completamente determinato da un numero di partenza chiamato \emph{seed} (seme).} \break
 
@@ -2460,9 +2475,9 @@
 	\item \textsf{\small \textbf{Pseudo-random number engines} : usano un algoritmo per generare numeri casuali basati su un seme iniziale. Questi sono: }
 \end{enumerate}
 
-\begin{figure}[ht]
+\begin{figure}[H]
 	\centering
-	\includegraphics[width=1.2\textwidth, height=1.2\textheight, keepaspectratio]{./imgs/random-number-engines.png}
+	\includegraphics[width=1\textwidth, height=1\textheight, keepaspectratio]{./imgs/random-number-engines.png}
 	\caption{Motori di numeri pseudo-casuali}
 	\label{fig:random-number-engines}
 \end{figure}
@@ -2478,7 +2493,7 @@
 	
 	int main()
 	{
-		// Trova il tempo tra il clock del sistema (tempo corrente) e l'epoch del clock (data e tempo relativi quando il timestamp di un clock di un computer sono determinati).
+		// Trova il tempo tra il clock del sistema (tempo corrente) e l'epoch del clock (ovvero data e tempo relativi quando il timestamp di un clock di un computer sono determinati).
 		unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
 		
 		std::minstd_rand0 generator(seed);
@@ -2591,7 +2606,7 @@
 	\item[III] \textsf{\small \textbf{Pseudo-random number engines (instantions)} : Questi sono particolari instanzioni di motori di generatori e adattatori: } \\
 \end{enumerate}
 
-\begin{figure}[ht]
+\begin{figure}[H]
 	\centering
 	\includegraphics[width=1\textwidth, height=1\textheight, keepaspectratio]{./imgs/pseudo-random-number-engines.png}
 	\caption{Motori di numeri pseudo casuali}
@@ -2735,7 +2750,7 @@
 	\item[3.] \textsf{\small \textbf{shuffle\_order\_engine} : È un adattatore che adatta un motore di generatore di numeri pseudo-casuali così che i numeri siano ottenuti in una sequenza differente.}
 \end{enumerate}
 
-\textsf{\small L'oggetto mantiene un buffer di k numeri generati internamente e quando richiesti restituisce alcuni selezionati casualmente nel buffer, rimpiazzandolo con un valore ottenuto dalla base del motore.} \\
+\textsf{\small L'oggetto mantiene un buffer di k numeri generati internamente e quando richiesti ne restituisce alcuni selezionati casualmente nel buffer, rimpiazzandolo con un valore ottenuto dalla base del motore.} \\
 
 \begin{lstlisting}
 	#include <iostream>
@@ -2818,14 +2833,14 @@
 
 \begin{figure}[ht]
 	\centering
-	\includegraphics[width=1.2\textwidth, height=1.2\textheight, keepaspectratio]{./imgs/unordered_map_include_unordered_map_initialize_it.png}
+	\includegraphics[width=1\textwidth, height=1\textheight, keepaspectratio]{./imgs/unordered_map_include_unordered_map_initialize_it.png}
 	\caption{unordered\_map}
 	\label{fig:unordered_map_include_unordered_map_initialize_it}
 \end{figure}
 
 \begin{figure}[ht]
 	\centering
-	\includegraphics[width=1.2\textwidth, height=1.2\textheight, keepaspectratio]{./imgs/function_pointers_unordered_map_pointer_to_a_function.png}
+	\includegraphics[width=1\textwidth, height=1\textheight, keepaspectratio]{./imgs/function_pointers_unordered_map_pointer_to_a_function.png}
 	\caption{unordered\_map function pointer}
 	\label{fig:function_pointers_unordered_map_pointer_to_a_function}
 \end{figure}
@@ -2834,14 +2849,14 @@
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=1.2\textwidth, height=1.2\textheight, keepaspectratio]{./imgs/function_pointers_unordered_map_pointer_to_a_function_lambda_function.png}
+	\includegraphics[width=1\textwidth, height=1\textheight, keepaspectratio]{./imgs/function_pointers_unordered_map_pointer_to_a_function_lambda_function.png}
 	\caption{unordered\_map function pointer}
 	\label{fig:function_pointers_unordered_map_pointer_to_a_function_lambda_function}
 \end{figure}
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=1.2\textwidth, height=1.2\textheight, keepaspectratio]{./imgs/function_pointers_unordered_map_functional_std_function.png}
+	\includegraphics[width=1\textwidth, height=1\textheight, keepaspectratio]{./imgs/function_pointers_unordered_map_functional_std_function.png}
 	\caption{unordered\_map function pointer}
 	\label{fig:function_pointers_unordered_map_functional_std_function}
 \end{figure}
@@ -2849,14 +2864,14 @@
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=1.2\textwidth, height=1.2\textheight, keepaspectratio]{./imgs/function_pointers_unordered_map_functional_std_function2.png}
+	\includegraphics[width=1\textwidth, height=1\textheight, keepaspectratio]{./imgs/function_pointers_unordered_map_functional_std_function2.png}
 	\caption{unordered\_map function pointer}
 	\label{fig:function_pointers_unordered_map_functional_std_function2}
 \end{figure}
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=1.2\textwidth, height=1.2\textheight, keepaspectratio]{./imgs/function_pointers_unordered_map_functional_std_function3.png}
+	\includegraphics[width=1\textwidth, height=1\textheight, keepaspectratio]{./imgs/function_pointers_unordered_map_functional_std_function3.png}
 	\caption{unordered\_map function pointer}
 	\label{fig:function_pointers_unordered_map_functional_std_function3}
 \end{figure}
@@ -2898,11 +2913,11 @@
 
 \subsection{Set}
 
-\textsf{\small \textbf{Definizione: } I \textbf{set} (insiemi in italiano) è un contenitore associativo nel quale gli elementi devono essere unici. Gli elementi dell'insieme non possono essere modificati una volta nel container, quindi sono sempre \textbf{const}.} \\
+\textsf{\small \textbf{Definizione: } Un \textbf{set} (insiemi in italiano) è un contenitore associativo nel quale gli elementi devono essere unici. Gli elementi dell'insieme non possono essere modificati una volta nel container, quindi sono sempre \textbf{const}.} \\
 
-\textsf{\small Per usare gli insieme è necessario includere l'header \textbf{<set>}.} \\
+\textsf{\small Per usare gli insiemi è necessario includere l'header \textbf{<set>}.} \\
 
-\textbf{Proprietà: } \\
+\textbf{Proprietà: }
 
 \begin{enumerate}
 	\item \textsf{\small Il \textbf{set} memorizza gli elementi in ordine.}
@@ -2914,9 +2929,11 @@
 
 \textsf{\small Per memorizzare gli elementi in maniera non ordinata c'è \textbf{unordered\_set()}.} \\
 
+\newpage %questo mi serve altrimenti gli elementi dell'enumerate si vedono troppo larghi.
+
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=1.2\textwidth, height=1.2\textheight, keepaspectratio]{./imgs/set_insert_second_operations.png}
+	\includegraphics[width=1\textwidth, height=1\textheight, keepaspectratio]{./imgs/set_insert_second_operations.png}
 	\caption{set}
 	\label{fig:set_insert_second_operations}
 \end{figure}
@@ -3034,7 +3051,7 @@
 \textsf{\small Possiamo usare gli operatori anche con i \textbf{pair}: } \\
 
 \begin{enumerate}
-	\item \textsf{\small \textbf{=} : implementato in questo modo: std::pair\& operator=(const std::pair\& pr).}
+	\item \textsf{\small \textbf{=} implementato in questo modo: std::pair\& operator=(const std::pair\& pr).}
 	\item \textsf{\small \textbf{==} per comparare due pair.}
 	\item \textsf{\small \textbf{!=} per controllare se non sono uguali.}
 	\item \textsf{\small \textbf{>=}, \textbf{<=} per controllare se è maggiore uguale o minore uguale.}
@@ -3117,15 +3134,18 @@
 	\hline
 	\textsf{\small Può contenere soltanto una coppia di valori.} & \textsf{\small Può contenere molteplici valori.} \\
 	\hline
-	\textsf{\small Un Pair è una specifico } & \textsf{\small È una classe template } \\
+	\textsf{\small Un Pair è uno specifico } & \textsf{\small È una classe template } \\
 	\textsf{\small caso di tuple a due elementi.} & \textsf{\small con size fisso di valori eterogenei.} \\
 	\hline
 	\textsf{\small Non è difficile ottenere } & \textsf{\small È un po' più complicato } \\
 	\textsf{\small i suoi elementi.} & \textsf{\small ottenere i suoi elementi.} \\
 	\hline
-	\textsf{\small Dovrebbe essere un po' più veloce di tuple.} & \textsf{\small È un po' più lenta se non ottimizzata.} \\
+	\textsf{\small Dovrebbe essere un po' } & \textsf{\small È un po' più lenta } \\
+	\textsf{\small più veloce di tuple.} & \textsf{\small se non ottimizzata.} \\ %textsc
 	\hline
 \end{tabular}
+
+\newpage
 
 \subsection{Hash Table}
 
@@ -3136,7 +3156,7 @@
 %TODO: forse questo non è corretto?
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=1.2\textwidth, height=1.2\textheight, keepaspectratio]{./imgs/hash_table_template_specialization.png}
+	\includegraphics[width=1\textwidth, height=1\textheight, keepaspectratio]{./imgs/hash_table_template_specialization.png}
 	\caption{Hash Table Template Specialization}
 	\label{fig:hash_table_template_specialization}
 \end{figure}
@@ -3259,7 +3279,7 @@
 
 \textsf{\small \textbf{dynamic\_cast} : in una gerarchia di ereditarietà è usato per il \emph{downcasting} di un puntatore di una classe base a una classe figlia.} \\
 
-\textsf{\small Se riesce ritorna un puntatore al tipo convertito, altrimenti, fallisce se proviamo a fare un cast ad un tipo invalido come un puntatore che non è del tipo desiderato della classe derivata. Per esempio: \textbf{dynamic\_cast} non riesce a fare un cast ad un' altra classe se questa non ha almeno una funzione virtuale.} \\
+\textsf{\small Se riesce, ritorna un puntatore al tipo convertito, altrimenti, fallisce se proviamo a fare un cast ad un tipo invalido come un puntatore che non è del tipo desiderato della classe derivata. Per esempio: \textbf{dynamic\_cast} non riesce a fare un cast ad un' altra classe se questa non ha almeno una funzione virtuale.} \\
 
 \begin{lstlisting}
 	#include <iostream>
@@ -3290,14 +3310,14 @@
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=1.2\textwidth, height=1.2\textheight, keepaspectratio]{./imgs/typeinfo_typeid.png}
+	\includegraphics[width=1\textwidth, height=1\textheight, keepaspectratio]{./imgs/typeinfo_typeid.png}
 	\caption{typeid}
 	\label{fig:typeinfo_typeid}
 \end{figure}
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=1.2\textwidth, height=1.2\textheight, keepaspectratio]{./imgs/typeinfo_typeid_if.png}
+	\includegraphics[width=1\textwidth, height=1\textheight, keepaspectratio]{./imgs/typeinfo_typeid_if.png}
 	\caption{typeid}
 	\label{fig:typeinfo_typeid_if}
 \end{figure}
@@ -3314,7 +3334,7 @@
 
 \section{Ellissi}
 
-\textsf{\small \textbf{Definizione: } Le \textbf{Ellissi}, ovvero i \textbf{...} (tre puntini) permettono ad una funzione di accettare un numero variabile di argomenti. È anche conosciuta come \emph{variable argument list}. } \\
+\textsf{\small \textbf{Definizione: } L' \textbf{Ellissi}, ovvero i \textbf{...} (tre puntini) permettono ad una funzione di accettare un numero variabile di argomenti. È anche conosciuta come \emph{variable argument list}. } \\
 
 \textsf{\small Di solito, le funzioni possono prendere solo un numero fisso di parametri, ma con le \textbf{ellissi} (\emph{ellipsis} in inglese) si possono passare tanti argomenti quanti se ne vuole. } \\
 
@@ -3364,7 +3384,7 @@
 	\item \textsf{\small \textbf{va\_end} : prende soltanto un argomento \textbf{va\_list} stessa. È usato per pulire la \textbf{va\_list}.}
 \end{itemize}
 
-\textsf{\small Non è molto usata in C++, perché al posto di usare l'\textbf{ellissi} possiamo passare come argomento un contenitore, come un \textbf{std::vector}, eccetera..} \\
+\textsf{\small Non è molto usata in C++, perché al posto di usare l'\textbf{ellissi} possiamo passare come argomento un contenitore, come un \textbf{std::vector}, eccetera.} \\
 
 % ------------------------ SECTION: INLINE FUNCTIONS ---------------------------------
 
@@ -3374,13 +3394,13 @@
 
 \textsf{\small \textbf{Definizione: } Le \textbf{inline functions} (\emph{funzioni in linea}) sono un concetto molto potente. Se una funzione è \textbf{inline} il compilatore piazzerà una copia del codice di quella funzione ad ogni punto dove essa è chiamata.} \\
 
-\textsf{\small Per le funzioni grandi, lunghe e/o che eseguono complesse tasks,	l'\emph{overhead} (sovrastante, sopra la testa, risorse in sovrappiù rispetto a quelle strettamente necessarie) è di solito insignificante comparato all'ammontare di tempo che la funzione ci mette per essere eseguita. Mentre, per quelle più piccole, le funzioni usate comunemente, il tempo necessario per fare la chiamata alla funzione è spesso molto di più rispetto a quello necessario per eseguirla.} \\
+\textsf{\small Per le funzioni grandi, lunghe e/o che eseguono complesse tasks,	l'\emph{overhead} (che significa sovrastante, sopra la testa, risorse in sovrappiù rispetto a quelle strettamente necessarie) è di solito insignificante comparato all'ammontare di tempo che la funzione ci mette per essere eseguita. Mentre, per quelle più piccole, le funzioni usate comunemente, il tempo necessario per fare la chiamata alla funzione è spesso molto di più rispetto a quello necessario per eseguirla.} \\
 
 \textsf{\small Questo occorre per le piccole funzioni, perché il tempo di esecuzione è minore del tempo di cambio. (\emph{switching time}).} \break
 
 \textsf{\small Quindi, la keyword \textbf{inline} nelle funzioni serve per ridurre l'\emph{overhead} nella chiamata alla funzione. È una funzione che viene espansa in linea quando viene chiamata. Quando la funzione \textbf{inline} viene chiamata, l'intero codice viene sostituito o inserito al momento della chiamata.} \\
 
-\textsf{\small Il compilatore può ignorare il qualificato \textbf{inline} nel caso che la funzione definita \textbf{inline} sia più di una riga di codice.} \\
+\textsf{\small Il compilatore può ignorare il qualificatore \textbf{inline} nel caso che la funzione definita \textbf{inline} sia più di una riga di codice.} \\
 
 \textsf{\small È comune usarlo nelle funzioni delle classi. } \\
 
@@ -3500,7 +3520,7 @@
 	{
 		A a = "copiami";
 		// Output: Chiamato il costruttore.
-		// In teoria quando l'oggetto a viene costruito, il costruttore a un argomento è usato per convertire "copiami" all'oggetto temporaneo e l'oggetto temporaneo è copiato nell'oggetto a.
+		// In teoria quando l'oggetto `a` viene costruito, un argomento è usato per convertire "copiami" all'oggetto temporaneo e l'oggetto temporaneo è copiato nell'oggetto `a`.
 		// La maggior parte dei compilatori C++ evita questi \emph{overhead} di creare un oggetto temporaneo e di copiarlo.
 		// Ma se non vogliamo questo comportamento, possiamo compilare passando l'argomento "-fno-elide-constructors"
 		// g++ nomefile.cpp -fno-elide-constructors
@@ -3515,6 +3535,10 @@
 \subsection{Explicit Keyword}
 
 \textsf{\small \textbf{Definizione: } La keyword \textbf{explicit} è usata per marcare il costruttore per non convertire implicitamente i tipi.} \\
+
+\textsf{\small Essenzialmente con questa keyword non permettiamo di passare al costruttore un argomento di tipologia diversa da quella richiesta. (se non la mettessimo, la tipologia passata verrebbe implicitamente convertita alla tipologia richiesta dal costruttore).} \break
+
+\textsf{\small Se, per esempio, il costruttore richiedesse un \textbf{int} e noi passassimo un \textbf{char}, senza la keyword \textbf{explicit}, il \textbf{char} verrebbe implicitamente convertito in \textbf{int}.} \\
 
 \begin{lstlisting}
 	#include <iostream>
@@ -3582,7 +3606,7 @@
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=1.3\textwidth, height=1.3\textheight, keepaspectratio]{./imgs/Conversion_Constructor.png}
+	\includegraphics[width=1\textwidth, height=1\textheight, keepaspectratio]{./imgs/Conversion_Constructor.png}
 	\caption{Conversion Constructor}
 	\label{fig:Conversion_Constructor}
 \end{figure}
@@ -3608,7 +3632,7 @@
 			friend void destructMyClass(MyClass*);
 	};
 
-	// Dichiarata all'esterno, ma che può ancora accedere all'interno della classe perché dichiarata friend.
+	// Dichiarata all'esterno, ma può ancora accedere all'interno della classe perché dichiarata friend.
 	void destructMyClass(MyClass* ptr)
 	{
 		delete ptr;
@@ -3620,7 +3644,7 @@
 		
 		MyClass *object; // Col puntatore non darà errore perché nessun oggetto è stato creato. (ovvio che bisogna rimuovere la riga sopra, altrimenti non va il programma)
 		
-		MyClass object2 = new MyClass; // Anche questo non darà errore quindi sarà il programmatore ad occuparsi di rimuovere la memoria dell'oggetto allocata.
+		MyClass object2 = new MyClass; // Anche questo non darà errore quindi sarà il programmatore ad occuparsi di rimuovere la memoria dell'oggetto allocato.
 		
 		delete object2; // Però in questo caso se chiamiamo delete genererà un errore per via del distruttore privato.
 		
@@ -3646,7 +3670,7 @@
 \end{lstlisting}
 
 \begin{itemize}
-	\item \textsf{\small \textbf{argc (ARGument Count)} : è un intero e memorizza il numero di argomenti passati da linea di comando da parte dell'utente, incluso il nome del programma. Quindi se passiamo un valore al programma, il valore di \emph{argc}, il numero di argomenti sarebbe 2: uno l'argomento passato e l'altro il nome del programma.} \\
+	\item \textsf{\small \textbf{argc (ARGument Count)} : è un intero e memorizza il numero di argomenti passati da linea di comando da parte dell'utente, incluso il nome del programma. Quindi se passiamo un valore al programma, il valore di \emph{argc}, ovvero il numero di argomenti sarebbe 2: uno l'argomento passato e l'altro il nome del programma.} \\
 	\item \textsf{\small \textbf{argv (ARGument Vector)} : è un array di puntatori di caratteri che lista tutti gli argomenti.} \\
 	\begin{itemize}
 		\item \textsf{\small Se \emph{argc} è maggiore di zero, l'array di elementi da argv[0] a argv[argc - 1] conterrà i puntatori alle stringhe.}

@@ -9,8 +9,10 @@
 \usepackage{float}
 \usepackage{graphicx}
 \usepackage[utf8]{inputenc}
-\usepackage{hyperref}
+\usepackage[breaklinks]{hyperref}
 \usepackage{amsmath,amssymb,amsthm}
+
+\usepackage[showframe]{geometry} % [showframe] serve per mostrare il margine, è da rimuovere quando ho finito di controllare il margine. %TODO: remove showframe
 
 \usepackage[italian]{babel}
 
@@ -105,6 +107,12 @@
 
 % ----- firma (signature) end ----------------
 
+% ----- per molteplici colonne begin ----------------
+
+\usepackage{multicol}
+
+% ----- per molteplici colonne end ----------------
+
 % ----- empty page command begin -------------
 
 \newcommand\blankpage{% comando pagina vuota
@@ -147,7 +155,7 @@
 \definecolor{weborange}{RGB}{255,165,0}
 
 \lstdefinestyle{VS2017}{
-	backgroundcolor=\color{clr-background}, % oppure darkgrey
+	backgroundcolor=\color{clr-background}, % oppure darkgray o darkgrey %TODO: mettere quello classico.
 	basicstyle=\color{clr-text}, % any text
 	stringstyle=\color{clr-string},
 	identifierstyle=\color{clr-variable}, % just about anything that isn't a directive, comment, string or known type
@@ -161,7 +169,7 @@
 	showspaces=false,
 	showstringspaces=false,
 	%otherkeywords={>,<,.,;,-,!,=,~},
-	morekeywords={\#, std, std::cout, cout, std::endl, endl, ::, ifndef, define, endif, pragma, override, decltype, noexcept, alignas, alignof, constexpr}, % \# non funziona.
+	morekeywords={\#, std, std::cout, cout, std::endl, endl, ::, ifndef, define, endif, pragma, override, decltype, noexcept, alignas, alignof, constexpr, assert, nullptr}, % \# non funziona.
 	%keywordstyle=\color{weborange},
 	tabsize=4
 }
@@ -218,6 +226,17 @@
 %\end{comment}
 
 \lstset{style=VS2017}
+
+%frame (ovvero un box) attorno al codice
+\begin{comment}
+\usepackage[most]{tcolorbox}
+\usepackage{inconsolata}
+
+\newtcblisting[auto counter]{listingframe}[2][]{sharp corners, 
+	fonttitle=\bfseries, colframe=gray, listing only, 
+	listing options={basicstyle=\ttfamily,language=java}, 
+	title=Listing \thetcbcounter: #2, #1}
+\end{comment}
 
 % ------ end code -----------
 
@@ -313,19 +332,19 @@
 
 % ----------------------------- BEGIN SUBSUBSECTION STYLE ----------------------------
 
-\titleformat{\subsubsection}{\bfseries\large\itshape}{}{}{}
+\titleformat{\subsubsection}{\centering\bfseries\large\itshape}{}{}{}
 
 % ----------------------------- END SUBSUBSECTION STYLE ------------------------------
 
 % ----------------------------- BEGIN PARAGRAPH STYLE --------------------------------
 
-\titleformat{\paragraph}{\bfseries\normalsize}{}{}{}
+\titleformat{\paragraph}{\centering\bfseries\normalsize}{}{}{}
 
 % ----------------------------- END PARAGRAPH STYLE ----------------------------------
 
 % ----------------------------- BEGIN TABLE OF CONTENTS ------------------------------
 
-\setcounter{tocdepth}{3}
+\setcounter{tocdepth}{4}
 \setcounter{secnumdepth}{1}
 
 % ----------------------------- END TABLE OF CONTENTS --------------------------------
@@ -379,7 +398,9 @@
 	
 	\include{Concetti_Avanzati}
 	
-	\include{Libreria_Algoritmi} 
+	\include{Libreria_Algoritmi}
+	
+	%\include{Convenzioni_del_Linguaggio} %TODO: magari dopo il capitolo La Libreria degli Algoritmi. %TODO: Rinominare: Linee_Guida_del_linguaggio? Oppure Convenzioni_e_Linee_Guida. 
 	
 	\include{Conclusioni}
 	

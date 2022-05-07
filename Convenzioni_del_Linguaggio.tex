@@ -1,0 +1,2191 @@
+% --------------------- CONVENZIONI|LINEE GUIDA DEL LINGUAGGIO -----------------------
+
+\chapter{Linee guida del Linguaggio} %TODO: oppure chiamarlo CppCoreGuidelines
+
+% -------------------------- SECTION: INTRODUZIONE -----------------------------------
+
+\section{Introduzione} %TODO: uncomment CppCoreGuidelines non ufficiali del ISO Foundation C++
+% Ho trattato alcune, ma non tutte e non sempre con lo stesso livello di approfondimento, linee guida della CppCoreGuidelines. 
+
+%TODO: Ce ne sono tante altre buono che non ho trattato.
+
+\textsf{\small In questo capitolo tratterò delle \textbf{CppCoreGuidelines} che sono delle linee guida del linguaggio, create dall'inventore del C++ \emph{Bjarne Stroustrup} e da \emph{Herb Sutter}.} \break
+
+\textsf{\small Il \textbf{CppCoreGuidelines} non è uno standard ISO ufficiale.} \\
+
+\textsf{\small Tratterò qui alcune di queste linee guida, ma sarebbe molto difficile trattarle tutte, visto che queste sono veramente tante. (credo più di 500 se non molto di più)} \\
+
+\textsf{\small È difficile per me, trattare queste linee guida nello stesso modo esaustivo e con la stessa profondità delle \textbf{CppCoreGuidelines}, a volte elencherò solo i punti principali di una linea guida, comunque se volete controllare una specifica linea guida che ho trattato potete trovarla qui: \href{CppCoreGuidelines}{https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines}} \\
+	
+\textsf{\small Ovviamente, ce ne sono tante altre buone che però non riuscirò a trattare.} 
+
+\break
+
+% -------------------------- SECTION: CONVENZIONI ------------------------------------
+
+\newpage
+
+\section{Convenzioni del linguaggio}
+
+\textsf{\small \textbf{Definizione: } Le \textbf{convenzioni} sono delle linee guida di un linguaggio che raccomandano un certo stile di programmazione. Queste permettono un codice più chiaro, più leggibile e rende il codice di un software più semplice da mantenere.} \\
+
+\textsf{\small Inoltre, sia il codice che i commenti dovrebbero essere in inglese a differenza di come ho fatto io in questa guida.} \\
+
+\textsf{\small Tratterò in primis le linee guida sui nomi e sul layout, presenti nella sezione di supporto: \emph{NL | Naming and Layout rules} delle \textbf{CppCoreGuidelines}.} \break
+
+% -------------------- NL | NAMING AND LAYOUT RULES ----------------------------------
+
+\subsection{NL | Naming and Layout rules}
+
+\subsubsection{NL.1: Non dire nei commenti quello che può essere semplicemente affermato nel codice}
+
+\textsf{\small I compilatori non leggono i commenti. I commenti sono meno precisi del codice. I commenti non vengono sempre aggiornati in modo costante come il codice.} \\
+
+\subsubsection{NL.2: Indica l'intento nei commenti}
+
+\textsf{\small Il codice dice ciò che è stato fatto, non quello che dovrebbe essere fatto. Spesso l'intento può essere indicato più chiaramente e concisamente che l'implementazione. } \\
+
+\textsf{\small \textbf{Se i commenti e il codice sono in disaccordo, entrambi sono probabilmente errati}.} \\
+
+\subsubsection{NL.3: Mantieni i commenti nitidi}
+
+\textsf{\small La verbosità rallenta la comprensione e rende il codice più difficile da leggere diffondendolo nei sorgenti.} \\
+
+\textsf{\small \textbf{Nota}: Usa l'inglese. Anche se sei madre lingua in un'altra lingua, usa l'inglese in modo che tutti i programmatori possano capire.} \\
+
+\subsubsection{NL.4: Mantieni un'indentazione costante}
+
+\textsf{\small Per via della leggibilità. Per evitare "sciocchi errori".} \\
+
+\textsf{\small \textbf{Nota}: Sempre indentare dopo gli \textbf{if}, \textbf{for}, \textbf{while} è una buona idea.} \\
+
+\subsubsection{NL.5: Evita la codifica delle informazioni sui tipi dei nomi} %TODO: tradurre meglio.
+
+\textsf{\small Se i nomi riflettono i tipi rispetto alle funzionalità, diventerà difficile cambiare i tipi usati per fornire quella funzionalità. Inoltre, se il tipo di una variabile viene cambiato, il codice che la usa dovrà essere anch'esso modificato. Minimizza le conversioni non intenzionali.} \break
+
+\textsf{\small Il seguente è un esempio \textbf{\color{red} ERRATO}\normalcolor:} \\
+
+% frame=single, framexleftmargin=5mm, frame=shadowbox, rulesepcolor=\color{red}
+
+\begin{lstlisting}[frame=single, rulecolor=\color{red}]
+	void print_int(int i);
+	void print_double(double d);
+	void print_string(const char*);
+	
+	print_int(3);
+	print_double(3.69);
+	print_string("abc");
+\end{lstlisting}
+
+\textsf{\small Il seguente è un esempio \textbf{\color{ForestGreen} CORRETTO}\normalcolor:} \\
+
+\begin{lstlisting}[frame=single, rulecolor=\color{ForestGreen}]
+	void print(int i);
+	void print(double d);
+	void print(string_view);
+	
+	print(3);
+	print(3.69);
+	print("abc");
+\end{lstlisting}
+
+\textsf{\small \textbf{Nota}: I nomi con i tipi codificati al loro interno sono verbosi e criptici.} \\
+
+\begin{lstlisting}
+	printS  // print a std::string
+	prints  // print a C-style string
+	printi  // print an int
+\end{lstlisting}
+
+\textsf{\small Le tecniche come la \emph{notazione Ungherese} sono state usate nei linguaggi \emph{untyped} (senza tipi), ma è generalmente non necessario e persino dannoso in un linguaggio fortemente staticamente-tipizzato come il C++, perché le notazioni non vengono aggiornate e interferiscono con il buon uso del linguaggio.} \\
+
+\subsubsection{NL.7: Fai si che la lunghezza di un nome sia proporzionale alla lunghezza del suo scope (raggio)}
+
+\textsf{\small Più grande è lo scope (raggio), più grande è la possibilità di confusione e di "scontri" tra nomi.} \\
+
+\subsubsection{NL.8: Usa uno stile dei nomi in modo costante}
+
+\textsf{\small La costanza nei nomi e nel loro stile aumenta la leggibilità.} \\
+
+\textsf{\small \textbf{Nota}: Ci sono molti stili, non puoi seguirli tutti, scegline uno, ma lascia lo stile delle librerie importate con il loro stile originale.} \\
+
+\textsf{\small \textbf{Esempio}: Lo \emph{Standard ISO}, usa le lettere minuscole e le cifre, separando le parole con gli underscores (trattini bassi):}
+
+\begin{itemize}
+	\item \textsf{\small int}
+	\item \textsf{\small vector}
+	\item \textsf{\small my\_map}
+\end{itemize}
+
+\textsf{\small Evita i doppi trattini bassi: \_\_} \\
+
+\textsf{\small \textbf{Esempio}: Lo \emph{Stroustrup}: ISO Standard, ma con le lettere maiuscole usate per i tipi e i concetti definiti dall'utente. }
+
+\begin{itemize}
+	\item \textsf{\small int}
+	\item \textsf{\small vector}
+	\item \textsf{\small My\_map}
+\end{itemize}
+
+\textsf{\small \textbf{Esempio}:\emph{CamelCase}, capitalizza ogni parola in un identificatore multi-parola: }
+
+\begin{itemize}
+	\item \textsf{\small int}
+	\item \textsf{\small vector}
+	\item \textsf{\small MyMap}
+	\item \textsf{\small myMap}
+\end{itemize}
+
+\textsf{\small Alcune convenzioni capitalizzano la prima lettera, altre no.} \\
+
+\subsubsection{NL.9: Usa ALL\_CAPS (tutte maiuscole) solo per i nomi delle macro}
+
+\textsf{\small Per evitare di confondere le macro con i nomi che obbediscono allo scope (raggio) e regole del tipo.} \\
+
+\textsf{\small \textbf{Nota}: Questa regola si applica anche alle costanti non-macro.} \\
+
+\textsf{\small Applicazioni per assicurarci che venga rispettata: } 
+
+\begin{itemize}
+	\item \textsf{\small Segnalare tutte le macro con le lettere minuscole.}
+	\item \textsf{\small Segnala tutte le macro che non sono nella forma ALL\_CAPS.}
+\end{itemize}
+
+\subsubsection{NL.10: Preferire nomi con lo stile\_underscore (con i trattini bassi)}
+
+\textsf{\small L'utilizzo degli underscores (trattini bassi) per separare parti del nome è originale dello stile del C e del C++ nella \emph{Libreria Standard del C++}.} \\
+
+\textsf{\small \textbf{Nota}: Questa regola è un default soltanto se si ha la possibilità di scelta. Spesso, non si ha la possibilità di scelta e si deve seguire uno stile stabilito per coerenza. Il bisogno di costanza sconfigge il gusto personale.} \\
+
+\textsf{\small \textbf{Esempio} \emph{Stroustrup}: ISO Standard, ma con le lettere maiuscole per i propri tipi e per i concetti: }
+
+\begin{itemize}
+	\item \textsf{\small int}
+	\item \textsf{\small vector}
+	\item \textsf{\small My\_Map}
+\end{itemize}
+
+\subsubsection{NL.11: Rendi i letterali leggibili}
+
+\textsf{\small Per la leggibilità del codice.} \\
+
+\textsf{\small \textbf{Esempio} Usa i separatori nelle cifre per evitare lunghe stringhe di cifre.}
+
+\begin{lstlisting}
+	auto c = 299'792'458; // m/s2
+	auto q2 = 0b0000'1111'0000'0000;
+	auto ss_number = 123'456'7890;
+\end{lstlisting}
+
+\textsf{\small \textbf{Esempio} Usa suffissi letterali quando necessario per chiarificare.}
+
+\begin{lstlisting}
+	auto hello = "Hello!"s; // a std::string
+	auto world = "world";   // a C-style string
+	auto interval = 100ms;  // using <chrono>
+\end{lstlisting}
+
+\textsf{\small \textbf{Nota}: I letterali (literals) non dovrebbero essere sparsi per l'intero codice come "magic constants", ma è comunque una buona idea per renderli chiari quando sono definiti. È semplice fare un typo in una lunga stringa di interi.} \\
+
+\textsf{\small Il seguente è un esempio \textbf{\color{red}ERRATO}\normalcolor:}
+
+\begin{lstlisting}[frame=single, rulecolor=\color{red}]
+	#include < chrono >
+	
+	int main(int argc, char * argv [ ])
+	{
+		// ...
+	}
+\end{lstlisting}
+
+\textsf{\small Il seguente è un esempio \textbf{\color{ForestGreen}CORRETTO}\normalcolor:}
+
+\begin{lstlisting}[frame=single, rulecolor=\color{ForestGreen}]
+	#include <chrono>
+	
+	int main(int argc, char* argv[])
+	{
+		// ...
+	}
+\end{lstlisting}
+
+\textsf{\small Applicazioni per assicurare il rispetto della regola: }
+
+\begin{itemize}
+	\item \textsf{\small Segnalare le lunghe sequenze di cifre. Il problema è definire "lunghe"; forse 7.}
+\end{itemize}
+
+\subsubsection{NL.15: Usa gli spazi con moderazione}
+
+\textsf{\small Troppi spazi rendono il testo largo e distraente.} \\
+
+\textsf{\small \textbf{Nota}: Gli spazi bianchi ben piazzati sono un aiuto significativo per la leggibilità. Basta non esagerare.} \\
+
+\subsubsection{NL.16: Usa una convenzionale ordine di dichiarazione della classe}
+
+\textsf{\small Un ordine convenzionale di membri migliora la leggibilità.} \\
+
+\textsf{\small Quando dichiari una classe usa il seguente ordine: } \\
+
+\begin{itemize}
+	\item \textsf{\small tipi: classi, enums, aliases (using)}
+	\item \textsf{\small costruttori, assegnamenti, distruttore}
+	\item \textsf{\small funzioni}
+	\item \textsf{\small dati}
+\end{itemize}
+
+\textsf{\small Usa l'ordine: \textbf{public} prima di \textbf{protected} prima di \textbf{private}. } \\
+
+\begin{lstlisting}
+	class X {
+		public:
+		// interface
+		protected:
+		// unchecked function for use by derived class implementations
+		private:
+		// implementation details
+	};
+\end{lstlisting}
+
+\textsf{\small \textbf{Esempio} A volte, l'ordine di default dei membri va in conflitto con l'intenzione di separare l'interfaccia pubblica dai dettagli implementativi. In questi casi, i tipi privati e le funzioni possono essere piazzati con i dati privati.} \\
+
+\textsf{\small \textbf{Esempio ERRATO}: Evita di dichiarare molteplici blocchi di accesso dispersi tra blocchi di dichiarazioni con differenti accessi. Il seguente esempio è \textbf{\color{red}ERRATO}\normalcolor: } \\
+
+\begin{lstlisting}[frame=single, rulecolor=\color{red}]
+	class X {   // bad
+		public:
+		void f();
+		public:
+		int g();
+		// ...
+	};
+\end{lstlisting}
+
+\textsf{\small L'utilizzo di macro per dichiarare gruppi di membri spesso porta a violazioni nelle regole di ordinamento. Comunque, usare le macro oscura quello che è stato espresso. } \\
+
+\textsf{\small Applicazioni per il rispetto della regola: } 
+
+\begin{itemize}
+	\item \textsf{\small Segnala le partenze dall'ordine suggerito.}
+\end{itemize}
+
+\subsubsection{NL.17: Usa il layout di K\&R }
+
+\textsf{\small Questo è il layout originale del C e C++. Preserva bene lo spazio verticale. Distingue bene i diversi costrutti del linguaggi (come le funzioni e le classi).} \\
+
+\textsf{\small \textbf{Nota}: Nel contesto del C++, questo stile è spesso chiamato \textbf{Stroustrup}.} \\
+
+\textsf{\small \textbf{Esempio}}
+
+\begin{lstlisting}
+	struct Cable {
+		int x;
+		// ...
+	};
+	
+	double foo(int x)
+	{
+		if (0 < x) {
+			// ...
+		}
+		
+		switch (x) {
+			case 0:
+			// ...
+			break;
+			case amazing:
+			// ...
+			break;
+			default:
+			// ...
+			break;
+		}
+		
+		if (0 < x)
+		++x;
+		
+		if (x < 0)
+		something();
+		else
+		something_else();
+		
+		return some_value;
+	}
+\end{lstlisting}
+
+\textsf{\small Da notare lo spazio tra \textbf{if} e \textbf{$($}} \\
+
+\textsf{\small \textbf{Nota}: Usa linee separate per per ogni statement, le parentesi di un \textbf{if} e il corpo di un \textbf{for}.} \\
+
+\textsf{\small \textbf{Nota}: La \{ per una \textbf{class} e per una \textbf{struct} non è su una linea separata, ma la \{ per una funzione sì.} \\
+
+\textsf{\small \textbf{Nota}: Capitalizza il nome dei tipi definiti dall'utente per distinguerli dai tipi della libreria standard.} \\
+
+\textsf{\small \textbf{Nota}: Non capitalizzare i nomi delle funzioni.} \\
+
+\textsf{\small Per applicare questa regola, usa un IDE per la formattazione.} \\
+
+\subsubsection{NL.18: Usa il layout dei dichiaratori del C}
+
+\textsf{\small Lo stile di layout del C enfatizza l'uso nelle espressioni e nella grammatica, mentre lo stile del C++ enfatizza i tipi. Questo non vale per le references.} \\ %TODO: "Questo non vale per le references" forse da tradurre meglio.
+
+\textsf{\small \textbf{Esempio}} 
+
+\begin{lstlisting}
+	T& operator[](size_t);   // OK
+	T &operator[](size_t);   // semplicemente strano
+	T & operator[](size_t);   // indeciso
+\end{lstlisting}
+
+\subsubsection{NL.19: Evita nomi che possono essere facilmente fraintesi}
+
+\textsf{\small Per la leggibilità. Può capitare di confondere parole simili o errate.} \\
+
+\textsf{\small \textbf{Esempio}}
+
+\begin{lstlisting}
+	int oO01lL = 6; // male
+	
+	int splunk = 7;
+	int splonk = 8; // male: splunk e splonk possono essere facilmente confusi
+\end{lstlisting}
+
+\subsubsection{NL.20: Non piazzare due dichiarazioni sulla stessa riga}
+
+\textsf{\small Per via della leggibilità. È davvero semplice lasciarsi sfuggire una dichiarazione quando ce ne sono più di una in una linea.} \\
+
+\textsf{\small \textbf{Esempio}}
+
+\begin{lstlisting}
+	int x = 8; std::string s = "hello"; // non lo fare
+	int x = 8; f(x); ++x; // non lo fare
+\end{lstlisting}
+
+\subsubsection{NL.21: Dichiara un nome (solo) per dichiarazione}
+
+\textsf{\small Per la leggibilità. Per minimizzare la confusione con la sintassi.} \\ %sintassi del dichiarante/di dichiarazione.
+
+\textsf{\small \textbf{Nota}: Per i dettagli, guardare \textbf{ES.10} a pag.\textbf{\pageref{ES_10}}.} \\
+
+\subsubsection{NL.25: Non usare void come argomento}
+
+\textsf{\small È verboso, prolisso ed è necessario solo per questioni riguardanti la compatibilità col C.} \\
+
+\textsf{\small \textbf{Esempio}}
+
+\begin{lstlisting}
+	void f(void);   // male
+	
+	void f();       // meglio
+\end{lstlisting}
+
+\textsf{\small \textbf{Nota}: Persino Dennis Ritchie (creatore del C) considerava void f(void) un abominio. Lo si poteva fare in C e se lo si fosse vietato avrebbe causato grossi problemi, ma non lo si può usare nel 21° secolo e in C++. } \\
+
+\subsubsection{NL.26: Usa la convenzionale notazione const}
+
+\textsf{\small La notazione convenzionale è più familiare alla maggior parte dei programmatori. È importante per la coerenza nei grandi progetti, community} \\
+
+\textsf{\small \textbf{Esempio}}
+
+\begin{lstlisting}
+	const int x = 7;    // OK
+	int const y = 9;    // male
+	
+	const int *const p = nullptr;   // OK, constant pointer to constant int
+	int const *const p = nullptr;   // male, constant pointer to constant int
+\end{lstlisting}
+
+\textsf{\small \textbf{Nota}: Gli esempi marcati "male" potrebbero sembrare più logici, ma confondono anche più persone, specialmente i principianti.} \break
+
+\textsf{\small Come sempre, ricorda che lo scopo di queste regole di layout è la coerenza, la costanza e che l'estetica varia immensamente.} \\
+
+\begin{comment}
+
+\textsf{\small Elencherò alcune convenzioni che ho trovato ricercando su internet, visto che nelle \textbf{CppCoreGuidelines} non mi è sembrato chiaro che cosa usare: } \\
+
+\textsf{\small Alcune di queste le ho trovate su questa repo:  \href{https://github.com/cpp-best-practices/cppbestpractices/blob/master/03-Style.md}{cppbestpractices style}} \\
+
+\textsf{\small L'importante, di solito, è essere consistenti con ciò che abbiamo scelto di seguire.} \\
+
+\subsection{Stile}
+
+\begin{itemize}
+	\item \textsf{\small snake\_case : sembra essere il più usato (è anche usato nella Libreria Standard) (è preferito anche dalle Core Guidelines, a meno che non bisogna seguire lo stile del progetto in cui stiamo lavorando)}
+	\item \textsf{\small camelCase (lower camelCase) sembra essere più usato dagli sviluppatori che vengono dal Java}
+	\item \textsf{\small PascalCase}
+\end{itemize}
+
+\textsf{\small La \emph{Libreria Standard} (e altre librerie molto conosciute come la libreria \href{https://www.boost.org/}{\textbf{Boost}}) usano queste linee guida: } \\
+
+\begin{itemize}
+	\item \textsf{\small Macro usano le maiuscole con gli underscores: INT\_MAX}
+	\item \textsf{\small I parametri dei templates usano CamelCase (quello upper, non lower): InputIterator}
+	\item \textsf{\small Tutti gli altri nomi usano lo snake\_case: unordered\_map}
+\end{itemize}
+
+\subsection{Convenzioni sui nomi}
+
+\begin{itemize}
+	\item \textsf{\small \textbf{Classi} iniziano con la maiuscola: MyClass}
+	\item \textsf{\small \textbf{Funzioni} iniziano con la minuscola oppure con gli underscores (trattini bassi): myFunction o my\_function}
+	\item \textsf{\small Le \textbf{costanti} e le \textbf{macro} sono tutte in maiuscolo e separate da \_ (trattini bassi): const double PI = 3.14;  (UPPERCASE\_UNDERSCORE\_STYLE)}
+\end{itemize}
+
+\subsection{Dati privati}
+
+\textsf{\small Li distinguiamo ponendo il prefisso \textbf{m\_}, questo sta per "member" (ovvero membro).} \\
+
+\subsection{Distinguere i parametri delle funzioni}
+
+\textsf{\small Si può aggiungere il prefisso \textbf{t\_} nel nome del parametro, questo starebbe per "the" (il/la). Questa linea guida è però controversa.} \\
+
+\subsection{Non iniziare un nome con \_}
+
+\textsf{\small Per evitare di rischiare di collidere con nomi riservati al compilatore e alla \emph{Libreria Standard}.} \\
+
+\subsection{Abilita la build fuori dalle source directories}
+
+\textsf{\small Fai in modo che i files generati vadano in una cartella di output separata dalla cartella dei source (sorgenti).} \\
+
+\subsection{Usa \textbf{nullptr}}
+
+\textsf{\small } \\
+
+\end{comment}
+
+\newpage
+
+\textsf{\small Potete trovare tutte le linee guida del linguaggio nelle \textbf{C++ Core Guidelines} : \href{https://github.com/isocpp/CppCoreGuidelines}{CppCoreGuidelines}} \\
+
+%TODO: aggiungere l'immagine CppCoreGuidelines.png
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\textwidth, height=1\textheight, keepaspectratio]{./imgs/CppCoreGuidelines.png}
+	\caption{CppCoreGuidelines}
+	\label{fig:CppCoreGuidelines}
+\end{figure}
+
+\textsf{\small Comunque ne elencherò qualche d'una. } \\
+
+%TODO: guardarsi le guidelines ufficiali!
+
+%TODO: scrivere qualcosa del tipo: "Guidelines aggiornate al ... (giorno in cui ho scritto). release 0.8
+
+\subsection{Organizzazione} %TODO: oppure Struttura (però con qunado la si guarda nella toc struttura potrebbe confondersi con le strutture)
+
+\textsc{\footnotesize Release 0.8} \\
+
+\textsf{Le linee guide sono così suddivise: } \\
+
+\textsf{Sezioni Maggiori: } \\ % volutamente senza lo \small.
+
+\begin{multicols}{2}
+	\begin{itemize}
+		\item[In.] \textsf{\small \textbf{Introduction} }
+		\item[P.] \textsf{\small \textbf{Philosophy} }
+		\item[I.] \textsf{\small \textbf{Interfaces} }
+		\item[F.] \textsf{\small \textbf{Functions} }
+		\item[C.] \textsf{\small \textbf{Classes and class hierarchies} }
+		\item[Enum.] \textsf{\small \textbf{Enumerations} }
+		\item[R.] \textsf{\small \textbf{Resource Management} }
+		\item[ES.] \textsf{\small \textbf{Expressions and Statements} }
+		\item[Per.] \textsf{\small \textbf{Performance} }
+		\item[CP.] \textsf{\small \textbf{Concurrency and Parallelism} }
+		\item[E.] \textsf{\small \textbf{Error handling} }
+		\item[Con.] \textsf{\small \textbf{Constants and immutability} }
+		\item[T.] \textsf{\small \textbf{Templates and generic programming} }
+		\item[CPL.] \textsf{\small \textbf{C-style programming} }
+		\item[SF.] \textsf{\small \textbf{Source Files} }
+		\item[SL.] \textsf{\small \textbf{The Standard Library} }
+	\end{itemize}
+\end{multicols}
+
+\subsection{Sezioni Maggiori}
+
+%TODO: volendo aggiungere qualche "Nota" e qualche esempio pratico di codice per tutte le subsubsection.
+
+\textsf{\small Come detto, riuscirò a trattare solo alcune delle linee guide. Son veramente troppe!} \break
+
+% -------------------------------- In | Introduction ---------------------------------
+
+\subsubsection{In | Introduction}
+
+\textsf{\small Lo scopo delle \textbf{CppCoreGuidelines} è quello di aiutare i programmatori a scrivere codice più semplice, più efficiente, più mantenibile.} \\
+
+\textsf{\small Cercare di applicare tutte queste regole non è semplice.} \\
+
+\textsf{\small Ma cerca di considerare queste linee guida, questi ideali quando scrivi codice e cerca di approssimarli il più possibile.} \break
+
+% --------------------------------- P | PHILOSOPHY -----------------------------------
+
+\subsubsection{P | Philosophy}
+
+\textsf{\small Questa è una sezione molto generale che riguarda la \textbf{Philosophy} (Filosofia) delle linee guida.} \\
+
+\textsf{\small Queste sono delle regole non meccaniche, ma regole individuali che riflettono temi filosofici. Senza una base filosofica, i concetti concreti, specifici mancherebbero di razionalità.}
+
+\paragraph{P.1: Esprimi le idee direttamente nel codice}
+
+\textsf{\small La motivazione principale è che i compilatori non leggono i commenti (o i documenti di design correlati) ovviamente e nemmeno tanti programmatori. Ciò che è espresso nel codice ha delle semantiche e può essere controllato dai compilatori e altri strumenti.} \\
+
+\textsf{\small Mi raccomando usare \textbf{const} ove necessario. Rende chiaro l'intento che quella variabile, oggetto non deve essere modificato. Se non lo si mette, è il programmatore a dover indovinare se questo serve o no.} \\
+
+\paragraph{P.2: Scrivi in ISO Standard C++}
+
+\label{P_2}
+
+\textsf{\small Questo è un insieme di linee guida per scrivere in \emph{ISO Standard C++}.} \\
+
+\textsf{\small \textbf{Nota}: Usarle non garantisce \emph{portabilità}.} \\
+
+\paragraph{P.3: Esprimi l'intento}
+
+\textsf{\small A meno che l'intento del codice è chiaro (con i nomi o i commenti), è impossibile dire se il codice fa quello che dovrebbe.} \\
+
+\textsf{\small \textbf{Nota}: Di' quello che dovrebbe essere fatto, piuttosto che come dovrebbe essere fatto.} \\
+
+\paragraph{P.4: Idealmente, un programma dovrebbe essere staticamente type safe}
+
+\textsf{\small Idealmente, un programma dovrebbe essere completamente staticamente (a compile-time) type safe.} \\
+
+\textsf{\small Purtroppo, questo non è possibile. Per via di: } 
+
+\begin{multicols}{2}
+	\begin{itemize}
+		\item \textsf{\small unions}
+		\item \textsf{\small casts}
+		\item \textsf{\small array decay}
+		\item \textsf{\small errori di range}
+		\item \textsf{\small narrowing conversions (conversioni strette, limitate)}
+	\end{itemize}
+\end{multicols}
+
+\textsf{\small Alcune alternative per queste aree problematiche, per esempio: } \\
+
+\begin{multicols}{2}
+	\begin{itemize}
+		\item \textsf{\small unions | usa \textbf{variant} (C++17)}
+		\item \textsf{\small casts | minimizza il loro utilizzo; i templates possono essere d'aiuto per questo.}
+		\item \textsf{\small array decay | usa \textbf{span} (dal GLSL)}
+		\item \textsf{\small errori di range | usa \textbf{span}}
+		\item \textsf{\small narrowing conversions | minimizza il loro utilizzo e usa \textbf{narrow} e \textbf{narrow\_cast}.}
+		%\item \textsf{\small }
+	\end{itemize}
+\end{multicols}
+
+\paragraph{P.5: Preferire i controlli a compile-time rispetto che a run-time}
+
+\textsf{\small La ragione è per via della chiarezza e delle performance. Non hai bisogno di scrivere \emph{error handlers} per errori a compile time.} \\
+
+\textsf{\small \textbf{Formulazione Alternativa}: Non posticipare a run time quello che può essere ben fatto a compile time.} \\
+
+\textsf{\small \textbf{Applicazioni}: }
+
+\begin{itemize}
+	\item \textsf{\small Guarda agli argomenti dei puntatori.}
+	\item \textsf{\small Guarda ai controlli a run-time per le violazioni di range.}
+\end{itemize}
+
+\paragraph{P.6: Quello che non può essere controllato a compile time dovrebbe essere controllato a run time}
+
+\textsf{\small Lasciare degli errori difficili da scovare in un programma è chiedere per crashes e pessimi risultati.} \\
+
+\textsf{\small \textbf{Nota}: Idealmente, cerchiamo di prendere tutti gli errori (che non sono nella logica del programmatore) o a compile time o a run time.} \\
+
+%TODO: Enforcement
+
+\paragraph{P.7: Prendere gli errori a run-time in anticipo} %TODO: oppure ... a run-time prima o presto
+
+\textsf{\small Evita crashes "misteriosi". Evita errori che porterebbero (possibilmente non identificati) a risultati errati.} \\
+
+\textsf{\small \textbf{Applicazioni}: } \\
+
+\begin{itemize}
+	\item \textsf{\small Controlla i puntatori e gli arrays. Controlla i range prima e non ripetutamente.}
+	\item \textsf{\small Controlla le conversioni: Elimina o segna le \emph{narrowing conversions} (conversioni strette).}
+	\item \textsf{\small Controlla i valori non controllati che arrivano dall'input.}
+	\item \textsf{\small Controlla i dati strutturati (oggetti di classi invarianti) che vengono convertiti in stringhe.}
+	%\item \textsf{\small }
+	%\item \textsf{\small }
+\end{itemize}
+
+\paragraph{P.8: Non \emph{leakere} nessuna risorsa}
+
+\textsf{\small Anche solo una piccola crescita nelle necessità di risorse, a lungo andare, esauriscono le risorse disponibili. Molto importante per programmi di vecchia data nel tempo, ma è un comportamento responsabile di ogni sviluppatore.} \\
+
+\textsf{\small \textbf{Applicazioni}: } 
+
+\begin{itemize}
+	\item \textsf{\small Guarda i puntatori: Classificali in non-proprietari (di default) e proprietari. Quando possibile, rimpiazza quelli proprietari con gli \emph{handles} della libreria standard.}
+	\item \textsf{\small Guarda per \textbf{new} e \textbf{delete}.}
+	\item \textsf{\small Guarda alle funzioni che allocano risorse e restituiscono raw pointers (come fopen, malloc e strdup).}
+\end{itemize}
+
+\paragraph{P.9: Non perdere nè tempo nè spazio}
+
+\textsf{\small Tempo e spazio che spendi per ottenere il risultato non è sprecato.} \\
+
+\textsf{``Un altro beneficio di impegnarsi per l'efficienza è che il processo ti forza a capire il problema in più profondità``.}
+\textsf{\emph{Alex Stepanov}.} \\
+
+\textsf{\small \textbf{Applicazioni}: }
+
+\begin{itemize}
+	\item \textsf{\small Segnala il valore di ritorno inutilizzato da un operatore++ o operatore-- in una funzione definita dall'utente e non di default. Preferire l'utilizzo della forma prefissa. }
+	%\item \textsf{\small }
+	%\item \textsf{\small }
+\end{itemize}
+
+\paragraph{P.10: Preferire i dati immutabili a quelli mutabili}
+
+\textsf{\small Perché è più semplice pensare in termini di costanti che di variabili. Qualcosa di immutabile non può cambiare inaspettatamente. A volte gli immutabili permettono una migliore ottimizzazione. Non si può avere \emph{data race} (race condition) su una costante.} \\
+
+\paragraph{P.11: Incapsula i costruttori disordinati, al posto di diffonderli nel codice}
+
+\textsf{\small Il codice disordinato, confusionario è più probabile che nasconda bugs ed è più difficile da scrivere. Una buona interfaccia è più semplice e sicura da usare. Codice disordinato e di basso livello genera più codice di questo tipo.} \\
+
+\textsf{\small \textbf{Applicazioni}: }
+
+\begin{itemize}
+	\item \textsf{\small Cerca del "codice disordinato" come una complessa manipolazione di un puntatore e dei casts fuori dalle implementazioni delle astrazioni.}
+	%\item \textsf{\small }
+	%\item \textsf{\small }
+\end{itemize}
+
+\paragraph{P.12: Usa gli strumenti di supporto come è appropriato}
+
+\textsf{\small Ci sono molte cose cose sono fatte meglio "dalle macchine". I computers non si stancano e non si annoiano delle tasks ripetitive.} \\
+
+\textsf{\small Per esempio: } \\
+
+\begin{itemize}
+	\item \textsf{\small \textbf{Static analysis tools}} %TODO: aggiungere link
+	\item \textsf{\small \textbf{Concurrency tools}} %TODO: aggiungere link
+	\item \textsf{\small \textbf{Testing tools}} %TODO: aggiungere link
+\end{itemize}
+
+\textsf{\small \textbf{Nota}: Cerca di non diventare dipendente sui tools (strumenti) troppo elaborati o specializzati. Questi potrebbero rendere il tuo codice non portabile.} \\
+
+\paragraph{P.13: Usa le librerie supportate in modo appropriato}
+
+\textsf{\small Usare le librerie ben progettate, ben documentate, e ben supportate salva tempo e impegno; Una libreria largamente diffusa è più probabile che verrà aggiornata e portata a nuovi sistemi.} \\
+
+\textsf{\small Le conoscenze di una libreria molto usata possono farti risparmiare tempo sui tuoi futuri progetti. Quindi, se una libreria adatta esiste per la tua applicazione/ per il tuo dominio applicativo, allora usala.} \\
+
+\textsf{\small \textbf{Nota}: Di default usa: }
+
+\begin{itemize}
+	\item \textsf{\small \textbf{ISO C++ Standard Library}} %TODO: aggiungere link
+	\item \textsf{\small \textbf{Guidelines Support Library}} %TODO: aggiungere link
+\end{itemize}
+
+\textsf{\small \textbf{Nota}: Se una libreria ben progettata, ben documentata e ben supportata non esiste per il dominio che ti serve, allora dovresti progettarne una e implementarla e poi usarla.} \\
+
+% --------------------------------- I | INTERFACES -----------------------------------
+
+\subsubsection{I | Interfaces}
+
+\textsf{\small Un'interfaccia è un contratto tra due parti di un programma. Di cui, uno di questi è il \emph{supplier} (fornitore) del servizio e l'altro è l'utente del servizio. Affermando con precisione qual è il servizio che si prevede di fornire è essenziale.} \\
+
+\textsf{\small Avere delle buone interfacce è probabilmente il singolo aspetto più importante dell'intera organizzazione del codice.} \\
+
+\paragraph{I.1: Fai delle interfacce esplicite}
+
+\textsf{\small Correttezza. Le assunzioni non precisate in un'interfaccia vengono semplicemente trascurate, tralasciate e difficili da testare. } \\
+
+\begin{comment}
+	\textsf{\small \textbf{Applicazioni}: }
+	
+	\begin{itemize}
+		\item \textsf{\small }
+		\item \textsf{\small }
+		\item \textsf{\small }
+	\end{itemize}
+\end{comment}
+
+\paragraph{I.2: Evita variabili globali non costanti}
+
+\textsf{\small Le variabili globali non costanti nascondono delle dipendenze e rendono le dipendenze soggette a cambiamenti imprevedibili.} \\
+
+\begin{comment}
+	\textsf{\small \textbf{Applicazioni}: }
+	
+	\begin{itemize}
+		\item \textsf{\small }
+		\item \textsf{\small }
+		\item \textsf{\small }
+	\end{itemize}
+\end{comment}
+
+\paragraph{I.3: Evita i singletons}
+
+\textsf{\small I singleton sono praticamente dei complicati oggetti globali celati} \\ %TODO: tradurlo meglio.
+
+\begin{comment}
+	\textsf{\small \textbf{Applicazioni}: }
+	
+	\begin{itemize}
+		\item \textsf{\small }
+		\item \textsf{\small }
+		\item \textsf{\small }
+	\end{itemize}
+\end{comment}
+
+\paragraph{I.4: Rendi le interfacce precise e fortemente typed}
+
+\textsf{\small I tipi sono la documentazione migliore e più semplice, migliorano la leggibilità per via del loro significato ben definito e vengono controllati al tempo di compilazione. Inoltre, a volte, il codice precisamente "tipato" è spesso meglio ottimizzato.} \\
+
+\begin{comment}
+	\textsf{\small \textbf{Applicazioni}: }
+	
+	\begin{itemize}
+		\item \textsf{\small }
+		\item \textsf{\small }
+		\item \textsf{\small }
+	\end{itemize}
+\end{comment}
+
+\paragraph{I.5: Precondizioni di stato (se ce ne sono)}
+
+\textsf{\small Gli argomenti hanno significati che potrebbero limitare il loro proprio utilizzo nel chiamante.} \\
+
+\begin{comment}
+	\textsf{\small \textbf{Applicazioni}: }
+	
+	\begin{itemize}
+		\item \textsf{\small }
+		\item \textsf{\small }
+		\item \textsf{\small }
+	\end{itemize}
+\end{comment}
+
+\paragraph{I.6: Preferisci \textbf{Expects()} per esprimere le precondizioni}
+
+\textsf{\small Per rendere chiaro che la condizione è una precondizione e per consentire l'uso dello strumento.} \\ %TODO: tradurlo meglio.
+
+\begin{comment}
+	\textsf{\small \textbf{Applicazioni}: }
+	
+	\begin{itemize}
+		\item \textsf{\small }
+		\item \textsf{\small }
+		\item \textsf{\small }
+	\end{itemize}
+\end{comment}
+
+\paragraph{I.7: Postcondizioni di stato }
+
+\textsf{\small Per rilevare malintesi riguardo al risultato e possibilmente individuare implementazioni errate.} \\
+
+\begin{comment}
+	\textsf{\small \textbf{Applicazioni}: }
+	
+	\begin{itemize}
+		\item \textsf{\small }
+		\item \textsf{\small }
+		\item \textsf{\small }
+	\end{itemize}
+\end{comment}
+
+\paragraph{I.8: Preferire \textbf{Ensures()} per esprimere postcondizioni}
+
+\textsf{\small Per rendere chiaro che la condizione è una postcondizione e per consentire l'uso dello strumento.} \\ %TODO: tradurlo meglio.
+
+\begin{comment}
+	\textsf{\small \textbf{Applicazioni}: }
+	
+	\begin{itemize}
+		\item \textsf{\small }
+		\item \textsf{\small }
+		\item \textsf{\small }
+	\end{itemize}
+\end{comment}
+
+\paragraph{I.9: Se un'interfaccia è un template, allora documenta i suoi parametri usando i concepts}
+
+\textsf{\small Rendi l'interfaccia precisamente specificata e controllata a compile-time (non così distante) nel futuro.} \\
+
+\begin{comment}
+	\textsf{\small \textbf{Applicazioni}: }
+	
+	\begin{itemize}
+		\item \textsf{\small }
+		\item \textsf{\small }
+		\item \textsf{\small }
+	\end{itemize}
+\end{comment}
+
+\paragraph{I.10: Usa le eccezioni per segnalare un fallimento nel performare una attività necessaria}
+
+\textsf{\small Non dovrebbe essere possibile ignorare un errore perché questo potrebbe lasciare il sistema o la computazione in uno stato indefinito. Questa è una delle principali fonti di errori.} \\
+
+\begin{comment}
+	\textsf{\small \textbf{Applicazioni}: }
+	
+	\begin{itemize}
+		\item \textsf{\small }
+		\item \textsf{\small }
+		\item \textsf{\small }
+	\end{itemize}
+\end{comment}
+
+\paragraph{I.11: Non trasferire mai l'ownership (la proprietà) di un raw pointer (T*) o di una referenza (T\&)}
+
+\textsf{\small Se si è in dubbio se un chiamante o un chiamato possiedono un oggetto, allora questo potrebbe portare a dei leaks o a una prematura distruzione dell'oggetto.} \\
+
+\begin{comment}
+	\textsf{\small \textbf{Applicazioni}: }
+	
+	\begin{itemize}
+		\item \textsf{\small }
+		\item \textsf{\small }
+		\item \textsf{\small }
+	\end{itemize}
+\end{comment}
+
+\paragraph{I.12: Dichiara un puntatore che \emph{non} deve essere \emph{null} come \emph{not\_null}}
+
+\textsf{\small Per evitare di dereferenzare gli errori a \textbf{nullptr}. Per migliorare le performance evitando degli inutili controlli sul \textbf{nullptr}.} \\
+
+\begin{comment}
+	\textsf{\small \textbf{Applicazioni}: }
+	
+	\begin{itemize}
+		\item \textsf{\small }
+		\item \textsf{\small }
+		\item \textsf{\small }
+	\end{itemize}
+\end{comment}
+
+\paragraph{I.13: Non passare un array come un singolo puntatore}
+
+\textsf{\small Le interfacce stile puntatori sono prone agli errori. Inoltre, un raw pointer ad un array deve dipendere su qualche convenzione per permettere al chiamato di determinare il size. } \\
+
+\begin{comment}
+\textsf{\small \textbf{Applicazioni}: }
+
+\begin{itemize}
+	\item \textsf{\small }
+	\item \textsf{\small }
+	\item \textsf{\small }
+\end{itemize}
+\end{comment}
+
+\paragraph{I.23: Mantieni il numero di argomenti in una funzione basso}
+
+\textsf{\small Avere molti argomenti apre le porte alla possibilità di confusione. Passare molti argomenti è spesso costoso rispetto ad altre alternative.} \\
+
+\begin{comment}
+	\textsf{\small \textbf{Applicazioni}: }
+	
+	\begin{itemize}
+		\item \textsf{\small }
+		\item \textsf{\small }
+		\item \textsf{\small }
+	\end{itemize}
+\end{comment}
+
+% --------------------------------- F | Functions ------------------------------------
+
+\subsubsection{F | Functions}
+
+\paragraph{F.21: Per restituire molteplici "out" values, preferire il ritorno di una struttura o di una tupla}
+
+\textsf{\small Un valore di ritorno è auto esplicativo, si auto documenta come un valore soltanto di output. Si possono ritornare molteplici valori attraverso le \textbf{tuple} (\textbf{incluso i pair}) con la convenienza dell'usare \textbf{tie}.} \\
+
+\textsf{\small \textbf{Applicazioni}: }
+
+\begin{itemize}
+	\item \textsf{\small Gli "output parameters" dovrebbero essere rimpiazzati dai valori di ritorno. Un "output parameter" è uno a cui la funzione scrive, invoca un membro non costante o passa un non costante. } %TODO: da riscrivere.
+	%\item \textsf{\small }
+	%\item \textsf{\small }
+\end{itemize}
+
+\paragraph{F.51: Se c'è possibilità di scelta, preferisci gli argomenti di default rispetto all'overloading}
+
+\textsf{\small Gli argomenti di default forniscono interfacce alternative ad una singola implementazione. Non c'è alcuna garanzia che un insieme di funzioni "overloaddate" implementano tutte le stesse semantiche. } \\
+
+\textsf{\small L'utilizzo degli argomenti di default può evitare la replicazione del codice.} \\
+
+% ----------------------- C | Classes and class hierarchies --------------------------
+
+\subsubsection{C | Classes and class hierarchies}
+
+\paragraph{C.45: Non definire un costruttore di default solo per inizializzare dei dati membri; usa gli inizializzatori della classe piuttosto}
+
+\textsf{\small Usare gli inizializzatori della classe permette al compilatore di generare la funzione per te. Le funzioni generate dal compilatore potrebbero essere più efficienti.} \\
+
+\textsf{\small \textbf{Applicazioni}: }
+
+\begin{itemize}
+	\item \textsf{\small Un default constructor dovrebbe fare di più che semplicemente inizializzare le variabili membro con delle costanti.}
+	\item \textsf{\small }
+	\item \textsf{\small }
+\end{itemize}
+
+\paragraph{C.47: Definisci e inizializza le variabili membro nell'ordine della loro dichiarazione}
+
+\textsf{\small Per minimizzare la confusione e gli errori. Nell'ordine dell'inizializzazione succede.} \\
+
+\textsf{\small \textbf{Applicazioni}: }
+
+\begin{itemize}
+	\item \textsf{\small La lista di inizializzazione dovrebbe menzionare i membri nello stesso ordine in cui sono stati dichiarati.}
+	%\item \textsf{\small }
+	%\item \textsf{\small }
+\end{itemize}
+
+\paragraph{C.48: Preferisci gli inizializzatori nella classe al posto degli inizializzatori ai membri nei costruttori per gli inizializzatori costanti} %TODO: da scrivere meglio.
+
+\textsf{\small Rende esplicito che lo stesso valore è da usare in tutti i costruttori. Evita la ripetizione. Evita i problemi di manutenzione. Porta a codice più corto ed efficiente.} \\
+
+\textsf{\small \textbf{Applicazioni}: }
+
+\begin{itemize}
+	\item \textsf{\small Ogni costruttore dovrebbe inizializzare ogni variabile membro (o esplicitamente attraverso una chiamata a costruttore o attraverso un costruttore di default).}
+	\item \textsf{\small Gli argomenti di default in un costruttore suggeriscono che un inizializzatore potrebbe essere più appropriato.}
+	%\item \textsf{\small }
+\end{itemize}
+
+% -------------------------------- Enum | Enumerations -------------------------------
+
+\subsubsection{Enum | Enumerations}
+
+\paragraph{Enum.3: Preferire le classi enum al posto degli enum "scoperti"} %TODO: migliorare la traduzione.
+
+\textsf{\small Per ridurre le sorprese: gli enum tradizionali si convertono a int troppo facilmente.} \\
+
+\textsf{\small \textbf{Applicazioni}: }
+
+\begin{itemize}
+	\item \textsf{\small Avvertire (Warn, porre un warning) su qualsiasi definizione di un enum che non è in una classe.}
+	%\item \textsf{\small }
+	%\item \textsf{\small }
+\end{itemize}
+
+% ----------------------------- R | Resource Management ------------------------------
+
+\subsubsection{R | Resource Management}
+
+\paragraph{R.10: Evita la malloc() e la free()}
+
+\textsf{\small Perché non supportano la costruzione e distruzione e non si mescolano bene con \textbf{new} e \textbf{delete}.} \\
+
+\textsf{\small \textbf{Applicazione per rispettare la regola}: }
+
+\begin{itemize}
+	\item \textsf{\small Segnala l'uso esplicito della \emph{malloc} e della \emph{free}.}
+\end{itemize}
+
+\paragraph{R.11: Evita di chiamare \textbf{new} e \textbf{delete} in modo esplicito}
+
+\textsf{\small Il puntatore ritornato dalla \textbf{new} dovrebbe appartenere al gestore della risorsa (che può chiamare la \textbf{delete}). Se il puntatore ritornato dalla \textbf{new} viene assegnato ad un puntatore, l'oggetto può essere "\emph{leakato}".} \\
+
+\textsf{\small \textbf{Applicazione per rispettare la regola}: }
+
+\begin{itemize}
+	\item \textsf{\small Poni un warning sull'uso esplicito della \textbf{new} e della \textbf{delete}. Suggerisci l'uso di \textbf{make\_unique} piuttosto.}
+\end{itemize}
+
+% ------------------------ ES | Expressions and Statements ---------------------------
+
+\subsubsection{ES | Expressions and Statements}
+
+\label{ES_10}
+
+\paragraph{ES.10: Dichiara solo un nome per dichiarazione}
+
+\textsf{\small Una singola dichiarazione per linee migliora la leggibilità ed evita errori correlati alla grammatica del C/C++. Lascia anche spazio per un più descrittivo commento a fine linea. } \\
+
+\textsf{\small Il seguente è un esempio \textbf{\color{red}ERRATO}\normalcolor: }
+
+\begin{lstlisting}[frame=single, rulecolor=\color{red}]
+	char *p, c, q[7], *pp[7], **qq[10];   // male!
+\end{lstlisting}
+
+\textsf{\small \textbf{Eccezione} structured binding (C++17) è specificamente progettato per introdurre diverse variabili: }
+
+\begin{lstlisting}
+	auto [iter, inserted] = m.insert_or_assign(k, val);
+	if (inserted) { /* new entry was inserted */ }
+\end{lstlisting}
+
+\textsf{\small \textbf{Applicazioni per il rispetto della regola}: }
+
+\begin{itemize}
+	\item \textsf{\small Contrassegna le variabili e le costanti con più dichiaratori (esempio: int* p, q;).}
+\end{itemize}
+
+\paragraph{ES.46: Evita le conversione aritmetiche che perdono dati (narrowing, truncating)}
+
+\textsf{\small Una conversione stretta (narrowing) distrugge le informazioni, spesso in modo inaspettato.} \\
+
+\textsf{\small \textbf{Applicazioni}: } \\
+
+textsf{\small Un buon analizzatore riesce a rilevare tute le conversioni strette (narrowing), però segnalarle tutte potrebbe portare a dei falsi positivi. Consigli: }
+
+\begin{itemize}
+	\item \textsf{\small  Segnala tutte le conversioni da numeri con la virgola (floating-point) a numeri interi (forse solo \textbf{float} \textrightarrow \textbf{char} e \textbf{double} \textrightarrow \textbf{int}).}
+	\item \textsf{\small Segnala \textbf{long} \textrightarrow \textbf{char} (anche \textbf{int} \textrightarrow \textbf{char}).}
+	\item \textsf{\small Considera le conversioni strette per gli argomenti delle funzioni molto sospette.}
+\end{itemize}
+
+\paragraph{ES.50: Non togliere il const col cast}
+
+\textsf{\small Rende il \textbf{const} una menzogna. Se la variabile è dichiarata \textbf{const}, modificarla risulterebbe in un \emph{undefined behaviour} (comportamento indefinito).} \\
+
+\textsf{\small Il seguente è un esempio \textbf{\color{red}ERRATO}\normalcolor:}
+
+\begin{lstlisting}[frame=single, rulecolor=\color{red}]
+	void f(const int& x)
+	{
+		const_cast<int&>(x) = 42;   // MALE
+	}
+	
+	static int i = 0;
+	static const int j = 0;
+	
+	f(i); // effetto collaterale silenzioso
+	f(j); // undefined behavior
+\end{lstlisting}
+
+\textsf{\small Quando sei tentato a ricorrere al const\_cast per evitare la duplicazione del codice, [...] preferisci mettere il codice in una funzione e rendila un template così che possa dedurre il \textbf{const}. Questo non usa alcun \textbf{const\_cast}: }
+
+\begin{lstlisting}
+	class Foo {
+		public:                         // buono
+		Bar& get_bar()       { return get_bar_impl(*this); }
+		const Bar& get_bar() const { return get_bar_impl(*this); }
+		private:
+		Bar my_bar;
+		
+		template<class T>           // buono, deduce se T è const o non-const
+		static auto& get_bar_impl(T& t)
+		{ /* the complex logic around getting a possibly-const reference to my_bar */ }
+	};
+\end{lstlisting}
+
+\textsf{\small Non fare un grosso lavoro all'interno di un template, potrebbe portare ad un \emph{code bloat} (rigonfiamento, codice troppo lungo).} \\ %TODO: scrivere meglio.
+
+\textsf{\small \textbf{Eccezione} Potresti voler rimuovere il \textbf{const} quando chiami funzioni incorrettamente \textbf{const}.} \\ %TODO: scrivere meglio.
+\textsf{\small Al posto, preferisci wrappare le funzioni inline const per encapsulare il cast in un unico posto.} \\ %TODO: scrivere meglio.
+
+\textsf{\small \textbf{Applicazioni}: }
+
+\begin{itemize}
+	\item \textsf{\small Segnala i \textbf{const\_cast}.}
+	%\item \textsf{\small }
+	%\item \textsf{\small }
+\end{itemize}
+
+% -------------------------------- Per | Performance ---------------------------------
+
+\subsubsection{Per | Performance}
+
+\paragraph{Per.2: Non ottimizzare prematuramente}
+
+\label{Per_2}
+
+\textsf{\small Codice altamente elaborato per l'ottimizzazione è, di solito, più grande e difficile da modificare piuttosto che del codice non ottimizzato.} \\
+
+%TODO: per il resto c'è un ??? e non c'è nient'altro.
+
+\paragraph{Per.3: Non ottimizzare qualcosa che non è critico a livello di performance}
+
+\textsf{\small Ottimizzare una parte che non è critica per le prestazioni di un programma non ha effetti sulle prestazioni del sistema. } \\
+
+\textsf{\small \textbf{Nota}: Se il tuo programma spende il 4\% del suo tempo di esecuzione nella computazione A e il 40\% del tempo sulla computazione B, un miglioramento del 50\% sulla A non avrà un grosso impatto come un 5\% di miglioramento sulla B. } \\
+
+\paragraph{Per.4: Non presumere che del codice più complicato sia necessariamente più veloce}
+
+\textsf{\small Il codice semplice può essere molto veloce. Gli ottimizzatori (optimizers) fanno cose meravigliose con del semplice codice. } \\
+
+\textsf{\small Il seguente esempio è \textbf{\color{red}ERRATO}\normalcolor:}
+
+\begin{lstlisting}[frame=single, rulecolor=\color{red}]
+	// intended to be faster, but is often slower
+	
+	vector<uint8_t> v(100000);
+	
+	for (size_t i = 0; i < v.size(); i += sizeof(uint64_t)) {
+		uint64_t& quad_word = *reinterpret_cast<uint64_t*>(&v[i]);
+		quad_word = ~quad_word;
+	}
+\end{lstlisting}
+
+\textsf{\small Il seguente esempio è \textbf{\color{ForestGreen}CORRETTO}\normalcolor:}
+
+\begin{lstlisting}[frame=single, rulecolor=\color{ForestGreen}]
+	// clear expression of intent, fast execution
+	
+	vector<uint8_t> v(100000);
+	
+	for (auto& c : v)
+	c = ~c;
+\end{lstlisting}
+
+\paragraph{Per.5: Non supporre che il codice a basso livello sia necessariamente più veloce di quello ad alto livello}
+
+\textsf{\small Il codice di basso livello può, a volte, inibire le ottimizzazioni. Gli \emph{optimizers} qualche volta fanno meraviglie con il codice di alto livello.} \\
+
+\paragraph{Per.7: Progetta per permettere l'ottimizzazione}
+
+\textsf{\small Perché spesso abbiamo bisogno di ottimizzare il design iniziale. Perché un design che ignora la possibilità per un miglioramento futuro è difficile da cambiare.} \\
+
+\textsf{\small \textbf{Nota}: L'ottimizzazione prematura, si dice, sia la radice di ogni male (Per.2 a pag.\pageref{Per_2}), ma questo non è un motivo per disprezzare le performance. } \\
+
+\textsf{\small Non è mai prematuro considerare ciò che rende un progetto suscettibile al miglioramento, e il miglioramento delle prestazioni è un miglioramento comunemente desiderato.} \\
+
+\textsf{\small In particolare, quando scrivi una funzione ampia, tieni in considerazione: } \\
+
+\begin{itemize}
+	\item \textsf{\small \textbf{Il passaggio delle informazioni (Information passing)}: Preferisci le interfacce chiare che hanno sufficienti informazioni per un successivo miglioramento delle implementazioni.}
+	\item \textsf{\small \textbf{Compattezza dei dati}: Di default, usa dei dati compatti, come gli \textbf{std::vector} e accedi in un modo sistematico. (Per.19 a pagina \pageref{Per_19}). Se ti serve una struttura linkata, prova a crearne un'interfaccia.} %TODO: in modo che non sia vista dagli utenti.
+	\item \textsf{\small \textbf{Passaggio degli argomenti e il return}: Fai una distinzione tra dati mutabili e non-mutabili.}
+	\item \textsf{\small \textbf{Astrazione}: Non generalizzare troppo; un design che cerca di soddisfare ogni possibile uso (e abuso) e rinvia ogni decisione di progettazione per dopo (utilizzando indirezioni in fase di compilazione (compile-time) o di esecuzione (run-time)) è di solito un progetto complicato, gonfio e difficile da capire. Generalizza da esempi concreti, preservando le performance mentre generalizziamo. Non generalizzare basandoti sulla mera speculazione di possibili futuri bisogni. L'ideale è zero \emph{overhead} procurato dalla generalizzazione. }
+	\item \textsf{\small \textbf{Librerie}: Usa librerie con delle buone interfacce. Se non ce ne sono, prova a creartene una da solo e imita lo stile delle interfacce di una buona libreria. Per esempio la \emph{Libreria Standard}.}
+	\item \textsf{\small \textbf{Isolamento}: Isola il tuo codice confusionario/vecchio fornendo un'interfaccia di tua scelta (questo è a volte chiamato \emph{providing a wrapper}). Non permettere a del pessimo design di infiltrarsi, "di far sanguinare" il tuo codice.}
+\end{itemize}
+
+\textsf{\small \textbf{Nota}: Non creare un'interfaccia per poi fermarsi alla prima implementazione e al primo caso d'uso a cui avevi pensato. Una volta completata la prima implementazione, ricontrollala; una volta distribuita, sarà più difficile rimediare agli errori. } \\
+
+\textsf{\small \textbf{Nota}: La necessità per l'efficienza non implica un bisogno per del codice di basso livello. Il codice di alto livello non implica lentezza o rigonfiamento.} \\
+
+\textsf{\small \textbf{Nota}: Le cose hanno dei costi. Non essere paranoico sui costi (i computer moderni sono davvero molto veloci), ma abbi un'idea approssimativa dell'ordine di grandezza del costo di ciò che usi. } \\
+
+\textsf{\small \textbf{Nota}: Se riesci a pensare ad una sola implementazione, allora probabilmente non hai qualcosa per cui puoi escogitare un'interfaccia stabile. } \\
+
+\textsf{\small \textbf{Nota}: Questa regola non contraddice la regola Per.2 \emph{Non ottimizzare prematuramente} a pag.\pageref{Per_2}.} \\
+
+\textsf{\small \textbf{Applicazioni per il rispetto della regola}: }
+
+\begin{itemize}
+	\item \textsf{\small Forse cercare gli \textbf{void*} negli argomenti delle funzioni potrebbe portare a trovare interfacce che impediscono future ottimizzazioni.}
+	%\item \textsf{\small }
+	%\item \textsf{\small }
+\end{itemize}
+
+\paragraph{Per.11: Sposta la computazione dal run time al compile time}
+
+\textsf{\small Per ridurre lo spazio occupato dal codice e il tempo di esecuzione. Per evitare \emph{data races} attraverso l'utilizzo delle costanti. Per "acchiappare" (catch) errori a compile time (e quindi eliminando il bisogno di codice per gestire gli errori).} \\
+
+\textsf{\small \textbf{Nota}: L'ideale è di non eseguire tutto a compile time. Ovvio che certe computazioni dipendono dagli input e quindi non possono essere spostate a compile time, ma a parte quello è che le complesse computazioni a compile time possono seriamente incrementare i tempi di compilazione e complicare il debugging. È anche possibile rallentare il codice attraverso le computazioni a compile time. Questo è certamente raro, ma fattorizzando un calcolo generale in separati sotto-calcoli ottimali è possibile rendere la cache delle istruzioni meno efficace.} \\
+
+\textsf{\small \textbf{Applicazioni per il rispetto della regola}: }
+
+\begin{itemize}
+	\item \textsf{\small Guarda per delle funzioni che potrebbero essere constexpr, ma che non lo sono.}
+	\item \textsf{\small Guarda per funzioni chiamate con tutti argomenti costanti.}
+	\item \textsf{\small Guarda alle macro che potrebbero essere constexpr.}
+\end{itemize}
+
+\paragraph{Per.19: Accedi alla memoria in modo prevedibile}
+
+\label{Per_19}
+
+\textsf{\small Le prestazioni sono molto sensibili alle performance della cache e gli algoritmi della cache favoriscono semplice (di solito lineari) accessi a dati adiacenti.} \\
+
+\begin{lstlisting}
+	int matrix[rows][cols];
+	
+	// male
+	for (int c = 0; c < cols; ++c)
+	for (int r = 0; r < rows; ++r)
+	sum += matrix[r][c];
+	
+	// bene
+	for (int r = 0; r < rows; ++r)
+	for (int c = 0; c < cols; ++c)
+	sum += matrix[r][c];
+\end{lstlisting}
+
+% -------------------- CP | Concurrency and Parallelism ------------------------------
+
+\subsubsection{CP | Concurrency and Parallelism}
+
+\paragraph{CP.2: Evita le \emph{data races}}
+
+\textsf{\small A meno che tu lo faccia, non c'è garanzia che funzioni e i sottili errori persisteranno.} \\
+
+\textsf{\small \textbf{Nota}: In sintesi, se due threads possono accedere allo stesso oggetto contemporaneamente (concurrently, in modo concorrente) (senza sincronizzazione) e almeno uno è uno scrittore (che esegue operazioni non-const) allora avrai una \emph{data race}. } \\
+
+\textsf{\small \textbf{Applicazioni per il rispetto della regola}: } \\
+
+\textsf{\small È possibile usare dei tools oppure è possibile mitigare le possibilità di \emph{data races} così: }
+
+\begin{itemize}
+	\item \textsf{\small Evita dati globali}
+	\item \textsf{\small Evita variabili \textbf{statiche}}
+	\item \textsf{\small Un uso più concreto di tipi sullo stack (e non passare troppo in giro i puntatori)}
+	\item \textsf{\small Usa di più i dati immutabili (literals, constexpr, e const)}
+\end{itemize}
+
+\paragraph{CP.3: Minimizza la condivisione esplicita di dati scrivibili}
+
+\textsf{\small Se non condividi dati scrivibili, non puoi avere \emph{data race}. Meno condivisione (sharing) fai meno possibilità ci sono di dimenticarti di sincronizzare gli accessi (e avere delle data races). Meno condivisione fai, meno possibilità c'è di dover aspettare su una lock (quindi le prestazioni possono essere migliorate).} \\
+
+\textsf{\small \textbf{Nota}: I dati immutabili possono essere condivisi in modo efficiente e sicuro. Non c'è bisogno di locking. Non si può avere una data race su una costante. Guarda anche \textbf{CP.mess: Message passing} e la \textbf{CP.31}.} \\
+
+\paragraph{CP.4: Pensa in termini di tasks, al posto che in threads}
+
+\textsf{\small Un \textbf{thread} è un concetto di implementazione, un modo di pensare della macchina. Una \textbf{task} è una nozione applicativa, qualcosa che vorresti fare, preferibilmente in concomitanza (in modo concorrente) con altre tasks (attività). È più facile ragionare in termini di concetti applicativi.} \\
+
+\textsf{\small \textbf{Esempio}}
+
+\begin{lstlisting}
+	void some_fun(const std::string& msg)
+	{
+		std::thread publisher([=] { std::cout << msg; }); // male: meno espressivo
+		// e più prono ad errori.
+		auto pubtask = std::async([=] { std::cout << msg; });  // OK
+		// ...
+		publisher.join();
+	}
+\end{lstlisting}
+
+\textsf{\small \textbf{Nota}: Ad eccezione di async(), le funzionalità della libreria standard sono di basso livello, orientate alla macchina, a livello di thread e lock. Questa è una fondazione necessaria, ma dobbiamo cercare di alzare il livello di astrazione: per la produttività, per l'affidabilità e per le prestazioni. Questo è un argomento potente per l'utilizzo di librerie di alto livello e orientate più alle applicazioni (se possibile, costruite sopra la libreria standard).} \\
+
+\paragraph{CP.8: Non provate ad usare \emph{volatile} per la sincronizzazione}
+
+\textsf{\small Nel C++, a differenza di altri linguaggi, \textbf{volatile} non fornisce atomicità, non sincronizza tra le threads, e non previene il riordino delle istruzioni (nè compilatore nè hardware). Non ha niente a che vedere con la concorrenza.} \\
+
+\textsf{\small \textbf{Alternativa}: Usa i tipi \textbf{atomic} dove avresti usato \textbf{volatile} in altri linguaggi. Usa la \textbf{mutex} per gli esempi più complicati.} \\
+
+\textsf{\small Guarda la \textbf{CP.200: Use volatile only to talk to non-C++ memory}.}
+
+\break
+
+% -------------------------------- E | Error Handling --------------------------------
+
+\subsubsection{E | Error Handling}
+
+\paragraph{E.1: Sviluppa una strategia per occuparti degli errori il prima possibile in un design}
+
+\textsf{\small Una strategia coerente e completa per la gestione degli errori e delle perdite di risorse è difficile da ammodernare in un sistema.} \\
+
+\paragraph{E.6: Usa RAII per prevenire i \emph{leaks}}
+
+\textsf{\small I \emph{leaks} sono, di solito, inaccettabili. Il rilascio/liberazione di risorse in modo manuale è prono agli errori. RAII (\emph{\textbf{R}esource \textbf{A}cquisition \textbf{I}s \textbf{I}nitialization}) è il modo più semplice e sistematico per prevenire i \emph{leaks}.} \\
+
+\textsf{\small \textbf{Nota}: Ma cosa facciamo se scriviamo un programma dove le eccezioni non possono essere usate? Ci sono molti miti contro le eccezioni. Qui di seguito solo un paio di buoni motivi: } \\
+
+\begin{itemize}
+	\item \textsf{\small Siamo su un sistema così piccolo che il supporto delle eccezioni consumerebbe la maggior parte della nostra memoria 2K.}
+	\item \textsf{\small Siamo in un sistema hard-real-time e non abbiamo strumenti che ci garantiscano che un'eccezione venga gestita entro il tempo richiesto.}
+	\item \textsf{\small Siamo in un sistema con tonnellate di codice legacy (vecchio codice) che utilizza molti puntatori in modi difficili da capire (in particolare senza una strategia di proprietà riconoscibile) in modo che le eccezioni possano causare leaks.}
+	\item \textsf{\small La nostra implementazione dei meccanismi di eccezione del C++ è irragionevolmente scarsa (lenta, consuma memoria, non funziona correttamente per le librerie collegate dinamicamente, ecc.) Presenta reclamo al proprio fornitore dell'implementazione; se nessun utente si lamenta, non si verificherà alcun miglioramento.}
+	\item \textsf{\small Verremo licenziati se sfidiamo l'antica saggezza del nostro manager.}
+\end{itemize}
+
+\textsf{\small Solo la prima di queste ragioni è fondamentale, quindi quando possibile, usa le eccezioni per implementare RAII o progetta i tuoi oggetti RAII in modo che non falliscano mai.} \\
+
+\textsf{\small Riguardati anche l'utilizzo del \textbf{noexcept}.} \\
+
+\paragraph{E.12: Usa \emph{noexcept} quando esci da una funzione perché una \emph{throw} è impossibile o inaccettabile}
+
+\textsf{\small Per rendere la gestione degli errori sistematica, robusta ed efficiente.} \\
+
+\textsf{\small \textbf{Nota}: Non usare le tradizionali \emph{exception-specifications}, guarda \textbf{E.30: Don't use exception specification}.} \\
+
+\break
+
+% -------------------------------- Con | Constants and immutability ------------------
+
+\subsubsection{Con | Constants and immutability}
+
+\paragraph{Con.1: Di default, poni gli oggetti immutabili}
+
+\textsf{\small È più semplice ragionare in termini di oggetti immutabili, quindi poni gli oggetti a \textbf{non-const} solo quando c'è bisogno di cambiare i loro valori. Previeni cambiamenti ai valori in modo accidentale o difficili da notare. } \\
+
+\textsf{\small \textbf{Esempio}}
+
+\begin{lstlisting}
+	for (const int i : c) cout << i << '\n'; // serve solo per leggere i valori: const
+	
+	for (int i : c) cout << i << '\n'; // MALE: serve solo per leggere i valori
+\end{lstlisting}
+
+\textsf{\small \textbf{Eccezione}: I parametri passati per valore raramente mutano, ma anche raramente vengono passati const. Non forzare questa regola per i parametri delle funzioni, per evitare confusione e falsi positivi.} \\
+
+\textsf{\small \textbf{Applicazioni per il rispetto della regola}: }
+
+\begin{itemize}
+	\item \textsf{\small Segnala le variabili \textbf{non-const} che non vengono modificate.}
+	%\item \textsf{\small }
+	%\item \textsf{\small }
+\end{itemize}
+
+\paragraph{Con.5: Usa \emph{constexpr} per i valori che possono essere calcolati a tempo di compilazione (compile-time)}
+
+\textsf{\small Per avere migliori prestazioni, migliori controlli a compile-time, per avere una valutazione garantita a compile-time, per evitare le possibilità di \emph{race conditions}.} \\
+
+\textsf{\small \textbf{Esempio}}
+
+\begin{lstlisting}
+	double x = f(2);            // possibile valutazione a run-time
+	const double y = f(2);      // possibile valutazione a run-time
+	constexpr double z = f(2);  // errore a meno che f(2) possa essere valutata a compile time
+\end{lstlisting}
+
+\textsf{\small \textbf{Nota}: Guarda la regola \textbf{F.4: If a function might have to be evaluated at compile time, declare it \emph{constexpr}}.} \\
+
+\textsf{\small \textbf{Applicazioni per il rispetto della regola}: }
+
+\begin{itemize}
+	\item \textsf{\small Contrassegna le definizioni \textbf{const} con inizializzatori di espressioni costanti.} %TODO: da riscrivere meglio.
+	%\item \textsf{\small }
+	%\item \textsf{\small }
+\end{itemize}
+
+\break
+
+% ------------ T | Templates and generic programming ---------------------------------
+
+\subsubsection{T | Templates and generic programming}
+
+\paragraph{T.1: Usa i \emph{templates} per aumentare il livello di astrazione del codice}
+
+\textsf{\small Per via della generalità, della riusabilità, dell'efficienza. Incoraggia definizioni coerenti di tipi definiti dagli utenti.} \\
+
+\textsf{\small \textbf{Esempio errato} Concettualmente, i seguenti requisiti sono sbagliati perché ciò che vogliamo da T è più dei concetti di basso livello: "può essere incrementato" o "può essere aggiunto": }
+
+\begin{lstlisting}[frame=single, rulecolor=\color{red}]
+	template<typename T>
+	requires Incrementable<T>
+	T sum1(vector<T>& v, T s)
+	{
+		for (auto x : v) s += x;
+		return s;
+	}
+	
+	template<typename T>
+	requires Simple_number<T>
+	T sum2(vector<T>& v, T s)
+	{
+		for (auto x : v) s = s + x;
+		return s;
+	}
+\end{lstlisting}
+
+\textsf{\small Assumendo che Incrementable non supporti l'operazione + e Simple\_number non supporti l'operazione +=, abbiamo implementatori sovralimitati di sum1 e sum2. E, in questo caso, abbiamo perso un'opportunità per generalizzare ulteriormente.}
+
+\begin{lstlisting}
+	template<typename T>
+	requires Arithmetic<T>
+	T sum(vector<T>& v, T s)
+	{
+		for (auto x : v) s += x;
+		return s;
+	}
+\end{lstlisting}
+
+\textsf{\small Supponendo che \emph{Arithmetic} richieda sia + che +=, abbiamo vincolato l'utente di sum a fornire un tipo aritmetico completo. Questo non è un requisito minimo, ma dà all'implementatore di algoritmi la libertà tanto necessaria e garantisce che qualsiasi tipo aritmetico possa essere utilizzato per un'ampia varietà di algoritmi. Per una maggiore generalità e riusabilità, potremmo anche usare un concetto più generale di contenitore o range invece di impegnarci in un solo contenitore, vettore.} \\
+
+\textsf{\small \textbf{Nota}: Se definiamo un template per richiedere esattamente le operazioni richieste per una singola implementazione di un singolo algoritmo (ad esempio, richiedendo solo += piuttosto che sia = e sia +) e solo quelle, abbiamo manutentori sovra limitati. Miriamo a ridurre al minimo i requisiti sugli argomenti del template, ma i requisiti assolutamente minimi di un'implementazione sono raramente un concetto significativo.} \\
+
+\textsf{\small \textbf{Applicazioni per il rispetto della regola}: }
+
+\begin{itemize}
+	\item \textsf{\small Segnala gli algoritmi che usano requisiti "eccessivamente semplici", come l'uso specifico di certi operatori senza senza un \emph{concept}.}
+	\item \textsf{\small Non segnalare la definizione dei concetti "eccessivamente semplici" di per se; potrebbero essere semplicemente elementi costitutivi per concetti più utili.}
+	%\item \textsf{\small }
+\end{itemize}
+
+\paragraph{T.5: Combina le tecniche OO (Object-Oriented) e quelle generiche per amplificare le loro forze, non i loro costi}
+
+\textsf{\small Le tecniche OO (Object Oriented, Orientate agli Oggetti) e quelle generiche sono complementari. } \\
+
+\textsf{\small \textbf{Esempio} Static aiuta la dinamica: usa il polimorfismo statico per implementare interfacce dinamicamente polimorfiche.} \\
+
+\begin{lstlisting}
+	class Command {
+		// pure virtual functions
+	};
+	
+	// implementations
+	template</*...*/>
+	class ConcreteCommand : public Command {
+		// implement virtuals
+	};
+\end{lstlisting}
+
+\textsf{\small \textbf{Esempio} La dinamica aiuta la statica: offri un'interfaccia generica, confortevole e legata staticamente, ma invia internamente in modo dinamico, in modo da offrire un layout di oggetti uniformi. Gli esempi includono \emph{type erasure} come con il deleter di std::shared\_ptr (ma non abusare del \emph{type erasure}).} \\
+
+\begin{lstlisting}
+	#include <memory>
+	
+	class Object {
+		public:
+		template<typename T>
+		Object(T&& obj)
+		: concept_(std::make_shared<ConcreteCommand<T>>(std::forward<T>(obj))) {}
+		
+		int get_id() const { return concept_->get_id(); }
+		
+		private:
+		struct Command {
+			virtual ~Command() {}
+			virtual int get_id() const = 0;
+		};
+		
+		template<typename T>
+		struct ConcreteCommand final : Command {
+			ConcreteCommand(T&& obj) noexcept : object_(std::forward<T>(obj)) {}
+			int get_id() const final { return object_.get_id(); }
+			
+			private:
+			T object_;
+		};
+		
+		std::shared_ptr<Command> concept_;
+	};
+	
+	class Bar {
+		public:
+		int get_id() const { return 1; }
+	};
+	
+	struct Foo {
+		public:
+		int get_id() const { return 2; }
+	};
+	
+	Object o(Bar{});
+	Object o2(Foo{});
+\end{lstlisting}
+
+\textsf{\small \textbf{Nota}: In una classe template, le funzioni non virtuali vengono istanziate solo se vengono utilizzate, ma le funzioni virtuali vengono istanziate ogni volta. Ciò può aumentare le dimensioni del codice e potrebbe limitare eccessivamente un tipo generico creando un'istanza di funzionalità che non è mai utilizzata. Evita questo, anche se la libreria standard ha nel proprio codice questi errori.} \\ %TODO: forse da risistemare
+
+\paragraph{T.120: Usa la metaprogrammazione solo quando ti serve veramente}
+
+\textsf{\small La template metaprogramming è difficile da ottenere in modo corretto, rallenta la compilazione ed è spesso molto difficile da mantenere. Tuttavia, ci sono esempi reali in cui la metaprogrammazione dei template offre prestazioni migliori rispetto al codice assembly a livello di esperti. Inoltre, ci sono anche esempi reali in cui il \emph{template metaprogramming} esprime le idee fondamentali meglio del codice a runtime. Ad esempio, se si ha bisogno della manipolazione AST in fase di compilazione (ad esempio, per delle operazioni su matrice di piegatura (folding)) potrebbe non esserci altro modo in C ++.} \\ %TODO: da riguardarsi.
+
+\textsf{\small \textbf{Alternativa}: Se il risultato è un valore, al posto di un tipo, usa una \textbf{funzione constexpr}.} \\
+
+\textsf{\small \textbf{Nota}: Se senti il bisogno di nascondere il tuo \emph{template metaprogramming} in macros, allora sei andato troppo in là.} \\
+
+\break
+
+% ------------------------ CPL | C-style programming ---------------------------------
+
+\subsubsection{CPL | C-style programming}
+
+\paragraph{CPL.1: Preferire il C++ al C}
+
+\textsf{\small Il C++ fornisce più controllo sui tipi e più notazione. Fornisce più supporto per la programmazione ad alto livello e spesso genera codice più veloce.} \\
+
+\textsf{\small \textbf{Esempio} }
+
+\begin{lstlisting}
+	char ch = 7;
+	void* pv = &ch;
+	int* pi = pv;   // non è C++
+	*pi = 999;      // sovrascrive sizeof(int) bytes vicino \&ch
+\end{lstlisting}
+
+\textsf{\small Le regole per il casting implicito da e verso void* in C sono sottili e non applicate. In particolare, questo esempio viola una regola contro la conversione di un tipo con allineamento più stretto.} \\ %TODO: da riguardare.
+
+\textsf{\small \textbf{Applicazioni per il rispetto della regola}: }
+
+\begin{itemize}
+	\item \textsf{\small Bisogna usare un compilatore C++}
+	%\item \textsf{\small }
+	%\item \textsf{\small }
+\end{itemize}
+
+\break
+
+% -------------------------------- SF | Source Files ---------------------------------
+
+\subsubsection{SF | Source Files}
+
+\paragraph{SF.1: Usa il suffisso .cpp per i sorgenti e .h per le interfacce se il tuo progetto non richiede già un'altra convenzione}
+
+\textsf{\small È una convenzione di lunga data. Ma la coerenza, costanza è più importante, quindi se il tuo progetto usa un'altra convenzione, segui quella. } \\
+
+\textsf{\small \textbf{Nota}: Questa convenzione riflette un modello di utilizzo comune: le intestazioni sono più spesso condivise con il C per essere compilate sia come C++ che come C, che in genere utilizza .h, ed è più semplice nominare tutte le intestazioni .h invece di avere estensioni diverse solo per quelle intestazioni che devono essere condivise con il C. D'altra parte, i file di implementazione sono raramente condivisi con il C e quindi in genere dovrebbero essere distinti dai file .c, quindi è, di solito, meglio nominare tutti i file di implementazione C++ qualcos'altro (come .cpp). I nomi specifici .h e .cpp non sono richiesti (solo consigliati come impostazione predefinita) e altri nomi sono diffusi. Esempi sono .hh, .C e .cxx. Si possono utilizzare quei nomi in modo equivalente. In questo documento, ci riferiamo a .h e .cpp come abbreviazione per i file di intestazione e di implementazione, anche se l'estensione effettiva potrebbe essere diversa. Il tuo IDE (se ne usi uno) potrebbe avere opinioni forti sui suffissi.} \\
+
+\textsf{\small \textbf{Esempio}}
+
+\begin{lstlisting}
+	// foo.h:
+	extern int a;   // una dichiarazione
+	extern void foo();
+	
+	// foo.cpp:
+	int a;   // una definizione
+	void foo() { ++a; }
+\end{lstlisting}
+
+\textsf{\small foo.h fornisce un'interfaccia a foo.cpp. È meglio evitare l'utilizzo di variabili globali.} \\
+
+\textsf{\small \textbf{Esempio errato}}
+
+\begin{lstlisting}[frame=single, rulecolor=\color{red}]
+	// foo.h:
+	int a;   // una definizione
+	void foo() { ++a; }
+\end{lstlisting}
+
+\textsf{\small \#include <foo.h> due volte in un programma lancerà un errore di linker per via di una doppia definizione. } \\
+
+\textsf{\small \textbf{Applicazioni per il rispetto della regola}: }
+
+\begin{itemize}
+	\item \textsf{\small Contrassegna i nomi non convenzionali dei files}
+	\item \textsf{\small Assicurati che .h e .cpp (ed equivalenti) seguano il resto delle regole (della sezione SF).}
+	%\item \textsf{\small }
+\end{itemize}
+
+\paragraph{SF.4: Includi i files .h nel file prima di altre dichiarazione}
+
+\textsf{\small Minimizza le dipendenze e incrementa la leggibilità.} \\
+
+\textsf{\small \textbf{Esempio}}
+
+\begin{lstlisting}
+	#include <vector>
+	#include <algorithm>
+	#include <string>
+	
+	// ... il codice qui ...
+\end{lstlisting}
+
+\textsf{\small \textbf{Esempio errato}}
+
+\begin{lstlisting}[frame=single, rulecolor=\color{red}]
+	#include <vector>
+	
+	// ... il codice qui ...
+	
+	#include <algorithm>
+	#include <string>
+\end{lstlisting}
+
+\textsf{\small \textbf{Nota}: Questo vale sia per i files .h che per i .cpp.} \\
+
+\textsf{\small \textbf{Nota}: Esiste una discussione per isolare il codice dalle dichiarazioni e dalle macro nei file di intestazione, includendo le intestazioni dopo il codice che vogliamo proteggere (come nell'esempio etichettato "errato"). Tuttavia ciò funziona solo per un file (a un livello): usa quella tecnica in un header incluso con altri headers e la vulnerabilità riappare. Un namespace (uno "namespace di implementazione") può proteggere da molte dipendenze. Protezione completa e flessibilità richiedono i moduli (modules).} \\ %TODO: da riguardarsi
+
+\paragraph{SF.5: Un file .cpp deve includere il file(s) .h che definiscono la sua interfaccia}
+
+\textsf{\small Questo permette al compilatore di fare controlli di costanza in anticipo.} \\
+
+\textsf{\small \textbf{Esempio errato}}
+
+\begin{lstlisting}[frame=single, rulecolor=\color{red}]
+	// foo.h:
+	void foo(int);
+	int bar(long);
+	int foobar(int);
+	
+	// foo.cpp:
+	void foo(int) { /* ... */ }
+	int bar(double) { /* ... */ }
+	double foobar(int);
+\end{lstlisting}
+
+\textsf{\small Gli errori non verranno rilevati fino al tempo di linking per un programma che chiama bar o foobar.} \\
+
+\textsf{\small \textbf{Esempio}}
+
+\begin{lstlisting}
+	// foo.h:
+	void foo(int);
+	int bar(long);
+	int foobar(int);
+	
+	// foo.cpp:
+	#include <foo.h>
+	
+	void foo(int) { /* ... */ }
+	int bar(double) { /* ... */ }
+	double foobar(int);   // errore: tipo di ritorno errato
+\end{lstlisting}
+
+\textsf{\small L'errore del tipo di ritorno per foobar ora viene rilevato immediatamente quando viene compilato il foo.cpp. L'errore di tipo dell'argomento per bar non può essere rilevato fino al tempo di linking a causa della possibilità di overloading, ma l'uso sistematico dei files .h aumenta la probabilità che venga rilevato in precedenza da parte del programmatore. } \\
+
+\paragraph{SF.6: Usa le direttive namespaces per transizione, per librerie fondamentali (come la \emph{std}) o in uno scope locale (soltanto)}
+
+\textsf{\small \emph{using namespace} può portare a dei clash (scontri) di nomi, quindi dovrebbe essere usato di rado, con moderazione. } \\
+
+\textsf{\small Tuttavia, non è sempre possibile qualificare ogni nome da un namespace nel codice utente (ad esempio, durante la transizione) e talvolta un namespace è così fondamentale e prevalente in un codice, che una qualifica coerente sarebbe prolissa e distraente.} \\
+
+\textsf{\small \textbf{Esempio} L'uso di \emph{using namespace;} potrebbe portare a scontri con i nomi della libreria standard.} \\
+
+\begin{lstlisting}
+	#include <cmath>
+	using namespace std;
+	
+	int g(int x)
+	{
+		int sqrt = 7;
+		// ...
+		return sqrt(x); // errore
+	}
+\end{lstlisting}
+
+%\textsf{\small \textbf{Nota}: } \\
+
+\textsf{\small \textbf{Nota}: Guardare anche la linea guida \textbf{SF.7} a pagina \pageref{SF_7}.} \\
+
+\textsf{\small \textbf{Applicazioni per il rispetto della regola}: }
+
+\begin{itemize}
+	\item \textsf{\small Contrassegna le molteplici direttive \emph{using namespaces} per diversi namespaces in un singolo file.}
+	%\item \textsf{\small }
+	%\item \textsf{\small }
+\end{itemize}
+
+\paragraph{SF.7: Non scrivere \emph{using namespace} in uno scope globale in un header file}
+
+\label{SF_7}
+
+\textsf{\small Farlo porterebbe via l'abilità di disambiguare efficacemente e di usare alternative. Rende inoltre le intestazioni \#included (incluse) dipendenti dall'ordine in quanto potrebbero avere un significato diverso se incluse in ordini diversi. } \\
+
+\textsf{\small \textbf{Esempio}}
+
+\begin{lstlisting}
+	// bad.h
+	#include <iostream>
+	using namespace std; // male
+	
+	// user.cpp
+	#include "bad.h"
+	
+	bool copy(/*... alcuni parametri ...*/);    // una funzione che, guarda caso, si chiama copy
+	
+	int main()
+	{
+		copy(/*...*/);    // ora overloads local ::copy and std::copy, potrebbe essere ambiguo
+	}
+\end{lstlisting}
+
+\textsf{\small \textbf{Nota}: Un'eccezione è l'utilizzo del namespace std::literals;. Questo è necessario per utilizzare i valori letterali (literals) delle stringhe nei file di intestazione e date le regole - gli utenti sono tenuti a nominare il proprio operatore UDLs""\_x - così che non collideranno con la libreria standard.} \\
+
+\textsf{\small \textbf{Applicazioni per il rispetto della regola}: }
+
+\begin{itemize}
+	\item \textsf{\small Segnala \emph{using namespace} in uno scope globale in un file di intestazione. (header file)}
+	%\item \textsf{\small }
+	%\item \textsf{\small }
+\end{itemize}
+
+\paragraph{SF.8: Usa le \#include guards per tutti i files .h}
+
+\textsf{\small Per evitare che i file .h vengano inclusi molteplici volte. Per evitare collisioni dalle \#include guards, non limitarti a denominare la guardia con il nome del file. Assicurati di includere anche una chiave e un buon elemento di differenziazione, ad esempio il nome della libreria o del componente di cui fa parte il file di intestazione.} \\
+
+\textsf{\small \textbf{Esempio}}
+
+\begin{lstlisting}
+	// file foobar.h:
+	#ifndef LIBRARY_FOOBAR_H
+	#define LIBRARY_FOOBAR_H
+	// ... dichiarazioni ...
+	#endif // LIBRARY\_FOOBAR\_H
+\end{lstlisting}
+
+\textsf{\small \textbf{Nota}: L'estensione \emph{\#pragma once} come tipo di \emph{\#include guards} non è standard e non è portabile. Guardarsi la linee guida \textbf{P.2} a pag.\pageref{P_2}.} \\
+
+\textsf{\small \textbf{Applicazioni per il rispetto della regola}: }
+
+\begin{itemize}
+	\item \textsf{\small Contrassegna i files .h senza le \#include guards.}
+	%\item \textsf{\small }
+	%\item \textsf{\small }
+\end{itemize}
+
+\paragraph{SF.9: Evita le dipendenze cicliche tra i file sorgenti}
+
+\textsf{\small I cicli complicano la comprensione e rallentano la compilazione. Complicano anche la conversione per usare i \emph{modules} supportati dalla lingua.} \\
+
+\textsf{\small \textbf{Nota}: Elimina i cicli. non rimuoverli soltanto usando le \#include guards.} \\
+
+\textsf{\small Il seguente è un esempio \textbf{\color{red}ERRATO}\normalcolor:}
+
+\begin{lstlisting}[frame=single, rulecolor=\color{red}]
+	// file1.h:
+	#include "file2.h"
+	
+	// file2.h:
+	#include "file3.h"
+	
+	// file3.h:
+	#include "file1.h"
+\end{lstlisting}
+
+\textsf{\small \textbf{Applicazioni per il rispetto della regola}: }
+
+\begin{itemize}
+	\item \textsf{\small Contrassegna tutti i cicli.}
+	%\item \textsf{\small }
+	%\item \textsf{\small }
+\end{itemize}
+
+\paragraph{SF.11: Gli header files dovrebbero essere indipendenti (self-contained)}
+
+\textsf{\small Usabilità, le intestazioni (headers) dovrebbero essere semplici da usare e funzionare quando incluse da per se. Le intestazioni devono incapsulare le funzionalità che forniscono. Evitare che i client di un'header debbano gestire le dipendenze di tale header.} \\
+
+\textsf{\small \textbf{Esempio}}
+
+\begin{lstlisting}
+	#include "helpers.h"
+	// helpers.h dipende su std::string e include <string>
+\end{lstlisting}
+
+\textsf{\small \textbf{Nota}: Non riuscire a seguire questo si traduce in errori difficili da diagnosticare per i clienti di un'intestazione.} \\
+
+\textsf{\small \textbf{Nota}: Un'header deve includere tutte le sue dipendenze. Prestare attenzione all'utilizzo di percorsi relativi perché le implementazioni C++ divergono sul loro significato.} \\
+
+\textsf{\small \textbf{Applicazioni per il rispetto della regola}: }
+
+\begin{itemize}
+	\item \textsf{\small Un test dovrebbe verificare che il file di intestazione stesso venga compilato o che venga compilato un file cpp che include solo quel file di intestazione.}
+	%\item \textsf{\small }
+	%\item \textsf{\small }
+\end{itemize}
+
+\paragraph{SF.12: Preferire gli \#include con le virgolette per i files relativi e i simboli < > per il resto} %TODO: al posto di "per il resto": "altrove".
+
+\textsf{\small Lo standard offre flessibilità per i compilatori di implementare le due forme di \#include selezionate utilizzando la sintassi angolare (<>) o tra virgolette (""). I fornitori (Vendors) ne approfittano e utilizzano diversi algoritmi e metodi di ricerca per specificare il percorso di inclusione. Tuttavia, la guida consiste nell'utilizzare la forma con le virgolette "" per includere i file esistenti in un percorso relativo al file contenente l'istruzione \#include (all'interno dello stesso componente o progetto) e di utilizzare la forma con parentesi angolare <> ovunque, ove possibile. Ciò incoraggia a essere chiari sulla località del file rispetto ai file che lo includono o agli scenari in cui è richiesto il diverso algoritmo di ricerca. Rende facile capire a colpo d'occhio se un'intestazione viene inclusa da un file relativo locale rispetto a un'header della libreria standard o un'header dal percorso di ricerca alternativo (ad esempio un'header da un'altra libreria o un insieme comune di includes).} \\
+
+\textsf{\small \textbf{Esempio}}
+
+\begin{lstlisting}
+	// foo.cpp:
+	#include <string> // Dalla libreria standard, richiede la forma con le <>
+	#include <some_library/common.h> // Un file che non è locale, incluso da un'altra libreria; usa la forma <>.
+	#include "foo.h" // Un file localmente relativo a foo.cpp nello stesso progetto, usa la forma con le virgolette "".
+	#include "foo_utils/utils.h" // Un file localmente relativo a foo.cpp nello stesso progetto, usa la forma con le virgolette "".
+	#include <component_b/bar.h> // Un file nello stesso progetto trovato attraverso il percorso di ricerca, usa la forma <>.
+\end{lstlisting}
+
+\textsf{\small \textbf{Nota}: Non riuscire a seguire questo si traduce in errori difficili da diagnosticare per via di aver incluso il file sbagliato. Ad esempio, in un caso tipico in cui l'algoritmo di ricerca \#include "" potrebbe cercare prima un file esistente in un percorso relativo locale, poi l'utilizzo di questa forma per fare riferimento a un file che non è localmente relativo, potrebbe significare che se un file viene creato nel percorso relativo locale (ad esempio il file incluso viene spostato in una nuova posizione), ora si troverà prima del precedente file di inclusione e il set di includes sarà stato modificato in modo imprevisto. I creatori di librerie dovrebbero inserire le loro intestazioni in una cartella e fare in modo che i clienti includano tali file utilizzando il percorso relativo \#include <some\_library/common.h>.} \\ %TODO: da sistemare!
+
+\textsf{\small \textbf{Applicazioni per il rispetto della regola}: }
+
+\begin{itemize}
+	\item \textsf{\small Un test dovrebbe identificare se le intestazioni a cui si fa riferimento tramite "" potrebbero essere referenziate con i <>.}
+	\item \textsf{\small }
+	\item \textsf{\small }
+\end{itemize}
+
+\break
+
+% ---------------------------- SL | The Standard Library -----------------------------
+
+\subsubsection{SL | The Standard Library}
+
+\paragraph{SL.1: Usa le librerie quando possibile}
+
+\textsf{\small Perché risparmia tempo. Non reinventare la ruota. Non replicare il lavoro di altri. Prendi vantaggio dal lavoro degli altri quando apportano dei miglioramenti. Aiuta gli altri quando apporti dei miglioramenti.} \\
+
+\paragraph{SL.2: Preferire la libreria standard alle altre librerie}
+
+\textsf{\small Più persone conoscono la libreria standard. È più probabile che sia stabile, ben mantenuta e ampiamente disponibile rispetto al proprio codice o a maggior parte delle altre librerie.} \\
+
+\paragraph{SL.3: Non aggiungere entità non-standard al namespace std}
+
+\textsf{\small Aggiungere al \emph{std} potrebbe cambiare il significato di codice che altrimenti sarebbe conforme agli standard. Le aggiunte al \emph{std} potrebbero scontrarsi con le versioni future dello standard.} \\
+
+\paragraph{SL.4: Usa la libreria standard in modo type-safe (sicuro per i tipi)}
+
+\textsf{\small Perché, ovviamente, rompere questa regola può portare a dell'\emph{undefined behaviour} (comportamento indefinito), corruzione della memoria, e ogni sorta di brutti errori.} \\
+
+\textsf{\small \textbf{Nota}: Questa è una meta-regola semi-filosofica, che ha bisogno di molte regole concrete di supporto. Ne abbiamo bisogno come di un ombrello per le norme più specifiche. Sintesi delle norme più specifiche:} \\
+
+\textsf{\small \textbf{C++ Standard Library sommario}: }
+
+\begin{itemize}
+	\item \textsf{\small SL.con: Containers}
+	\item \textsf{\small SL.str: String}
+	\item \textsf{\small SL.io: Iostream}
+	\item \textsf{\small SL.regex: Regex}
+	\item \textsf{\small SL.chrono: Time}
+	\item \textsf{\small SL.C: The C Standard Library}
+\end{itemize}
+
+% ---------------------------- SL.Con | Containers -----------------------------------
+
+\paragraph{SL.con.1: Preferire l'utilizzo di STL \emph{array} o \emph{vector} al posto degli array del C}
+
+\textsf{\small Gli array del C sono meno sicuri, e non hanno vantaggi rispetto agli \emph{array} e ai \emph{vector} (della STL). Per gli array a lunghezza fissa, usa \emph{std::array} che non degenerano in un puntatore quando passati ad una funzione e conoscono il loro size. Inoltre, un \emph{std::array} allocato sullo stack, mantiene i suoi elementi sullo stack. Per un array a lunghezza variabile, usa \emph{std::vector}, può, per di più, cambiare il proprio size e gestire l'allocazione di memoria. } \\
+
+\textsf{\small \textbf{Esempio}}
+
+\begin{lstlisting}
+	int v[SIZE];                        // MALE
+	
+	std::array<int, SIZE> w;            // ok
+\end{lstlisting}
+
+\textsf{\small \textbf{Esempio}}
+
+\begin{lstlisting}
+	int* v = new int[initial_size];     // MALE, si possiede un raw pointer
+	delete[] v;                         // MALE, delete manuale
+	
+	std::vector<int> w(initial_size);   // ok
+\end{lstlisting}
+
+\textsf{\small \textbf{Nota}: Utilizzare \emph{gsl::span} per le referenze non proprietarie in un container.} \\
+
+\textsf{\small \textbf{Nota}: Confrontare le prestazioni di un array di dimensioni fisse allocato sullo stack con un \emph{vector} con i suoi elementi nello spazio libero è falso. Si potrebbe anche confrontare un \emph{std::array} sullo stack con il risultato di una malloc() a cui si accede tramite un puntatore. Per la maggior parte del codice, anche la differenza tra l'allocazione sullo stack e l'allocazione sulo spazio libero non ha importanza, ma la comodità e la sicurezza del \emph{vector} sì. Le persone che lavorano con codice per il quale questa differenza è importante sono in grado di scegliere tra \emph{array} e \emph{vector}.} \\
+
+\textsf{\small \textbf{Applicazioni per il rispetto della regola}: }
+
+\begin{itemize}
+	\item \textsf{\small Segnala la dichiarazione di un array del C all'interno di una funzione o classe che dichiara anche un contenitore STL (per evitare warnings sul codice non STL legacy). Per correggere: modificare almeno la l'array del C in un \emph{std::array}.}
+	%\item \textsf{\small }
+	%\item \textsf{\small }
+\end{itemize}
+
+% ------------------------------- SL.str | String ------------------------------------
+
+\paragraph{SL.str.1: Usare \emph{std::string} per possedere le sequenze di caratteri}
+
+\textsf{\small \emph{string} gestisce correttamente l'allocazione, la proprietà, la copiatura, la graduale espansione e offre una varietà di utili operazioni.} \\
+
+\textsf{\small \textbf{Nota}: Non dare per scontato che \emph{string} sia più lenta delle tecniche di basso livello senza una misurazione e ricorda che non tutto il codice è critico per le prestazioni. Ricorda la regola \textbf{Per.2: Non ottimizzare prematuramente} a pagina \pageref{Per_2}.} \\
+
+\paragraph{SL.str.2: Usa \emph{std::string\_view} o \emph{gsl::span<char>} per riferirti a sequenze di caratteri}
+
+\textsf{\small \emph{std::string\_view} o \emph{gsl::span<char>} forniscono semplice e (potenzialmente) accesso sicuro alle sequenze di caratteri indipendentemente da come queste sequenze sono allocate e memorizzate. } \\
+
+\textsf{\small \textbf{Nota}: \emph{std::string\_view} (C++17) è read-only (solo per la lettura).} \\
+
+\paragraph{SL.str.4: Usa \emph{char*} per riferirti ad un singolo carattere}
+
+\textsf{\small La varietà di usi di \emph{char*} nel codice corrente è una maggiore fonte di errori.} \\
+
+\textsf{\small Il seguente è un esempio \textbf{\color{red}ERRATO}\normalcolor:}
+
+\begin{lstlisting}[frame=single, rulecolor=\color{red}]
+	char arr[] = {'a', 'b', 'c'};
+	
+	void print(const char* p)
+	{
+		cout << p << '\n';
+	}
+	
+	void use()
+	{
+		print(arr);   // errore a run-time; potenzialmente molto male
+	}
+\end{lstlisting}
+
+\textsf{\small L'array \emph{arr} non è una stringa array stile C perché non termina con lo zero terminatore (nul terminator).} \\
+
+\textsf{\small \textbf{Alternative}: Vedi anche \textbf{zstring}, \textbf{string} e \textbf{string\_view}.} \\
+
+\textsf{\small \textbf{Applicazioni per il rispetto della regola}: }
+
+\begin{itemize}
+	\item \textsf{\small Segnala l'uso di [ ] in un \emph{char*}.}
+	%\item \textsf{\small }
+	%\item \textsf{\small }
+\end{itemize}
+
+\paragraph{SL.str.12: Usa il suffisso \emph{s} per le stringhe letterali (string literals) intesi come stringhe della libreria standard}
+
+\textsf{\small L'espressione diretta di un'idea riduce al minimo gli errori.} \\
+
+\textsf{\small \textbf{Esempio}}
+
+\begin{lstlisting}
+	auto pp1 = make_pair("Tokyo", 9.00);         // {C-style string,double} intended?
+	pair<string, double> pp2 = {"Tokyo", 9.00};  // un poco verboso, prolisso
+	auto pp3 = make_pair("Tokyo"s, 9.00);        // {std::string,double}    // C++14
+	pair pp4 = {"Tokyo"s, 9.00};                 // {std::string,double}    // C++17
+\end{lstlisting}
+
+% ------------------------------- SL.io | Iostream -----------------------------------
+
+\paragraph{SL.io.3: Preferire \emph{iostream} per l'I/O (Input/Output)}
+
+\textsf{\small Le \emph{iostream}s sono sicure, flessibili ed estendibili.} \\
+
+\textsf{\small \textbf{Esempio}: } \\
+
+\begin{lstlisting}
+	// scrivi un  numero complesso:
+	complex<double> z{ 3, 4 };
+	cout << z << '\n';
+\end{lstlisting}
+
+\textsf{\small \emph{complex} è un tipo definito dall'utente e il suo I/O è definito senza modificare la libreria iostream.} \\
+
+\begin{lstlisting}
+	// leggi un file di numeri complessi:
+	for (complex<double> z; cin >> z; )
+	v.push_back(z);
+\end{lstlisting}
+
+\paragraph{SL.io.50: Evita l'\emph{endl}}
+
+\textsf{\small Il manipolatore \emph{endl} è più che altro equivalente a \emph{'$\backslash$n'} e "$\backslash$n"; come più comunemente usato, rallenta semplicemente l'output eseguendo un \emph{flush()} ridondante. Questo rallentamento può essere significativo rispetto all'output in stile \emph{printf}.} \\
+
+\begin{lstlisting}
+	cout << "Hello, World!" << endl;    // due operazioni di output e un flush
+	cout << "Hello, World!\n";          // una operazione di output e nessun flush
+\end{lstlisting}
+
+\textsf{\small \textbf{Nota}: Per l'interazione cin/cout (ed equivalente), non c'è motivo di fare una \emph{flush}; questo viene fatto automaticamente. Per scrivere su un file, raramente è necessario fare una \emph{flush}.} \\
+
+\textsf{\small \textbf{Nota}: A parte la questione (a volte importante) delle prestazioni, la scelta tra '$\backslash$n' ed \emph{endl} è quasi completamente estetica.} \\
+
+% ------------------------------- SL.regex | Regex -----------------------------------
+
+\paragraph{SL.regex: Regex}
+
+\textsf{\small \textbf{<regex>} è la libreria di espressioni regolari standard del C++. Supporta una varietà di convenzioni di pattern di espressioni regolari.} \\
+
+% ------------------------------- SL.chrono | Time -----------------------------------
+
+\paragraph{SL.chrono: Time}
+
+\textsf{\small \textbf{<chrono>} (definito nel namespace \emph{std::chrono} ) fornisce le nozioni di time\_point e durata insieme a funzioni per l'output del tempo in varie unità. Fornisce orologi per la registrazione di time\_points.} \\
+
+% ------------------------------- SL.C | The C Standard Library ----------------------
+
+\paragraph{SL.C.1: Non usare \emph{setjmp}|\emph{longjmp}}
+
+\textsf{\small Un \emph{longjmp} ignora i distruttori, invalidando così tutte le strategie di gestione delle risorse basate su \emph{RAII}.} \\
+
+\textsf{\small \textbf{Applicazioni per il rispetto della regola}: }
+
+\begin{itemize}
+	\item \textsf{\small Contrassegna tutte le occorrenze di \emph{longjmp} e \emph{setjmp}.}
+	%\item \textsf{\small }
+	%\item \textsf{\small }
+\end{itemize}
+
+\begin{comment}
+\paragraph{SL.: }
+
+\textsf{\small } \\
+
+\textsf{\small \textbf{Nota}: } \\
+
+\textsf{\small \textbf{Applicazioni per il rispetto della regola}: }
+
+\begin{itemize}
+	\item \textsf{\small }
+	\item \textsf{\small }
+	\item \textsf{\small }
+\end{itemize}
+\end{comment}
+
+\break
+
+\fleuron
+
+\textsf{\small Tutto quello citato sopra fa riferimento alla \textsc{Release 0.8} delle \textbf{CppCoreGuidelines}.} \\
+\textsf{\small L'ultimo commit, al momento in cui sto scrivendo, nel \emph{master branch} è del 7 Aprile 2022.} \\ %TODO: da ricontrollare.
+
+\begin{comment} %TODO: remove
+	\subsection{Generale}
+	
+	\begin{itemize}
+		\item \textsf{\small Lunghezza della riga limitata a 80 caratteri}
+		\item \textsf{\small Indentazione con 4 spazi.}
+		\item \textsf{\small I files dovrebbero usare le newlines stile Unix $\backslash n$.}
+	\end{itemize}
+	
+	\subsection{Parentesi Graffe}
+	
+	\textsf{\small Utilizzare \emph{Allman Style} brackets (parentesi). Le parentesi graffe sono sulla loro linea allo stesso livello con lo statement sopra.} \\
+	
+	\begin{lstlisting}
+		if (condition)
+		{
+			
+		}
+	\end{lstlisting}
+	
+	\textsf{\small Anche gli if con una sola linea dovrebbero avere le parentesi graffe.} \\
+	
+	\subsection{Indentazione}
+	
+	\textsf{\small Il contenuto in un \textbf{namespace} dovrebbe essere allo stesso livello di indentazione del namespace stesso. } \\
+	
+	\textsf{\small Il contenuto in una \textbf{classe}, \textbf{struct}, \textbf{funzioni}, \textbf{if}, \textbf{loop}, \textbf{switch}, \textbf{cases} e \textbf{labels} (dei goto) dovrebbe essere indentato.} \\
+	
+	\subsection{Convenzioni sui nomi}
+	
+	\begin{itemize}
+		\item \textsf{\small Non c'è nè prefisso nè suffisso a nessun nome.}
+		\item \textsf{\small Gli acronimi dovrebbero essere dello stesso case.}
+	\end{itemize}
+	
+	\begin{lstlisting}
+		// Correct.
+		SomeBMCType someBMCVariable = bmcFunction();
+	\end{lstlisting}
+	
+	\subsection{Ordine Inclusione Header files}
+	
+	\textsf{\small Inclusione degli headers in un header file:} \\
+	
+	\begin{itemize}
+		\item \textsf{\small headers locali}
+		\item \textsf{\small librerie c}
+		\item \textsf{\small librerie cpp}
+	\end{itemize}
+	
+	\textsf{\small Inclusione degli headers in un source file (.cpp):} \\
+	
+	\begin{itemize}
+		\item \textsf{\small source.hpp (se applicabile)}
+		\item \textsf{\small headers locali}
+		\item \textsf{\small librerie c}
+		\item \textsf{\small librerie cpp}
+	\end{itemize}
+	
+	\textsf{\small In ordine alfabetico.} \\
+	
+	\subsubsection{Files}
+	
+	\begin{itemize}
+		\item \textsf{\small Gli headers C++ dovrebbero finire in \emph{.hpp}. Gli headers C dovrebbero finire in \emph{.h}.}
+		\item \textsf{\small I files dovrebbero essere chiamati nel modo (case) lower\_snake\_case.}
+	\end{itemize}
+	
+	\subsection{Types}
+	
+	\begin{itemize}
+		\item \textsf{\small Preferire \emph{using} a \emph{typedef}.}
+		\item \textsf{\small Le strutture, classi, enums dovrebbero essere tutti in UpperCamelCase.}
+		\item \textsf{\small Preferire gli scope namespaces al posto di nomi con lunghi prefissi.}
+		\item \textsf{\small Un alias di una singola parola con una struct / class dovrebbe essere in minuscolo, ma un alias a più parole dovrebbe essere UpperCamelCase.}
+		\item \textsf{\small Eccezioni: Una libreria API potrebbe usare il modo lower\_snake\_case per accordarsi alle convenzioni STL o ad una libreria C. Application APIs dovrebbero tutte essere UpperCamelCase.}
+		\item \textsf{\small Eccezione: Per convenienza un tipo di una classe template potrebbe finire in \_t per accordarsi alle convenzioni STL.}
+		%\item \textsf{\small }
+	\end{itemize}
+	
+	\subsection{Variabili}
+	
+	\textsf{\small Le variabili dovrebbero tutte essere lowerCamelCase, inclusi i membri delle classi, senza underscore (trattini bassi).} \\
+	
+	\subsection{Funzioni}
+	
+	\begin{itemize}
+		\item \textsf{\small Le funzioni dovrebbero essere lowerCamelCase.}
+		\item \textsf{\small Eccezione: Una libreria API potrebbe usare lower\_snake\_case in accordo con le convenzioni STL o di una sottostante libreria in C che sta astraendo. Application API dovrebbero tutte essere lowerCamelCase.}
+		%\item \textsf{\small }
+	\end{itemize}
+	
+	\subsection{Costanti}
+	
+	\begin{itemize}
+		\item \textsf{\small Costanti e i membri delle enums dovrebbero essere chiamati come le variabili in lowerCamelCase.}
+	\end{itemize}
+	
+	\subsection{Namespaces}
+	
+	\begin{itemize}
+		\item \textsf{\small I namespaces dovrebbero essere lower\_snake\_case.}
+		\item \textsf{\small Top-level namespace dovrebbe essere chiamato sulla base della repository che lo contiene.}
+		\item \textsf{\small Favorisci un namespace chiamato 'details' o 'internal' per indicare l'equivalente di un namespace 'private' in un header file e namespaces anonimi in un file C++.}
+	\end{itemize}
+	
+	\subsection{Header Guards}
+	
+	\textsf{\small Preferire \textbf{\#pragma} allo stile \textbf{\#ifndef}.}\\
+	
+	\subsection{Spazi bianchi addizionali}
+	
+	\begin{itemize}
+		\item \textsf{\small Segui lo stile di dichiarazione del C++}
+	\end{itemize}
+	
+	\begin{lstlisting}
+		foo(T& bar, const S* baz); // Correct.
+		foo(T &bar, const S *baz); // Incorrect.
+	\end{lstlisting}
+	
+	\begin{itemize}
+		\item \textsf{\small Usa gli spazi bianchi moderatamente.}
+		\item \textsf{\small Inserisci uno spazio bianco prima e dopo if e loops.}
+	\end{itemize}
+	
+	\begin{lstlisting}
+		if (...)
+		while (...)
+		for (...)
+	\end{lstlisting}
+	
+	\begin{itemize}
+		\item \textsf{\small Aggiungi spazio bianco attorno agli operatori binari per leggibilità}
+	\end{itemize}
+	
+	\begin{lstlisting}
+		foo((a-1)/b,c-2); /// Incorrect.
+		foo((a - 1) / b, c - 2); /// Correct.
+	\end{lstlisting}
+	
+	\begin{itemize}
+		\item \textsf{\small Non inserire spazi bianchi dopo gli operatori unari.}
+	\end{itemize}
+	
+	\begin{lstlisting}
+		a = * b;  /// Incorrect.
+		a = & b;  /// Incorrect.
+		a = b -> c;  /// Incorrect.
+		if (! a)  /// Incorrect.
+	\end{lstlisting}
+	
+	\begin{itemize}
+		\item \textsf{\small Non inserire spazi bianchi nè prima nè dopo una chiamata a funzione e ai parametri.}
+	\end{itemize}
+	
+	\begin{lstlisting}
+		foo(x, y); /// Correct.
+		foo ( x , y ); /// Incorrect.
+		
+		do (...)
+		{
+		} while(0); /// 'while' qui è strutturato come una chiamata a funzione.
+	\end{lstlisting}
+	
+	\begin{itemize}
+		\item \textsf{\small Preferire una linea a capo dopo gli operatori per mostrare la continuazione.}
+	\end{itemize}
+	
+	\begin{lstlisting}
+		if (this1 == that1 &&
+		this2 == that2) /// Correct.
+		
+		if (this1 == that1
+		&& this2 == that2) /// Incorrect.
+	\end{lstlisting}
+	
+	\begin{itemize}
+		\item \textsf{\small Le linee lunghe dovrebbero avere la continuazione che inizi allo stesso livello delle parentesi o tutti gli oggetti all'interno delle parentesi dovrebbero essere al secondo livello di indentazione.}
+	\end{itemize}
+	
+	\begin{lstlisting}
+		reallyLongFunctionCall(foo,
+		bar,
+		baz); // Correct.
+		
+		reallyLongFunctionCall(
+		foo,
+		bar,
+		baz); // Also correct.
+		
+		reallyLongFunctionCall(
+		foo, bar, baz); // Similarly correct.
+		
+		reallyLongFunctionCall(foo,
+		bar,
+		baz); // Incorrect.
+	\end{lstlisting}
+	
+	\subsection{Linee Guida Miste}
+	
+	\begin{itemize}
+		\item \textsf{\small  Usare sempre size\_t o ssize\_t per cose come contatori, pesi, ecc. C'è bisogno di un forte motivo razionale per usare un tipo come uint8\_t quando size\_t può fare lo stesso lavoro.}
+		\item \textsf{\small Usa uint8\_t, int16\_t, uint32\_t, int64\_t quando è importante per l'interazione coll'hardware. Non usarli senza una buona motivazione, quando le interazioni coll'hardware non sono coinvolte; preferire size\_t o int piuttosto.}
+	\end{itemize}
+\end{comment}

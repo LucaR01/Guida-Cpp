@@ -8,7 +8,7 @@
 
 \section{Introduzione}
 
-\textsf{\small La libreria degli Algoritmi è di vitale importanza sapere e conoscere bene per ogni buon programma, fornisce delle vere e proprie gemme, per una varietà di scopi: ricerche, ordinamento, contare, manipolare su \emph{ranges} ( un range è una sequenza di oggetti a cui si può accedere attraverso iteratori o puntatori) di elementi. } \\
+\textsf{\small È di vitale importanza, per ogni buon programma, sapere e conoscere bene la \textbf{Libreria degli Algoritmi}, fornisce delle vere e proprie gemme, per una varietà di scopi: ricerche, ordinamento, contare, fondere, permutare, partizionare, comparare,  manipolare su \emph{ranges} ( un range è una sequenza di oggetti a cui si può accedere attraverso iteratori o puntatori) di elementi e molto altro ancora. } \\
 
 \textsf{\small Questa libreria è molto vasta, perciò non tratterò proprio tutto tutto, ma una buona parte di essa.} \\
 
@@ -39,7 +39,7 @@
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=1.2\textwidth, height=1.2\textheight, keepaspectratio]{./imgs/Algorithm_Library/algorithms.png}
+	\includegraphics[width=1\textwidth, height=1\textheight, keepaspectratio]{./imgs/Algorithm_Library/algorithms.png}
 	\caption{Algorithm Library}
 	\label{fig:algorithms}
 \end{figure}
@@ -50,7 +50,7 @@
 
 \section{Operazioni su sequenze non-modificabili}
 
-\textsf{\small \textbf{Definizione: } Le \textbf{operazioni su sequenze non-modificabili}, da come si intende sono quelle operazioni che non modificano la sequenza, ma che attuano, compiono ricerche per trovare determinati elementi, contano gli elementi, testano varie condizioni, eccetera..} \\
+\textsf{\small \textbf{Definizione: } Le \textbf{operazioni su sequenze non-modificabili}, da come si intende, sono quelle operazioni che non modificano la sequenza, ma che attuano, compiono ricerche per trovare determinati elementi, contano gli elementi, testano varie condizioni, eccetera.} \\
 
 \subsection{Condizioni}
 
@@ -240,7 +240,7 @@
 		
 		std::copy_n( b.begin(), 9, c.begin());
 		
-		// A sto giro devo usare begin() ed end(), non posso usare cbegin() e cend().
+		// In questo caso devo usare begin() ed end(), non posso usare cbegin() e cend().
 		std::cout << "il vettore c contiene: ";
 		for (std::vector<std::string>::iterator it = c.begin(); it!=c.end(); ++it)
 		{
@@ -265,7 +265,7 @@
 		
 		// back\_inserter è uno speciale tipo di \emph{output iterator} per 
 		// permettere agli algoritmi che sovrascrivono gli elementi, come il 
-		// \emph{copy} di inserire in dei nuovi elementi automaticamente alla fine del container.
+		// \emph{copy}, di inserire dei nuovi elementi automaticamente alla fine del container.
 		std::copy_if(a.begin(), a.end(), std::back_inserter( uppers ), [](auto s){ return std::isupper(s); } ); // una volta funzionava anche così: std::copy\_if(a.begin(), a.end(), std::back\_inserter( uppers), std::isupper);
 		std::cout << uppers << std::endl; //Output: SLLMVC
 		
@@ -370,7 +370,7 @@
 
 \textsf{\small Applica un'operazione sugli elementi delle sequenze: \textbf{std::transform}.} \\
 
-\textsf{\small \textbf{In Place} : vuol dire che il risultato viene messo nello stesso contenitore non in un altro a parte.} \\
+\textsf{\small \textbf{In Place} : vuol dire che il risultato viene messo nello stesso contenitore e non in un altro a parte.} \\
 
 \begin{lstlisting}
 	#include <iostream>
@@ -571,6 +571,8 @@
 
 \textsf{\small Permettono di ottenere una sequenza unica, senza elementi ripetuti.} \\
 
+\textsf{\small Queste operazioni sono: \textbf{std::unique}, \textbf{std::unique\_copy}. } \\
+
 \begin{lstlisting}
 	#include <iostream>
 	#include <algorithm>
@@ -676,7 +678,7 @@
 
 \subsection{Spostare | Shift}
 
-\textsf{\small Servono per spostare di tot elementi le sequenze, a differenza della rotazione che si limita a ruotare la sequenza, con lo spostamento si perdono o si ottengono dati.} \\
+\textsf{\small Servono per spostare di tot elementi le sequenze, a differenza della rotazione che si limita a ruotare la sequenza, con lo spostamento si perdono o si ottengono dati: \textbf{std::shift\_left}, \textbf{std::shift\_right}.} \\
 
 \begin{lstlisting}
 	#include <iostream>
@@ -1263,7 +1265,7 @@
 
 \begin{itemize}
 	\item \textsf{\small le chiavi (il valore) di ciascun nodo padre son sempre maggiori o uguali a quelle dei nodi figli.}
-	\item \textsf{\small La chiave (il valore) dal valore massimo appartiene alla radice (detta \emph{root node}).}
+	\item \textsf{\small La chiave (il valore) del valore massimo appartiene alla radice (detta \emph{root node}).}
 \end{itemize}
 
 \textsf{\small In un \textbf{min heap}: } \\
@@ -1272,6 +1274,8 @@
 	\item \textsf{\small Le chiavi (il valore) di ciascun nodo sono minori o uguali a quelle dei figli.}
 	\item \textsf{\small La chiave del valore minimo appartiene alla radice. }
 \end{itemize}
+
+\newpage %TODO: questo \newpage per gli spazi bianchi sopra.
 
 \begin{figure}[H]
 	\centering
@@ -1626,7 +1630,7 @@
 		std::vector<int> v2;
 		std::vector<int> v3;
 		
-		// Esegue una operazione di somma di prefisso inclusiva con \emph{binary\_op}.
+		// Esegue un' operazione di somma di prefisso inclusiva con \emph{binary\_op}.
 		std::inclusive_scan( v1.begin(), v1.end(), std::back_inserter( v2 ));
 		
 		for(const auto& i : v2)
@@ -1638,7 +1642,7 @@
 		
 		//Output: 12 15 22 30 74 83
 		
-		// Esegue una operazione di somma di prefisso esclusiva con \emph{binary\_op}.
+		// Esegue un' operazione di somma di prefisso esclusiva con \emph{binary\_op}.
 		std::exclusive_scan( v1.begin(), v1.end(), std::back_inserter( v3 ), 0);
 		
 		for(const auto& i : v3)
@@ -1660,7 +1664,7 @@
 	}
 \end{lstlisting}
 
-%TODO: spiegare cosa fanno: la inclusive ed esclusive, transform, ecc..
+%TODO: spiegare cosa fanno: la inclusive ed esclusive, transform, ecc.
 %TODO: volendo aggiungere esempi sulla transform_exclusive_scan, transform_inclusive_scan.
 
 \subsubsection{Differenza tra std::accumulate vs std::reduce}
@@ -1854,7 +1858,7 @@
 
 \textsf{\small Questi non fanno parte della \emph{Libreria degli Algoritmi}, ma possono comunque essere utili in correlazione ad essa.} \\
 
-\textsf{\small Per ottenere il valore del \textbf{std::optional} utilizziamo l'operatore \textbf{*}, a meno che } \\
+\textsf{\small Per ottenere il valore del \textbf{std::optional} utilizziamo l'operatore \textbf{*}. } \\ %TODO: non ho finito la frase: ", a meno che ..."
 
 \textsf{\small Sono definiti nel file di intestazione: \textbf{<optional>}.} \\
 
@@ -1864,7 +1868,7 @@
 	#include <string>
 	#include <fstream>
 	
-	// Al posto di std::nullopt si poteva anche mettere {}.
+	// Al posto di std::nullopt si poteva anche mettere \{\}.
 	// Quelli nell'uguale sono i valori di default se i parametri non vengono passati quando viene chiamata la funzione.
 	int foo(int x, std::optional<int> y = std::nullopt, int z = 0)
 	{
@@ -2045,9 +2049,9 @@
 	
 	int main()
 	{
-		test(); //Output: ~6sec tempo diverso per tutti ma maggiore rispetto all'altro test. (l'output è sempre diverso, in base al tuo computer, alla sequenza, ecc..)
+		test(); //Output: ~6sec tempo diverso per tutti ma maggiore rispetto all'altro test. (l'output è sempre diverso, in base al tuo computer, alla sequenza, ecc.)
 		
-		testWithExecPolicies(); //Output: ~1.3sec tempo diverso per tutti, ma minore rispetto all'altro test. (l'output è sempre diverso, in base al tuo computer, alla sequenza, ecc..)
+		testWithExecPolicies(); //Output: ~1.3sec tempo diverso per tutti, ma minore rispetto all'altro test. (l'output è sempre diverso, in base al tuo computer, alla sequenza, ecc.)
 		
 		return 0;
 	}
@@ -2096,7 +2100,7 @@
 
 \textsf{\small Un terzo esempio, in cui però senza la \emph{mutua esclusione} (mutex) per evitare la \emph{race condition} il programma non darebbe lo stesso risultato. } \\
 
-\textsf{\small La \emph{race condition} è quando due \emph{threads} (flussi di istruzioni che può essere eseguito in modo concorrente) arrivano entrambe alla stessa variabile ed entrambe cambiano il valore di essa nello stesso momento. Quindi una stessa variabile di valore 9 potrebbe essere aumentata di 1 da due \emph{threads} portando il valore di suddetta variabile a 10, al posto di 11.} \\
+\textsf{\small La \emph{race condition} è quando due \emph{threads} (flussi di istruzioni che possono essere eseguiti in modo concorrente) arrivano entrambe alla stessa variabile ed entrambe cambiano il valore di essa nello stesso momento. Quindi una stessa variabile di valore 9 potrebbe essere aumentata di 1 da due \emph{threads} portando il valore di suddetta variabile a 10, al posto di 11.} \\
 
 \begin{lstlisting}
 	#include <iostream>
@@ -2191,7 +2195,7 @@
 	}
 \end{lstlisting}
 
-\textsf{\small Per la questione del \emph{Multithreading} servirebbe un intero capitolo a parte per spiegare, approfondire il funzionamento, cosa sono i \emph{threads}, cos'è la \emph{mutex}, cosa sono le \emph{condition variables}, i \emph{semaphore}, eccetera..} \\
+\textsf{\small Per la questione del \emph{Multithreading} servirebbe un intero capitolo a parte per spiegare, approfondire il funzionamento, cosa sono i \emph{threads}, cos'è la \emph{mutex}, cosa sono le \emph{condition variables}, i \emph{semaphore}, eccetera.} \\
 
 %TODO: casomai scrivessi il capitolo sul Multithreading, allora aggiungere la \pageref qui a quel capitolo.
 
@@ -2207,13 +2211,13 @@
 
 \section{C++20}
 
-\textsf{\small \textbf{Definizione: } Il \textbf{C++20} ha introdotto nel linguaggio diverse funzionalità utili agli algoritmi, formando così la versione \emph{Constrained Algorithms} della maggior parte degli algoritmi nel namespace \textbf{std::ranges}. } \\
+\textsf{\small \textbf{Definizione: } Il \textbf{C++20} ha introdotto nel linguaggio diverse funzionalità utili agli algoritmi, formando così la versione \emph{Constrained Algorithms} della maggior parte degli algoritmi dando vita al namespace \textbf{std::ranges}. } \\
 
-\textsf{\small Questa versione del linguaggio ha introdotto una serie di funzionalità, alcune di queste sono: \textbf{Ranges}, \textbf{Concepts}, \textbf{Modules}, \textbf{Coroutine} e altro ancora..} \\
+\textsf{\small Questa versione del linguaggio ha introdotto una serie di funzionalità, alcune di queste sono: \textbf{Ranges}, \textbf{Concepts}, \textbf{Modules}, \textbf{Coroutine} e altro ancora.} \\
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=1.2\textwidth, height=1.2\textheight, keepaspectratio]{./imgs/TimelineCpp20_3.png}
+	\includegraphics[width=1\textwidth, height=1\textheight, keepaspectratio]{./imgs/TimelineCpp20_3.png}
 	\caption{C++20 Timeline}
 	\label{fig:TimelineCpp20_3}
 \end{figure}
@@ -2224,7 +2228,7 @@
 
 %TODO: ranges view
 
-\textsf{\small \textbf{Definizione: } I \textbf{ranges} sono, concettualmente, un paio di iteratori, all'inizio ed alla fine della sequenza ( o una \emph{sentinel} sentinella in certi casi).} \\
+\textsf{\small \textbf{Definizione: } I \textbf{ranges} sono, concettualmente, un paio di iteratori, all'inizio ed alla fine della sequenza ( o una \emph{sentinel}, sentinella in certi casi).} \\
 
 \textsf{\small I \textbf{ranges} velocizzano la chiamata alle funzioni della \emph{Libreria degli Algoritmi} in cui al posto di dover passare un iteratore (.begin(), .end()) con i \textbf{ranges} possiamo semplicemente passare l'oggetto, la sequenza stessa.} \break
 
@@ -2239,17 +2243,20 @@
 	\textbf{Concetto} & \textbf{Descrizione} \\
 	\hline
 	\textsf{\small \textbf{std::ranges::input\_range}} & \textsf{\small può essere iterato } \\
-	\textsf{\small \textbf{}} & \textsf{\small dall'inizio alla fine almeno una volta.} \\
+	\textsf{\small \textbf{}} & \textsf{\small dall'inizio alla fine } \\
+	\textsf{\small } & \textsf{\small almeno una volta.} \\
 	\hline
 	\textsf{\small \textbf{std::ranges::forward\_range}} & \textsf{\small può essere iterato } \\
-	\textsf{\small \textbf{}} & \textsf{\small dall'inizio alla fine molteplici volte.} \\
+	\textsf{\small \textbf{}} & \textsf{\small dall'inizio alla fine } \\
+	\textsf{\small } & \textsf{\small molteplici volte.} \\
 	\hline
 	\textsf{\small \textbf{std::ranges::bidirectional\_range}} & \textsf{\small può muoversi all'indietro con \textbf{- -}.} \\
 	\hline
 	\textsf{\small \textbf{std::ranges::random\_access\_range}} & \textsf{\small si possono saltare gli elementi con \textbf{[]}.} \\
 	\hline
 	\textsf{\small \textbf{std::ranges::contiguous\_range}} & \textsf{\small gli elementi vengono } \\
-	\textsf{\small \textbf{}} & \textsf{\small memorizzati consecutivamente in memoria.} \\
+	\textsf{\small \textbf{}} & \textsf{\small memorizzati consecutivamente } \\
+	\textsf{\small } & \textsf{\small in memoria.} \\
 	\hline
 \end{tabular}
 
@@ -2257,7 +2264,7 @@
 
 \textsf{\small Ci sono anche dei \textbf{ranges} che sono indipendenti dall'\emph{input} o \emph{output}, per esempio \textbf{std::ranges::sized\_range} che richiede che lo spazio di un range sia recuperabile da \textbf{std::ranges::size()}.} \\
 
-\textsf{\small Le \textbf{ranges::views} sono dei \textbf{ranges} che trasformano il \textbf{range} attraverso degli algoritmi o delle operazioni. Le \textbf{views} non possiedono alcuna data eccetto il loro algoritmo e il tempo di costruzione, distruzione o copiatura non dovrebbe dipendere dal numero di elementi che rappresentano.} \\
+\textsf{\small Le \textbf{ranges::views} sono dei \textbf{ranges} che trasformano il \textbf{range} attraverso degli algoritmi o delle operazioni. Le \textbf{views} non possiedono alcuna data (nel senso dati, informazioni) eccetto il loro algoritmo e il tempo di costruzione; distruzione o copiatura non dovrebbe dipendere dal numero di elementi che rappresentano.} \\
 
 \textsf{\small I \textbf{ranges} sono definiti nel file di intestazione: \textbf{<ranges>}.} \\
 
@@ -3160,7 +3167,7 @@
 	}
 \end{lstlisting}
 
-\textsf{\small In questo esempio abbiamo visto come \textbf{requires} ci permette di validare che un data variabile sia dia una determinata tipologia.} \\
+\textsf{\small In questo esempio abbiamo visto come \textbf{requires} ci permette di validare che una data variabile sia di una determinata tipologia.} \\
 
 \begin{lstlisting}
 	#include <iostream>
@@ -3220,7 +3227,7 @@
 
 \textsf{\small \textbf{Definizione: } I \textbf{Modules} permettono di velocizzare un programma attraverso l'importazione di \textbf{moduli}, porzioni di codice, invece di \textbf{includere} un \textbf{header}.} \\
 
-\textsf{\small Quindi, in un certo senso i \textbf{modules} servono in parte, ma non del tutto sostituire gli \textbf{headers}.} \\
+\textsf{\small Quindi, in un certo senso i \textbf{modules} servono in parte, ma non del tutto sostituiscono gli \textbf{headers}.} \\
 
 \textsf{\small I \textbf{Modules} forniscono due nuove keywords: \textbf{export} e \textbf{import}.} \break
 
@@ -3233,7 +3240,7 @@
 \textsf{\small Questo ci permette una serie di vantaggi: } \\
 
 \begin{enumerate}
-	\item \textsf{\small \textbf{Isolamento} : perché un'unità di modulo è una unità di traduzione separata: possiede la sua serie di macros, dichiarazioni, direttive che non influenzano chi lo \emph{importa}.}
+	\item \textsf{\small \textbf{Isolamento} : perché un'unità di modulo è un' unità di traduzione separata: possiede la sua serie di macros, dichiarazioni, direttive che non influenzano chi lo \emph{importa}.}
 	\item \textsf{\small \textbf{Controllo dell'Interfaccia} : perché può dichiarare entità con un link interno, con l'\textbf{export}.}
 	\item \textsf{\small \textbf{Deduplicazione} : perché in molti casi non sarà più necessario fornire una dichiarazione in un header file.}
 	\item \textsf{\small \textbf{One Definition Rule violation avoidance} (\emph{ODR}) : un modulo può definire un'entità solo una volta e fornire quella definizione ai clienti.}
@@ -3241,7 +3248,7 @@
 	\item \textsf{\small \textbf{Dichiarazioni di moduli privati} : le entità dichiarate in un modulo che non sono esportate e non hanno un link interno sono usabili dalle \emph{unità di traduzione} stesse nel modulo.}
 	\item \textsf{\small \textbf{Stabilità ABI} : le regole dell'\textbf{inline} sono state aggiustate per supportare una strategia d'implementazione dove le funzioni \emph{non-inline} possono servire come frontiera \emph{ABI} per gli aggiornamenti delle librerie condivise.}
 	\item \textsf{\small \textbf{Velocità di compilazione} : perché i contenuti dei moduli non devono essere \emph{riparsati}, in molti casi questo velocizza i tempi di compilazione.}
-	%\item \textsf{\small \textbf{Strumentazione} : }
+	\item \textsf{\small \textbf{Tooling (Utensili, Strumentazione, Attrezzi)} :  le "dichiarazioni strutturali" che riguardano import e module hanno delle restrizioni nel loro uso per renderle leggibili e efficienti da parte degli strumenti che hanno bisogno di capire il grafo delle dipendenze di un progetto. Le restrizioni permettono anche molti, se non tutti, i casi d'uso di queste parole comune come identificatori.}
 \end{enumerate}
 
 \begin{lstlisting}
@@ -3812,7 +3819,7 @@
 	\item \textsf{\small Un altro beneficio delle \textbf{coroutine} è il loro minore uso di memoria. Con i \textbf{thread}, ognuno di essi ha bisogno di allocare il proprio \emph{stack} e così la memoria cresce linearmente, mentre il numero di \textbf{coroutines} non ha una relazione diretta con l'utilizzo di memoria. } \\
 \end{itemize}
 
-\break
+%\break
 
 \textsf{\small Queste sono le \emph{4 Big} \emph{features} del \textbf{C++20} che cambieranno il modo di scrivere C++.} \\
 

@@ -8,6 +8,21 @@
 
 %TODO: <limits>?
 
+%TODO: L'stringa di testo' vuol dire wchar_t (extended character set) che a differenza di una normale stringa richiede 16 bits di memorizzazione.
+
+%TODO: prefissi: 0x o 0X: esadecimale, 0: ottale, 0b o 0B: binario.
+%TODO: suffissi: unisgned int: u alla fine, long int: l o L, unsigned long int: ul o UL, long long int: ll o LL, unsigned long long: ull o ULL.
+
+%TODO: std::string_view
+
+%TODO: #pragma once vs #ifndef #define #endif
+
+%TODO: long long come data type e la L nei tipi long e la doppia L nei tipi long long LL
+
+%TODO: La m_nomevariabile nelle variaibili membre della classe.
+
+%TODO: Le direttive #include meglio mettere negli header .h o nei .cpp
+
 % -------------------------- SECTION: INTRODUZIONE -----------------------------------
 
 \section{Introduzione}
@@ -33,7 +48,7 @@ Mentre, l'ultima preview mostrata è stata quella del C++23.}\\
 
 \textsf{\small Il C++ è un linguaggio di programmazione general purpose nato nel 1983 da Bjarne Stroustrup nei Bell Labs come evoluzione del C.}\\
 
-\textsf{Il nome del linguaggio deriva dal C, ma con l'aggiunta dell'operatore ++ che nel C serve per incrementare di 1. Il che stava a significare che il C++ è come il C, ma migliore, ovvero come suo successore.}\\
+\textsf{\small Il nome del linguaggio deriva dal C, ma con l'aggiunta dell'operatore ++ che nel C serve per incrementare di 1. Il che stava a significare che il C++ è come il C, ma migliore, ovvero come suo successore, come sua evoluzione.}\\
 
 % ---------------------------- SECTION: VERSIONI -------------------------------------
 
@@ -41,7 +56,7 @@ Mentre, l'ultima preview mostrata è stata quella del C++23.}\\
 
 \section{Versioni}
 
-\textsf{\small Il C++ è un linguaggio che esiste da tanto e quindi nel tempo ha ricevuto diversi aggiornamenti, di seguito una lista delle versioni del linguaggio: } \\
+\textsf{\small Il C++ è un linguaggio che esiste da tanto e quindi nel tempo ha ricevuto diversi aggiornamenti, di seguito una lista delle versioni del linguaggio: }\\
 
 \textsf{\small Il numero affianco a \textbf{C++} è l'anno in cui è uscita la versione.} \\
 
@@ -55,14 +70,14 @@ Mentre, l'ultima preview mostrata è stata quella del C++23.}\\
 	\item \textsf{\small \textbf{C++11}}
 	\begin{itemize}
 		\item \textsf{\small Grosso numero di cambiamenti alle pratiche standard già esistenti e miglioramenti all'astrazione disponibile per i programmatori.}
-		\item \textsf{\small Numeri in virgola mobile dal IEEE 754: std::decimal::decimal32, std::decimal::decimal64, eccetera..} %TR1 (Technical Report 1)
+		\item \textsf{\small Numeri in virgola mobile dal IEEE 754: std::decimal::decimal32, \\ std::decimal::decimal64, eccetera.} %TR1 (Technical Report 1)
 		\item \textsf{\small Fondata la \emph{The Standard C++ Foundation}.}
 	\end{itemize}
 	\item \textsf{\small \textbf{C++14}}
 	\begin{itemize}
 		\item \textsf{\small \emph{Nuove features} : variable templates, generic lambdas, lambda init-capture, new/delete elision,relaxed restrictions on constexpr functions, binary literals, digit separators, return type deduction for functions, aggregate classes with default non-static member initializers.}
 		\item \textsf{\small \emph{Nuove features delle librerie} : std::make\_unique
-			std::shared\_timed\_mutex and std::shared\_lock, std::integer\_sequence, std::exchange, std::quoted, e molti altri piccoli miglioramenti alle librerie già presenti, come: two-range overloads for some algorithms, type alias versions of type traits, user-defined literals for basic\_string, duration and complex, eccetera...}
+			std::shared\_timed\_mutex and std::shared\_lock, std::integer\_sequence, std::exchange, std::quoted, e molti altri piccoli miglioramenti alle librerie già presenti, come: two-range overloads for some algorithms, type alias versions of type traits, user-defined literals for basic\_string, duration and complex, eccetera.}
 		\item \textsf{\small Altre estensioni alle librerie.}
 	\end{itemize}
 	\item \textsf{\small \textbf{C++17}}
@@ -89,7 +104,7 @@ Mentre, l'ultima preview mostrata è stata quella del C++23.}\\
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=1.2\textwidth, height=1.2\textheight, keepaspectratio]{./imgs/versions_new_in_libraries.png}
+	\includegraphics[width=1\textwidth, height=1\textheight, keepaspectratio]{./imgs/versions_new_in_libraries.png}
 	\caption{Versioni}
 	\label{fig:versions_new_in_libraries}
 \end{figure}
@@ -100,11 +115,11 @@ Mentre, l'ultima preview mostrata è stata quella del C++23.}\\
 
 \section{Preprocessor}
 
-\textsf{\small Il \textbf{preprocessore} è composto da delle direttive che danno istruzioni al compilatore di preprocessare prima dell'effettiva compilazione.} \\
+\textsf{\small Il \textbf{preprocessore} è composto da delle direttive che devono essere preprocessate dal compilatore prima dell'effettiva compilazione.} \\
 
 \textsf{\small Per esempio di includere una libreria standard del linguaggio.} \\
 
-\textsf{\small Le direttive del preprocessore iniziano con il \textbf{\#}.} \\
+\textsf{\small Le direttive del preprocessore iniziano con il carattere \textbf{\#}.} \\
 
 \begin{lstlisting}
 	// Con la direttiva \#include diciamo al preprocessore di includere questo file
@@ -123,7 +138,7 @@ Mentre, l'ultima preview mostrata è stata quella del C++23.}\\
 
 \section{Linker}
 
-\textsf{\small Se il compilatore traduce il codice sorgente, il \textbf{linker} si occupa di risolvere le referenze ad altri files, per esempio all'inclusione di librerie standard del linguaggio. Quindi il linker linka i files che servono al tuo codice per essere eseguito al tuo codice (che dopo la compilazione sarà probabilmente diventato un .OBJ)} \\
+\textsf{\small Se il compilatore traduce il codice sorgente, il \textbf{linker} si occupa di risolvere le referenze ad altri files, per esempio all'inclusione di librerie standard del linguaggio. Quindi il linker linka i files che servono al codice per essere eseguito (che dopo la compilazione sarà probabilmente diventato un .OBJ).} \\
 
 %TODO: + immagini.
 
@@ -131,7 +146,7 @@ Mentre, l'ultima preview mostrata è stata quella del C++23.}\\
 
 \section{Runtime Vs Compile time}
 
-\textsf{\small \textbf{Runtime} sono le istruzioni di codice che vengono eseguite mentre il tuo programma si trova in esecuzione.} \\
+\textsf{\small \textbf{Runtime} sono le istruzioni di codice che vengono eseguite mentre il tuo programma è in esecuzione.} \\
 
 \textsf{\small \textbf{Compile time} sono le istruzioni che vengono tradotte dal compilatore nel momento della compilazione.} \\
 
@@ -150,8 +165,9 @@ Mentre, l'ultima preview mostrata è stata quella del C++23.}\\
 	\textsf{\small Sviluppato da Dennis Ritchie } & \textsf{\small Sviluppato da Bjarne Stroustrup } \\
 	\textsf{\small tra gli anni 1969 e 1973 agli AT\&T Bell Labs.} & \textsf{\small tra il 1979 ed il 1983.} \\
 	\hline
-	\textsf{\small Non supporta il polimorfismo, incapsulazione,  } & \textsf{\small Supporta polimorfismo, incapsulazione } \\
-	\textsf{\small ereditarietà il che significa che il C} & \textsf{\small ed ereditarietà il che significa} \\
+	\textsf{\small Non supporta il polimorfismo,  } & \textsf{\small Supporta polimorfismo,  } \\
+	\textsf{\small incapsulazione, ereditarietà} & \textsf{\small incapsulazione ed ereditarietà} \\
+	\textsf{\small  il che significa che il C} & \textsf{\small il che significa} \\
 	\textsf{\small non supporta la} & \textsf{\small  che è un linguaggio} \\
 	\textsf{\small programmazione ad oggetti.} & \textsf{\small  di programmazione ad oggetti.} \\
 	\hline
@@ -189,23 +205,26 @@ Mentre, l'ultima preview mostrata è stata quella del C++23.}\\
 	\textsf{\small File header di input ed output} & \textsf{\small File header di input ed output} \\
 	\textsf{\small in C è stdio.h.} & \textsf{\small in C++ è iostream.} \\
 	\hline
-	\textsf{\small Le variabili di referenza non sono supportate.} & \textsf{\small Le variabili di referenza sono supportate.} \\
+	\textsf{\small Le variabili di referenza } & \textsf{\small Le variabili di referenza } \\
+	\textsf{\small non sono supportate.} & \textsf{\small sono supportate.} \\
 	\hline
 	\textsf{\small Le funzioni virtual e} & \textsf{\small Le funzioni virtual e} \\
-	\textsf{\small friends non sono supportate.} & \textsf{\small friends sono supportate.} \\
+	\textsf{\small friends } & \textsf{\small friends } \\
+	\textsf{\small non sono supportate.} & \textsf{\small sono supportate.} \\
 	\hline
 	\textsf{\small Non supporta l'ereditarietà.} & \textsf{\small Supporta l'ereditarietà.} \\
 	\hline
 	\textsf{\small Si concentra sulle funzioni} & \textsf{\small Si concentra sui dati} \\
 	\textsf{\small più che sui dati.} & \textsf{\small più che sulle funzioni.} \\
 	\hline
-	\textsf{\small Fornisce malloc(), calloc(), realloc()} & \textsf{\small Fornisce gli operatori new e delete (e altro)} \\
-	\textsf{\small e free() per } & \textsf{\small per  } \\
-	\textsf{\small l'allocazione/deallocazione dinamica} & \textsf{\small l'allocazione/deallocazione dinamica} \\
-	\textsf{\small  della memoria.} & \textsf{\small della memoria.} \\
+	\textsf{\small Fornisce malloc(), calloc(),} & \textsf{\small Fornisce gli operatori new e } \\
+	\textsf{\small realloc() e free() per } & \textsf{\small delete (e altro) per  } \\
+	\textsf{\small l'allocazione/deallocazione } & \textsf{\small l'allocazione/deallocazione } \\
+	\textsf{\small  dinamica della memoria.} & \textsf{\small dinamica della memoria.} \\
 	\hline
 	\textsf{\small Supporto diretto per occuparsi} & \textsf{\small Supporto diretto per occuparsi} \\
-	\textsf{\small delle eccezioni non è supportato.} & \textsf{\small delle eccezioni è supportato.} \\
+	\textsf{\small delle eccezioni } & \textsf{\small delle eccezioni } \\
+	\textsf{\small non è supportato.} & \textsf{\small è supportato.} \\
 	\hline
 	\textsf{\small scanf() e printf() sono usate} & \textsf{\small cin e cout sono usate} \\
 	\textsf{\small per l'input/output in C.} & \textsf{\small per l'input/output in C++.} \\
@@ -221,13 +240,13 @@ Mentre, l'ultima preview mostrata è stata quella del C++23.}\\
 
 \textsf{\small Il C++ presenta oltre 60+ \textbf{keywords}, ovvero \emph{parole chiavi} del linguaggio.} \\
 
-\textsf{\small Le \textbf{keywords} sono delle parole riservate che hanno speciali funzionalità associate ad esse e sono già definite dal compilatore. Non si possono usare queste \emph{parole chiavi} come identificatori, come nomi delle variabili, ecc..} \\
+\textsf{\small Le \textbf{keywords} sono delle parole riservate che hanno speciali funzionalità associate ad esse e sono già definite dal compilatore. Non si possono usare queste \emph{parole chiavi} come identificatori, come nomi delle variabili, ecc.} \\
 
 \textsf{\small Di seguito, un'immagine di parte delle \textbf{keywords} del linguaggio: } \\
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=1.2\textwidth, height=1.2\textheight, keepaspectratio]{./imgs/keywords2.png}
+	\includegraphics[width=1\textwidth, height=1\textheight, keepaspectratio]{./imgs/keywords2.png}
 	%\caption{Keywords del Linguaggio}
 	\label{fig:keywords}
 \end{figure}
@@ -252,17 +271,18 @@ Mentre, l'ultima preview mostrata è stata quella del C++23.}\\
 \textsf{\small E dei wrappers sui tipi \textbf{unsigned} (ovvero senza segno, ovvero sempre e solo positivi), come: }\\
 
 \begin{tabular}{cc}
-	\color{myblue2}size\_t & corrisponde ad unsigned int \\
-	\color{myblue2}uint8\_t & unsigned char \\
-	\color{myblue2}uint16\_t & unsigned int  \\
-	\color{myblue2}uint32\_t & unsigned long \\ 
+	\color{myblue2}size\_t & \textbf{unsigned int} (se il compilatore è di 32 bit) \\
+	 & \textbf{unsigned long long} (se il compilatore è da 64 bit) \\
+	\color{myblue2}uint8\_t & \textbf{unsigned char} \\
+	\color{myblue2}uint16\_t & \textbf{unsigned int}  \\
+	\color{myblue2}uint32\_t & \textbf{unsigned long} \\ 
 \end{tabular} \\
 
 \textsf{\small E altri tipi di dati per lavorare sui caratteri e sulle stringhe: }\\
 
 \begin{tabular}{cc}
-	\color{myblue2}string & (includere string) \\
-	\color{myblue2}wchar\_t & wide char (per caratteri più grandi di 255) \\
+	\color{myblue2}string & \textbf{una stringa di caratteri} (includere <string>) \\
+	\color{myblue2}wchar\_t & \textbf{wide char} (per caratteri più grandi di 255) \\
 \end{tabular}
 
 \break
@@ -270,13 +290,20 @@ Mentre, l'ultima preview mostrata è stata quella del C++23.}\\
 \textsf{\small Altri tipi di dati: } \\
 
 \begin{tabular}{cc} %TODO: aggiungerne altri volendo.
-	\color{myblue2}bool & Un booleano : o 0, ovvero FALSO/OFF o 1, ovvero TRUE/ON \\
-	\color{myblue2}std::byte & 8 bit (definito in <cstddef> header file) \\
-	\color{myblue2}register &  un registro\\ 
-	\color{myblue2} auto &  trova la tipologia automaticamente\\
+	\color{myblue2}bool & Un booleano : o \textbf{0}, ovvero \textbf{FALSO/OFF} o \textbf{1}, ovvero \textbf{TRUE/ON} \\
+	\color{myblue2}std::byte & \textbf{8 bit} (definito in <cstddef> header file) \\
+	\color{myblue2}register &  \textbf{un registro} \\ 
+	\color{myblue2} auto &  \textbf{trova la tipologia automaticamente} \\
 \end{tabular}\\
 
 \textsf{\small Esistono anche altri tipi, ma quelli qui riportati sono tra i più comuni.}\\
+
+\begin{figure}[H] %TODO: remove?
+	\centering
+	\includegraphics[width=1\textwidth, height=1\textheight, keepaspectratio]{./imgs/data_types.jpg}
+	\caption{Tipi di dati}
+	\label{fig:data_types2}
+\end{figure}
 
 \subsection{Cast}
 
@@ -310,13 +337,13 @@ Mentre, l'ultima preview mostrata è stata quella del C++23.}\\
 	// Ovviamente una variabile intera non può contenere i dati delle variabili con la virgola e quindi le informazioni sulla virgola vengono perse.
 \end{lstlisting}
 
-\textsf{\small Questo è un cast semplice, ci sono altre forme di cast un po' più complesse che vedremo in un altro capitolo.} \\
+\textsf{\small Questo è un cast semplice o anche chiamato C-cast (ovvero un cast come nel C), ci sono altre forme di cast un po' più complesse che vedremo in un altro capitolo a pag.\textbf{\pageref{cast_types}}.} \\
 
 \subsection{Importanza di scrivere la f nei float}
 
-\textsf{\small Per i valori \textbf{float} (numeri in virgola mobile in singola precisione) sarà necessario oltre al numero inserire una \emph{f} dopo esso per indicare che questo è un numero in virgola mobile di tipo \textbf{float} (4 bytes, ovvero 16 bits).} \\
+\textsf{\small Per i valori \textbf{float} (numeri in virgola mobile in singola precisione) sarà necessario oltre al numero inserire una \emph{f} dopo esso per indicare che questo è un numero in virgola mobile di tipo \textbf{float} (4 bytes, ovvero 32 bit).} \\
 
-\textsf{\small Laddove noi non inserissimo la \emph{f} nel numero con la virgola, quello verrebbe considerato un numero in virgola mobile in doppia precisione di tipo \textbf{double} (che occupa 8 bytes, ovvero 32 bit).} \\
+\textsf{\small Laddove noi non inserissimo la \emph{f} nel numero con la virgola, quello verrebbe considerato un numero in virgola mobile in doppia precisione di tipo \textbf{double} (che occupa 8 bytes, ovvero 64 bit).} \\
 
 \begin{lstlisting}
 	
@@ -335,7 +362,7 @@ Mentre, l'ultima preview mostrata è stata quella del C++23.}\\
 
 \textsf{\small Una costante è un valore che non cambia mai.}\\
 
-\textsf{\small Ci sono diversi tipi di costanti e con significato diverso, per esempio \color{myblue2} cost \normalcolor e \color{myblue2} constexpr. \normalcolor}\\
+\textsf{\small Ci sono diversi tipi di costanti e con significato diverso, per esempio \color{myblue2} const \normalcolor e \color{myblue2} constexpr. \normalcolor}\\
 
 \subsection{const vs constexpr}
 
@@ -343,9 +370,11 @@ Mentre, l'ultima preview mostrata è stata quella del C++23.}\\
 	\hline
 	\textbf{const} & \textbf{constexpr} \\
 	\hline
-	\textsf{\small può essere composta da altre variabili a run-time} & \textsf{\small deve essere conosciuta a compile-time} \\
+	\textsf{\small può essere composta da } & \textsf{\small deve essere conosciuta } \\
+	\textsf{\small altre variabili a run-time} & \textsf{\small a compile-time} \\
 	%\hline
-	\textsf{\small può essere usata solo per } & \textsf{\small può essere usata sia per member } \\
+	\textsf{\small può essere usata  } & \textsf{\small può essere usata  } \\
+	\textsf{\small solo per} & \textsf{\small sia per member} \\
 	\textsf{\small non-static member functions} & \textsf{\small e non-member functions} \\
 	\textsf{\small } & \textsf{\small e anche costruttori} \\
 	\hline
@@ -377,7 +406,7 @@ Mentre, l'ultima preview mostrata è stata quella del C++23.}\\
 
 \begin{figure}[ht]
 	\centering
-	\includegraphics[width=1.2\textwidth, height=1.2\textheight, keepaspectratio]{./imgs/constexpr_e_const_differenze.png}
+	\includegraphics[width=1\textwidth, height=1\textheight, keepaspectratio]{./imgs/constexpr_e_const_differenze.png}
 	\caption{Tipi di costanti}
 	\label{fig:constants}
 \end{figure}
@@ -390,7 +419,7 @@ Mentre, l'ultima preview mostrata è stata quella del C++23.}\\
 
 \textsf{\small \textbf{Definizione: } Gli array sono dei contenitori di dati, una collezione di dati dello stesso tipo.} \\
 
-\textsf{\small Il primo elemento di un array, come qualsiasi altra cosa in informatica è l'elemento 0, non l'elemento 1.}\\
+\textsf{\small Il primo elemento di un array, come qualsiasi altra cosa in informatica è l'elemento 0, \textbf{non} l'elemento 1.}\\
 
 \textsf{\small Quindi l'elemento di indice 0 è il primo elemento, quello di indice 1 è il secondo, quello di indice 2 è il terzo e cosi via..} \\
 
@@ -414,7 +443,7 @@ Mentre, l'ultima preview mostrata è stata quella del C++23.}\\
 	// Ma è raccomandabile usare dei contenitori come: std::vector 
 	// oppure una lista.
 	// Oppure dei puntatori.
-	// Oppure dei smart pointers.
+	// Oppure degli smart pointers.
 \end{lstlisting}
 
 \subsection{Matrici}
@@ -437,7 +466,7 @@ Mentre, l'ultima preview mostrata è stata quella del C++23.}\\
 	}
 \end{lstlisting}
 
-\textsf{\small Ovviamente, come in matematica, è possibile eseguire varie operazioni sulle matrici, come: trasposizione, moltiplicazione, somma, sottrazione, ecc..(ma che qui non mostrerò).} \\ 
+\textsf{\small Ovviamente, come in matematica, è possibile eseguire varie operazioni sulle matrici, come: trasposizione, moltiplicazione, somma, sottrazione, ecc.} \\ 
 
 % -------------------------- SECTION: OPERATORI ARITMETICI ---------------------------
 
@@ -477,9 +506,9 @@ Mentre, l'ultima preview mostrata è stata quella del C++23.}\\
 \begin{itemize}
 	\item \textsf{\small \textbf{==} : per l'equivalenza; controllare se due operandi sono uguali.}
 	\item \textsf{\small \textbf{!=} : per controllare se due operandi non sono equivalenti.}
-	\item \textsf{\small \textbf{>} : per controllare se un operando è maggiore dell'altro}
+	\item \textsf{\small \textbf{>} : per controllare se un operando è maggiore di un altro}
 	\item \textsf{\small \textbf{>=} : per controllare se un operando è maggiore o uguale all'altro.}
-	\item \textsf{\small \textbf{<} : per controllare se un operando è minore di dell'altro.}
+	\item \textsf{\small \textbf{<} : per controllare se un operando è minore di un altro.}
 	\item \textsf{\small \textbf{<=} : per controllare se un operando è minore o uguale all'altro.}
 \end{itemize}
 
@@ -498,16 +527,23 @@ Mentre, l'ultima preview mostrata è stata quella del C++23.}\\
 
 \section{Operatori Bitwise}
 
-\textsf{\small \textbf{Definizione: } Gli operatori bitwise servono per lavorare sui singolo bits di dati.} \\
+\textsf{\small \textbf{Definizione: } Gli operatori bitwise servono per lavorare sui singoli bits di dati.} \\
 
 \begin{itemize}
 	\item \textsf{\small \textbf{\& (bitwise AND)} : permette di fare un AND bit a bit sui due operandi. Il risultato è 1 soltanto se entrambi sono 1.}
 	\item \textsf{\small \textbf{| (bitwise OR)} : permette di fare un OR bit a bit su ogni bit dei due operandi. Il risultato è 1 se almeno uno dei due bits è a 1.}
-	\item \textsf{\small \textbf{\^  (bitwise XOR)} : permette di fare uno XOR bit a bit su ogni bit dei due operandi. Il risultato è 1 se i due bits sono differenti.}
+	\item \textsf{\small \textbf{\textasciicircum  (bitwise XOR)} : permette di fare uno XOR bit a bit su ogni bit dei due operandi. Il risultato è 1 se i due bits sono differenti.}
 	\item \textsf{\small \textbf{$<<$ (left shift)} : prende due numeri. Shifta a sinistra i bits del primo operando, il secondo operando decide di quanti bits si deve shiftare il primo.}
 	\item \textsf{\small \textbf{$>>$ (right shift)} : prende due numeri. Shifta a destra i bits del primo operando, il secondo operando decide di quanti bits si deve shiftare il primo.}
-	\item \textsf{\small \textbf{\~ (bitwise NOT)} : prende un numero ed inverte tutti i bits.}
+	\item \textsf{\small \textbf{\textasciitilde (bitwise NOT)} : prende un numero ed inverte tutti i bits.}
 \end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\textwidth, height=1\textheight, keepaspectratio]{./imgs/bitwise_operators_truth_table.png}
+	\caption{Tabella della verità delle operazioni bitwise.}
+	\label{fig:bitwise_operators_truth_table}
+\end{figure}
 
 \begin{lstlisting}
 	// a = 5 in binario è 00000101, b = 9 in binario è 00001001
@@ -546,7 +582,7 @@ Mentre, l'ultima preview mostrata è stata quella del C++23.}\\
 	\item \textsf{\small \textbf{$<<$=} : Combinazione di = e $<<$, left shifta l'operando di destra a quello di sinistra e lo assegna a quello di sinistra.}
 	\item \textsf{\small \textbf{$>>$=} : Combinazione di = e $>>$, right shifta l'operando di destra a quello di sinistra e lo assegna a quello di sinistra.}
 	\item \textsf{\small \textbf{\&=} : Combinazione di = e \&, bitwise AND sull'operando di destra a quello di sinistra e lo assegna a quello di sinistra.}
-	\item \textsf{\small \textbf{\^ =} : Combinazione di = e \^, bitwise XOR sull'operando di destra a quello di sinistra e lo assegna a quello di sinistra.}
+	\item \textsf{\small \textbf{\textasciicircum =} : Combinazione di = e \textasciicircum, bitwise XOR sull'operando di destra a quello di sinistra e lo assegna a quello di sinistra.}
 	\item \textsf{\small \textbf{|=} : Combinazione di = e |, bitwise OR sull'operando di destra a quello di sinistra e lo assegna a quello di sinistra.}
 	\item \textsf{\small \textbf{$<>$=} : Bitwise shift left/right assignment} 
 \end{itemize}
@@ -575,7 +611,7 @@ Mentre, l'ultima preview mostrata è stata quella del C++23.}\\
 	\item \textsf{\small \textbf{nome\_variabile++} : Incremento postfix, il valore verrà incrementato dopo che è stato usato.}
 	\item \textsf{\small \textbf{- -nome\_variabile} : Decremento di 1 prefix, decrementa l'operando prima che venga usato. }
 	\item \textsf{\small \textbf{nome\_variabile- -} : Decremento postfix, il valore verrà decrementato dopo che è stato usato.}
-	\item \textsf{\small \textbf{\&nome\_variabile} : prima di una variabile, restituisce l'indirizzo di memoria della variabile in questione. In questo caso, NON è l'operatore bitwise AND \&.}
+	\item \textsf{\small \textbf{\&nome\_variabile} : prima di una variabile, restituisce l'indirizzo di memoria della variabile in questione. In questo caso, \textbf{NON} è l'operatore bitwise AND \&.}
 	\item \textsf{\small \textbf{!nome\_variabile} : operatore not, inverte lo stato logico dell'operando. Se è TRUE allora lo modifica in FALSE, se è FALSE allora diventa TRUE.}
 \end{itemize}
 
@@ -610,8 +646,15 @@ Mentre, l'ultima preview mostrata è stata quella del C++23.}\\
 	\item \textsf{\small \textbf{\&\& (logical AND)} : restituisce vero se tutte le condizioni sono vere.}
 	\item \textsf{\small \textbf{|| (logical OR)} : restituisce vero se almeno una delle condizioni è vera.}
 	\item \textsf{\small \textbf{! (logical NOT)} : restituisce vero se la condizione è falsa e restituisce falso se la condizione è vera.}
-	\item \textsf{\small \textbf{!~} : Logical negation/bitwise complement} 
+	\item \textsf{\small \textbf{!\textasciitilde} : Logical negation/bitwise complement} 
 \end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\textwidth, height=1\textheight, keepaspectratio]{./imgs/logical_operators_truth_table.png}
+	\caption{Tabella della verità degli operatori logici.}
+	\label{fig:logical_operators_truth_table}
+\end{figure}
 
 \begin{lstlisting}
 	int x = 3, y = 6, z = 9;
@@ -632,7 +675,7 @@ Mentre, l'ultima preview mostrata è stata quella del C++23.}\\
 
 \begin{itemize}
 	\item \textsf{\small \textbf{sizeof} : è usato per ottenere lo spazio che occupa una variabile.}
-	\item \textsf{\small \textbf{,} : la virgola è usata sia come operatore che come separatore. valuta il primo operando e cancella il risultato, valuta il secondo operando e restituisce il suo valore.}
+	\item \textsf{\small \textbf{,} : la virgola è usata sia come operatore che come separatore. Valuta il primo operando e cancella il risultato, valuta il secondo operando e restituisce il suo valore.}
 	\item \textsf{\small \textbf{Operatore Condizionale/Ternario} : condizione ? se vero esegui questo : se falso esegui questo.}
 \end{itemize}
 
@@ -665,7 +708,7 @@ Mentre, l'ultima preview mostrata è stata quella del C++23.}\\
 
 \textsf{\small \textbf{Definizione:} L'If statement permette di decidere se un certo blocco di codice verrà eseguito o no.} \\
 
-\textsf{\small L'else statement permette di eseguire un altro blocco di codice, casomai la condizione sia falsa.} \\
+\textsf{\small L'else statement permette di eseguire un altro blocco di codice, casomai la condizione nell'if statement sia falsa.} \\
 
 \textsf{\small else if(condizione) statement permette di fare un'ulteriore controllo dopo al primo if statement. } \\
 
@@ -708,7 +751,7 @@ Mentre, l'ultima preview mostrata è stata quella del C++23.}\\
 	std::cout << "Il valore minimo è: " << min << std::endl;
 \end{lstlisting}
 
-\textsf{\small Se la riga da eseguire è 1 sola, allora si possono anche omettere le parentesi graffe.} \\
+\textsf{\small Se la riga da eseguire è 1 sola, allora si possono anche omettere le parentesi graffe nell'if.} \\
 
 \subsection{if constexpr}
 
@@ -843,7 +886,7 @@ Mentre, l'ultima preview mostrata è stata quella del C++23.}\\
 
 \subsection{Continue}
 
-\textsf{\small La keyword \textbf{continue} è simile alla keyword \textbf{break}, ma invece di terminare l'esecuzione (del loop, dello switch, ecc..) , passa alla prossima iterazione del loop.}\\
+\textsf{\small La keyword \textbf{continue} è simile alla keyword \textbf{break}, ma invece di terminare l'esecuzione (del loop, dello switch, ecc.), passa alla prossima iterazione del loop.}\\
 
 \begin{lstlisting}
 	#include <iostream>
@@ -930,9 +973,9 @@ Mentre, l'ultima preview mostrata è stata quella del C++23.}\\
 
 \section{Enumeratori}
 
-\textsf{\small \textbf{Definizione: } Gli enumeratori sono dei tipi di dati definiti dagli utenti ed usati per assegnare nomi a delle costati intere, il che rende il codice semplice da leggere.}
+\textsf{\small \textbf{Definizione: } Gli enumeratori sono dei tipi di dati definiti dagli utenti e usati per assegnare nomi a delle costati intere, il che rende il codice chiaro da leggere.}
 
-\textsf{\small Il primo elemento di un enum è di indice 0, ammeno che non lo si cambi, se lo si cambia, di conseguenza, cambiano anche tutti gli altri sotto.} \\
+\textsf{\small Il primo elemento di un \textbf{enum} è di indice 0, a meno che non lo si cambi, se lo si cambia, di conseguenza, cambiano anche tutti gli altri sotto.} \\
 
 \begin{lstlisting}
 	#include <iostream>
@@ -1014,8 +1057,8 @@ Mentre, l'ultima preview mostrata è stata quella del C++23.}\\
 
 \begin{itemize}
 	\item \textsf{\small Icremento|Decremento di un puntatore.}
-	\item \textsf{\small Addizione di un intero ad un puntatore.}
-	\item \textsf{\small Sottrazione di un intero ad un puntatore.}
+	\item \textsf{\small Addizione di un intero a un puntatore.}
+	\item \textsf{\small Sottrazione di un intero a un puntatore.}
 	\item \textsf{\small Sottrazione di due puntatori dello stesso tipo.}
 \end{itemize}
 
@@ -1110,14 +1153,14 @@ Mentre, l'ultima preview mostrata è stata quella del C++23.}\\
 
 \begin{figure}[ht]
 	\centering
-	\includegraphics[width=1.2\textwidth, height=1.2\textheight, keepaspectratio]{./imgs/References.png}
+	\includegraphics[width=1\textwidth, height=1\textheight, keepaspectratio]{./imgs/References.png}
 	\caption{Reference}
 	\label{fig:references1}
 \end{figure}
 
 \begin{figure}[ht]
 	\centering
-	\includegraphics[width=1.2\textwidth, height=1.2\textheight, keepaspectratio]{./imgs/References2.png}
+	\includegraphics[width=1\textwidth, height=1\textheight, keepaspectratio]{./imgs/References2.png}
 	\caption{Reference}
 	\label{fig:references2}
 \end{figure}
@@ -1128,13 +1171,13 @@ Mentre, l'ultima preview mostrata è stata quella del C++23.}\\
 	\hline
 	\textbf{Reference} & \textbf{Pointers} \\
 	\hline
-	\textsf{\small Riferiscono ad una variabile } & \textsf{\small Memorizzano un indirizzo } \\
-	\textsf{\small con un altro nome} & \textsf{\small di una variabile} \\
+	\textsf{\small Riferiscono a una variabile } & \textsf{\small Memorizzano un indirizzo } \\
+	\textsf{\small con un altro nome.} & \textsf{\small di una variabile.} \\
 	\hline
 	\textsf{\small Non possono avere un valore \color{myblue2}NULL \normalcolor.} & \textsf{\small Possono avere un valore \color{myblue2}NULL \normalcolor.} \\
 	\hline
 	\textsf{\small Deve essere inizializzata } & \textsf{\small Può anche non essere inizializzata } \\
-	\textsf{\small alla dichiarazione} & \textsf{\small alla dichiarazione} \\
+	\textsf{\small alla dichiarazione.} & \textsf{\small alla dichiarazione.} \\
 	\hline
 	\textsf{\small Condivide la stessa memoria  } & \textsf{\small Ha un proprio spazio e } \\
 	\textsf{\small con la variabile originale, } & \textsf{\small indirizzo di memoria } \\
@@ -1159,6 +1202,7 @@ Mentre, l'ultima preview mostrata è stata quella del C++23.}\\
 \textsf{\small \textbf{nullptr} è implicitamente convertibile a qualsiasi tipo di puntatore.} \\
 
 \begin{lstlisting}
+	// Esempio 1
 	#include <iostream>
 	
 	int main()
@@ -1171,6 +1215,7 @@ Mentre, l'ultima preview mostrata è stata quella del C++23.}\\
 \end{lstlisting}
 
 \begin{lstlisting}
+	// Esempio 2
 	#include <iostream>
 	
 	void func(int n);
@@ -1239,7 +1284,7 @@ Mentre, l'ultima preview mostrata è stata quella del C++23.}\\
 
 \begin{figure}[ht]
 	\centering
-	\includegraphics[width=1.2\textwidth, height=1.2\textheight, keepaspectratio]{./imgs/ascii_table2.png}
+	\includegraphics[width=1\textwidth, height=1\textheight, keepaspectratio]{./imgs/ascii_table2.png}
 	\caption{Tabella ASCII}
 	\label{fig:ascii_table}
 \end{figure}
@@ -1295,7 +1340,7 @@ Mentre, l'ultima preview mostrata è stata quella del C++23.}\\
 	char *str = "prova";
 \end{lstlisting}
 
-\begin{tabular}{|c|c|}
+\begin{tabular}{|c|c|} 
 	\hline
 	\color{red} CONS & \color{Green} PROS \\
 	\hline
@@ -1304,8 +1349,8 @@ Mentre, l'ultima preview mostrata è stata quella del C++23.}\\
 	\textsf{\small mentre in C++ sono array di char costanti.} & \textsf{\small a livello di memoria.} \\
 	\hline
 	\textsf{\small Non possiamo modificare la stringa dopo, } & \textsf{\small Non c'è bisogno  } \\
-	\textsf{\small possiamo semplicemente far puntare ad un'altra stringa.} & \textsf{\small di dichiarare la lunghezza } \\
-	\textsf{\small } & \textsf{\small della stringa all' inizializzazione.} \\
+	\textsf{\small possiamo semplicemente } & \textsf{\small di dichiarare la lunghezza } \\
+	\textsf{\small far puntare ad un'altra stringa.} & \textsf{\small della stringa all' inizializzazione.} \\
 	\hline
 \end{tabular}
 
@@ -1330,7 +1375,7 @@ Mentre, l'ultima preview mostrata è stata quella del C++23.}\\
 
 \begin{itemize}
 	\item \textsf{\small Quando si ha a che fare con livelli bassi di accesso, come interagire con il sitema operativo. Anche se std::string::c\_str dovrebbe occuparsi di quello.}
-	\item \textsf{\small Compatibilità con del vecchio codice in C (Anche se la funzione std::string::c\_str dovrebbe già in largo modo occuparsi di questo).}
+	\item \textsf{\small Compatibilità con del vecchio codice in C (anche se la funzione std::string::c\_str dovrebbe già in largo modo occuparsi di questo).}
 	\item \textsf{\small Per risparmiare memoria (std::string sicuramente occupa di più).}
 \end{itemize}
 
@@ -1346,12 +1391,15 @@ Mentre, l'ultima preview mostrata è stata quella del C++23.}\\
 	\hline
 	\color{red} CONS & \color{Green} PROS \\
 	\hline
-	\textsf{\small È un array allocato staticamente che } & \textsf{\small Possiamo modificare la stringa } \\
-	\textsf{\small consuma spazio nello stack.} & \textsf{\small anche in un altro stage del programma.} \\
+	\textsf{\small È un array allocato  } & \textsf{\small Possiamo modificare la stringa } \\
+	\textsf{\small staticamente che consuma } & \textsf{\small anche in un } \\
+	\textsf{\small spazio nello stack.} & \textsf{\small altro stage del programma.} \\
 	\hline
 	\textsf{\small Dobbiamo utilizzare array di grandi dimensioni  } & \textsf{\small } \\
-	\textsf{\small per poter concatenare o manipolare le altre stringhe,} & \textsf{\small } \\
-	\textsf{\small visto che lo spazio dell'array è fissato dall'inizio.} & \textsf{\small } \\
+	\textsf{\small per poter concatenare } & \textsf{\small } \\
+	\textsf{\small o manipolare le altre stringhe,} & \textsf{\small } \\
+	\textsf{\small visto che lo spazio dell'array } & \textsf{\small } \\
+	\textsf{\small è fissato dall'inizio.} & \textsf{\small } \\
 	\hline
 \end{tabular}
 
@@ -1437,7 +1485,7 @@ Mentre, l'ultima preview mostrata è stata quella del C++23.}\\
 
 \textsf{\small \textbf{Definizione: } Una funzione è un blocco di codice che esegue una specifico compito e può essere richiamato quando si vuole.} \\
 
-\textsf{\small Le funzioni sono composte da: un tipo di dato di ritorno che è ciò che la funzione restituisce dopo esser stata eseguita, un nome, degli eventuali parametri ed racchiusa tra due parentesi graffe il corpo, il blocco di codice.}
+\textsf{\small Le funzioni sono composte da: un tipo di dato di ritorno che è ciò che la funzione restituisce dopo esser stata eseguita, un nome, degli eventuali parametri e racchiuso tra due parentesi graffe c'è il corpo, il blocco di codice.}
 
 \textsf{\small Per eseguire la funzione basta richiamarla col suo nome e passare gli eventuali parametri.} \\
 
@@ -1458,7 +1506,7 @@ Mentre, l'ultima preview mostrata è stata quella del C++23.}\\
 	
 	// Fuori dalla funzione
 	int x = 3, y = 5;
-	// chiamiamo la funzione somma, gli passiamo i parametri e il valore di ritorno lo assegniamo alla variabile intera z.
+	// chiamiamo la funzione somma, gli passiamo i parametri e il valore di ritorno e lo assegniamo alla variabile intera z.
 	int z = somma(x, y); // Output z : 8
 \end{lstlisting}
 
@@ -1468,10 +1516,10 @@ Mentre, l'ultima preview mostrata è stata quella del C++23.}\\
 
 \textsf{\small I parametri che vengono passati alla funzione sono anch'essi locali, a meno che non li si passano attraverso dei puntatori.} \\
 
-\textsf{\small I parametri passati, a meno che con puntatori, sono delle copie delle variabili passate come parametro, e qualsiasi modifiche di queste copie non ha un effetto sui parametri passati.} \\
+\textsf{\small I parametri passati, a meno che con puntatori, sono delle copie delle variabili passate come parametro, e qualsiasi modifiche di queste copie non ha alcun effetto sui parametri passati.} \\
 
 \begin{lstlisting}
-	// Questa è una funzione che restituisce un boolean (0 o 1 (VERO o FALSO)), chiamata isGreater che prende due variabili intere a e b come parametri e restituisce se true se la variabile a è maggiore della variabile b, altrimenti false.
+	// Questa è una funzione che restituisce un boolean (0 o 1 (VERO o FALSO)), chiamata isGreater che prende due variabili intere a e b come parametri e restituisce true se la variabile a è maggiore della variabile b, altrimenti false.
 	
 	// Questa funzione si potrebbe scrivere così..
 	bool isGreater(int a, int b)
@@ -1509,6 +1557,8 @@ Mentre, l'ultima preview mostrata è stata quella del C++23.}\\
 \textsf{\small Tutti i programmi in C++ devono avere un \textbf{main}, senza non funzionano.} \\
 
 \textsf{\small Senza il \textbf{main} un errore verrebbe lanciato dal compilatore: \emph{undefined reference to `main`}.} \\
+
+\textsf{\small Se modificassimo il nome del main verrebbe lanciato anche in questo caso un errore perché il main non esisterebbe.} \\
 
 \textsf{\small Il \textbf{main} viene invocato automaticamente quando il programma viene eseguito; è il punto di origine di ogni programma.} \\
 
@@ -1735,7 +1785,7 @@ Mentre, l'ultima preview mostrata è stata quella del C++23.}\\
 
 \textsf{\small Variables Scopes, o in italiano, la portata delle variabili, significa fino a dove una variabile può essere utilizzata, fino a dove esiste, vale, la possiamo usare.} \\
 
-\textsf{\small La portata è una regione del programma, ci sono all'incirca 3 principali posti in cui le variabili possono essere dichiarate ed in base a questo le variabili assumono diversi nomi: }
+\textsf{\small La portata è una regione del programma; ci sono all'incirca 3 principali posti in cui le variabili possono essere dichiarate ed in base a questo le variabili assumono diversi nomi: }
 
 \begin{itemize}
 	\item \textsf{\small \textbf{Locali} : dentro ad una funzione o ad un blocco di codice (racchiuso tra le graffe).}
@@ -1806,24 +1856,35 @@ Mentre, l'ultima preview mostrata è stata quella del C++23.}\\
 	}
 \end{lstlisting}
 
+\subsubsection{Perché evitare le variabili globali}
+
+\textsf{\small In generale, sarebbe meglio evitare di usare variabili globali perché: } \\
+
+\begin{itemize}
+	\item \textsf{\small Tutte le funzioni hanno accesso alle variabili globali, il che renderebbe difficile, nel lungo andare, capire chi scrive e legge queste variabili.}
+	\item \textsf{\small Non c'è un controllo su chi può accedervi.}
+	\item \textsf{\small Peggiorano la chiarezza del codice.}
+	%\item \textsf{\small }
+\end{itemize}
+
 % -------------------------- SECTION: HEADERS ----------------------------------------
 
 \newpage
 
 \section{Header files}
 
-\textsf{\small \textbf{Definizione: } Gli header files, o file di intestazione in italiano, sono dei files con l'estensione \textbf{.h} o \textbf{.hpp} che contengono le dichiarazioni delle funzioni e definizione di macro e tipi.}\\
+\textsf{\small \textbf{Definizione: } Gli header files, o file di intestazione in italiano, sono dei files con l'estensione \textbf{.h} o \textbf{.hpp} che contengono le dichiarazioni delle funzioni e definizioni di macro e tipi.}\\
 
-\textsf{\small Sono un modo per organizzare il codice, possiamo includere gli elementi di questi files nel nostro codice attraverso la direttiva \textbf{\#include} che informa il preprocessore di cercare questo file prima di continuare ad eseguire il codice. } 
+\textsf{\small Sono un modo per organizzare il codice; possiamo includere gli elementi di questi files nel nostro codice attraverso la direttiva \textbf{\#include} che informa il preprocessore di cercare questo file prima di continuare ad eseguire il codice. } 
 
 \textsf{\small Esistono due tipi di header files: quelli standard del linguaggio/compilatore e quelli creati dall'utente programmatore.}
 
-\textsf{\small Per includere le librerie standard usiamo \textbf{\#include <nomelibreria>} perché il compilatore sa dove si trovano queste librerie, mentre per le librerie definite dall'utente usiamo \textbf{\#include "nomelibreria.h"} e passiamo anche il percorso di dove si trova. (ammeno che non si trova nella stessa cartella in cui si trova il nostro codice, in quel caso basta mettere il nome della libreria)} \\
+\textsf{\small Per includere le librerie standard usiamo \textbf{\#include <nomelibreria>} perché il compilatore sa dove si trovano queste librerie, mentre per le librerie definite dall'utente usiamo \textbf{\#include "nomelibreria.h"} e passiamo anche il percorso di dove si trova. (a meno che non si trova nella stessa cartella in cui si trova il nostro codice, in quel caso basta mettere il nome della libreria)} \\
 
-% \texorpdfstring % per inserire caratteri speciali nelle section, subsection, ecc..
+% \texorpdfstring % per inserire caratteri speciali nelle section, subsection, ecc.
 \subsection{Only Once Headers | pragma once | ifndef}
 
-\textsf{\small \textbf{Definizione: } Se un file header viene incluso due volte, il compilatore lo processerà il suo contenuto due volte, il che risulterà in un errore. Per evitare questo c'è una procedura standard da scrivere all'interno del file di intestazione.}
+\textsf{\small \textbf{Definizione: } Se un file header viene incluso due volte, il compilatore processerà il suo contenuto due volte, il che risulterà in un errore. Per evitare questo c'è una procedura standard da scrivere all'interno del file di intestazione.}
 
 \begin{lstlisting}
 	#ifndef NOME_HEADER_FILE_H
@@ -1834,7 +1895,7 @@ Mentre, l'ultima preview mostrata è stata quella del C++23.}\\
 	#endif
 \end{lstlisting}
 
-\textsf{\small La direttiva \textbf{\#ifndef} controlla che il file non sia già stato aggiunto, se non è mai stato aggiunto, allora lo aggiunge, altrimenti salta il contenuto così che non verrà aggiunto due volte.} \\
+\textsf{\small La direttiva \textbf{\#ifndef} controlla che il file non sia già stato aggiunto, se così fosse, allora lo aggiunge, altrimenti salta il suo contenuto così che non verrà aggiunto due volte.} \\
 
 \textsf{\small Inoltre, per fare questa stessa operazione, ma più semplice e corta esiste una direttiva non-standard: \textbf{\#pragma once}. } 
 
@@ -1846,63 +1907,43 @@ Mentre, l'ultima preview mostrata è stata quella del C++23.}\\
 
 \subsection{Cosa sono le librerie?}
 
-\textsf{\small Le librerie sono collezioni di risorse non volatili usate dai programmi. La libreria Standard è una collezione di classi, funzioni, macros, costanti, ecc.. che sono state scritte in C++ stesso. Ci sono una grande lista di header files che contengono i contenuti della libreria Standard.} \\
+\textsf{\small Le librerie sono collezioni di risorse non volatili usate dai programmi. La libreria Standard è una collezione di classi, funzioni, macros, costanti, ecc. che sono state scritte in C++ stesso. Ci sono una grande lista di header files che contengono i contenuti della libreria Standard.} \\
 
 \subsection{Header files libreria Standard}
 
 \textsf{\small Qui, una lista degli header files della libreria standard più comuni (alcuni anche del C): } \break
 
-\begin{comment}
-\begin{itemize}
-	\item \textsf{\small \textbf{\#include <stdio.h>} : per l'input ed output (dal C).}
-	\item \textsf{\small \textbf{\#include <iostream>} : input ed output fondamentali.}
-	\item \textsf{\small \textbf{\#include <string>} : fornisce le standard classi string e template.}
-	\item \textsf{\small \textbf{\#include <math.h>} : per operazioni matematiche (dal C).}
-	\item \textsf{\small \textbf{\#include <limits>} : usata per descrivere proprietà di tipi numerici fondamentali.}
-	\item \textsf{\small \textbf{\#include <time.h>} : per funzioni legate al tempo (dal C).}
-	\item \textsf{\small \textbf{\#include <chrono>} : fornisce elementi di tempo, come std::chrono::duration e std::chrono::time\_point ed altri.}
-	\item \textsf{\small \textbf{\#include <algorithm>} : fornisce la definzione di molti container algoritmici.}
-	\item \textsf{\small \textbf{\#include <iterator>} : fornisce templates e classi per lavorare con gli iteratori.}
-	\item \textsf{\small \textbf{\#include <sstream>} : fornisce delle classi per la manipolazione di stringhe.}
-	\item \textsf{\small \textbf{\#include <vector>} : fornisce la classe di template container std::vector, un array dinamico.}
-	\item \textsf{\small \textbf{\#include <random>} : facilita la generazione di numeri (pseudo-)casuali e distribuzioni.}
-	\item \textsf{\small \textbf{\#include <numeric>} : operazioni numeriche generalizzate.}
-	\item \textsf{\small \textbf{\#include <functional>} : fornisce diverse oggetti funzionali da usare con gli standard algorithm.}
-	\item \textsf{\small \textbf{\#include <stdexcept>} : classi per le eccezioni.}
-	\item \textsf{\small \textbf{\#include <memory>} : per la gestione della memoria.}
-	\item \textsf{\small \textbf{\#include <optional>} : per gli opzionali.}
-	\item \textsf{\small \textbf{\#include <ranges>} : per i ranges e per i lazy evaluated adaptors. (C++20)}
-	\item \textsf{\small \textbf{\#include <concepts>} : fornisce la libreria fondamentale concepts. (C++20)}
-	\item \textsf{\small \textbf{\#include <thread>} : fornisce classi e namespaces per lavorare sui threads.}
-	%\item \textsf{\small \textbf{\#include <>} : }
-\end{itemize}
-\end{comment}
-
 \begin{tabular}{cc}
 	\textbf{\#include <stdio.h>} : & \textsf{\small per l'input ed output (dal C).} \\
 	\textbf{\#include <iostream>} : & \textsf{\small input ed output fondamentali.} \\
-	\textbf{\#include <string>} : & \textsf{\small fornisce le standard classi string e template.} \\
+	\textbf{\#include <string>} : & \textsf{\small fornisce le classi standard string e template.} \\
 	\textbf{\#include <math.h>} : & \textsf{\small per operazioni matematiche (dal C).} \\
-	\textbf{\#include <limits>} : & \textsf{\small usata per descrivere proprietà di tipi numerici fondamentali.} \\
+	\textbf{\#include <limits>} : & \textsf{\small usata per descrivere proprietà di } \\
+	\textbf{} & \textsf{tipi numerici fondamentali.} \\
 	\textbf{\#include <time.h>} : & \textsf{\small per funzioni legate al tempo (dal C).} \\
-	\textbf{\#include <chrono>} : & \textsf{\small fornisce elementi di tempo, come std::chrono::duration e } \\
-	\textbf{} & \textsf{\small std::chrono::time\_point ed altri.} \\
+	\textbf{\#include <chrono>} : & \textsf{\small fornisce elementi di tempo, come std::chrono::duration } \\
+	\textbf{} & \textsf{\small e std::chrono::time\_point ed altri.} \\
 	\textbf{\#include <algorithm>} : & \textsf{\small fornisce la definzione di molti container algoritmici.} \\
-	\textbf{\#include <iterator>} : & \textsf{\small fornisce templates e classi per lavorare con gli iteratori.} \\
-	\textbf{\#include <sstream>} : & \textsf{\small fornisce delle classi per la manipolazione di stringhe.} \\
+	\textbf{\#include <iterator>} : & \textsf{\small fornisce templates e classi } \\
+	\textbf{} & \textsf{per lavorare con gli iteratori.} \\
+	\textbf{\#include <sstream>} : & \textsf{\small fornisce delle classi per la } \\
+	\textbf{} & \textsf{manipolazione di stringhe stream.} \\
 	\textbf{\#include <vector>} : & \textsf{\small fornisce la classe di template container std::vector, } \\
 	\textbf{} & \textsf{\small un array dinamico.} \\
 	\textbf{\#include <random>} : & \textsf{\small facilita la generazione di numeri (pseudo-)casuali } \\
 	\textbf{} & \textsf{\small e distribuzioni.} \\
 	\textbf{\#include <numeric>} : & \textsf{\small operazioni numeriche generalizzate.} \\
-	\textbf{\#include <functional>} : & \textsf{\small fornisce diverse oggetti funzionali da usare } \\
+	\textbf{\#include <functional>} : & \textsf{\small fornisce diversi oggetti funzionali da usare } \\
 	\textbf{} & \textsf{\small con gli standard algorithm.} \\
 	\textbf{\#include <stdexcept>} : & \textsf{\small classi per le eccezioni.} \\
 	\textbf{\#include <memory>} : & \textsf{\small per la gestione della memoria.} \\
 	\textbf{\#include <optional>} : & \textsf{\small per gli opzionali.} \\
 	\textbf{\#include <ranges>} : & \textsf{\small per i ranges e per i lazy evaluated adaptors. (C++20)} \\
+	%\textbf{} & \textsf{} \\
 	\textbf{\#include <concepts>} : & \textsf{\small fornisce la libreria fondamentale concepts. (C++20)} \\
-	\textbf{\#include <thread>} : & \textsf{\small fornisce classi e namespaces per lavorare sui threads.} \\
+	%\textbf{} & \textsf{} \\
+	\textbf{\#include <thread>} : & \textsf{\small fornisce classi e namespaces } \\
+	\textbf{} & \textsf{per lavorare sui threads.} \\
 \end{tabular} \break
 
 \textsf{\small Inoltre, tutti gli headers dalla libreria standard del C sono inclusi nella libreria standard del C++}
@@ -1911,9 +1952,9 @@ Mentre, l'ultima preview mostrata è stata quella del C++23.}\\
 
 \subsection{Librerie create dagli utenti}
 
-\textsf{\small Gli utenti si possono creare le proprie librerie, creando un file \textbf{.h} con le sole definizioni di funzioni e un file chiamato come l'header file, con le implementazioni di queste, ma con l'estensione \textbf{.cpp}.}
+\textsf{\small Gli utenti possono comporre le proprie librerie, creando un file \textbf{.h} con le sole definizioni di funzioni e un file chiamato come l'header file, con le implementazioni di queste, ma con l'estensione \textbf{.cpp}.}
 
-\textsf{\small Per includere queste librerie, usiamo \textbf{\#include "nome\_libreria.h"}, al posto di \textbf{\#include <nomelibreria.h>}, perché non una libreria standard e quindi il compilatore non sa dove cercarla e quindi gli dobbiamo specificare noi dove si trova la nostra libreria.} \\
+\textsf{\small Per includere queste librerie, usiamo \textbf{\#include "nome\_libreria.h"}, al posto di \textbf{\#include <nomelibreria.h>}, perché non è una libreria standard e quindi il compilatore non sa dove cercarla e quindi gli dobbiamo specificare noi dove si trova la nostra libreria.} \\
 
 \begin{lstlisting}
 	// Nel file header nomelibreria.h
@@ -1938,7 +1979,7 @@ Mentre, l'ultima preview mostrata è stata quella del C++23.}\\
 	\textsf{\small Sia per il C che per il C++} & \textsf{\small È solo per C++} \\
 	\textsf{\small Dal punto di vista del C++, } & \textsf{\small Non funzionerà con il C.} \\
 	\textsf{\small il codice C verrà definito come \emph{extern "C"}} & \textsf{\small } \\
-	\textsf{\small Esprime l'intento che si usa il C } & \textsf{\small Esprime l'intento che si usi C++} \\
+	\textsf{\small Esprime l'intento che si usa il C } & \textsf{\small Esprime l'intento che si usa il C++} \\
 	\textsf{\small (o perlomeno si può pensare così)} & \textsf{\small (o perlomeno si può pensare così)} \\
 	\textsf{\small Dal punto di vista del C, il codice C sarà visibile, } & \textsf{\small } \\
 	\textsf{\small mentre quello del C++ sarà invisibile.} & \textsf{\small } \\
@@ -1953,7 +1994,7 @@ Mentre, l'ultima preview mostrata è stata quella del C++23.}\\
 
 \section{Namespaces}
 
-\textsf{\small \textbf{Definizione: } Gli \textbf{namespaces} ci permettono di raggruppare varie entità che altrimenti si troverebbero nello scope globale. Permettono una migliore organizzazione e strutturazione del codice.} \\
+\textsf{\small \textbf{Definizione: } I \textbf{namespaces} ci permettono di raggruppare varie entità che altrimenti si troverebbero nello scope globale. Permettono una migliore organizzazione e strutturazione del codice.} \\
 
 \textsf{\small Se avessimo per esempio due funzioni con lo stesso nome, sarebbe difficile differenziarle e quindi i namespaces ci permettono di separarle.}
 
@@ -1989,7 +2030,7 @@ Mentre, l'ultima preview mostrata è stata quella del C++23.}\\
 	}
 \end{lstlisting}
 
-\textsf{\small Il namespace più usato è quello della libreria Standard del linguaggio, ovvero il namespace std che raggruppa tutte le funzioni e classi della libreria Standard. } \\
+\textsf{\small Il namespace più usato è quello della libreria Standard del linguaggio, ovvero il namespace \textbf{std} che raggruppa tutte le funzioni e classi della libreria Standard. } \\
 
 \textsf{\small Ogni qualvolta che usiamo una funzione, classe della libreria Standard ci riferiamo a quel namespace. Usiamo il nome del namespace e i due punti :: per indicare che quello che stiamo usando fa parte di quel namespace. C'è un modo, però per evitare ogni volta di scrivere std::, ed è attraverso la riga \textbf{using namespace std;}. Con questo non abbiamo più bisogno di scrivere std::, perché lo da già per scontato, o meglio, li prende direttamente dalla libreria Standard.} \\
 
@@ -2009,7 +2050,7 @@ Mentre, l'ultima preview mostrata è stata quella del C++23.}\\
 \textsf{\small Usare \textbf{using namespace std} è considerato una \textbf{\color{red}bad practice}, probabilmente ci sono diversi motivi per questo, ma qui ne elenco alcuni: } \\
 
 \begin{itemize}
-	\item \textsf{\small Come abbiamo detto prima, se noi per esempio abbiamo due namespaces con due funzioni con lo stesso nome, se noi usiamo \emph{using namespace nome\_del\_namespace} allora avremmo un conflitto, o meglio, avremmo due namespaces con una funzione con lo stesso nome, il che creerebbe confusione. (e questo non vale solo per le funzioni, ma anche per le classi, costanti, ecc..). Il programma ancora compilerebbe, ma potrebbe chiamare la funzione sbagliata.}
+	\item \textsf{\small Come abbiamo detto prima, se noi per esempio abbiamo due namespaces con due funzioni con lo stesso nome, se noi usiamo \emph{using namespace nome\_del\_namespace} allora avremmo un conflitto, o meglio, avremmo due namespaces con una funzione con lo stesso nome, il che creerebbe confusione. (e questo non vale solo per le funzioni, ma anche per le classi, costanti, ecc.). Il programma ancora compilerebbe, ma potrebbe chiamare la funzione sbagliata.}
 	\item \textsf{\small Usare \emph{using namespace std} importerebbe nel nostro programma l'intero namespace std anche quando a noi serve solo una parte del namespace. \textbf{Non} è un problema di performance, ma solo di chiarezza del codice e di evitare ambiguità.}
 	\item \textsf{\small Scrivere invece \textbf{std::} ogni volta rende chiaro il codice, perchè si capisce subito da quale namespace stai prendendo quella data funzione e/o altro.}
 	%\item \textsf{\small }
@@ -2093,7 +2134,7 @@ Mentre, l'ultima preview mostrata è stata quella del C++23.}\\
 	\label{fig:never_using_in_header}
 \end{figure}
 
-\textsf{\small Quindi, meglio mettere \textbf{using namespace} nei files \textbf{.cpp}, ma in generale, come abbiamo detto prima è meglio \textbf{non} utilizzarli.} \\
+\textsf{\small Quindi, meglio mettere \textbf{using namespace} nei files \textbf{.cpp}, ma in generale, come abbiamo detto prima è meglio \textbf{non} utilizzarlo.} \\
 
 \textsf{\small Quindi \textbf{non} mettere \textbf{using namespace} in un header file, neanche \textbf{using namespace std}.} \\
 
@@ -2109,7 +2150,7 @@ Mentre, l'ultima preview mostrata è stata quella del C++23.}\\
 
 \textsf{\small La keyword \textbf{struct} è usata per creare una struttura.}
 
-\textsf{\small In questo modo semplicemente creiamo la struttura, ma non instanziamo nessun oggetto, per creare una istanza servirà richiamare il nome della struttura e poi il nome dell'istanza.}
+\textsf{\small In questo modo semplicemente creiamo la struttura, ma non instanziamo nessun oggetto; per creare una istanza servirà richiamare il nome della struttura e poi il nome dell'istanza.}
 
 \textsf{\small Per accedere ai campi della struttura si potrà usare l'operatore \textbf{.} (punto).}
 
@@ -2398,21 +2439,25 @@ Mentre, l'ultima preview mostrata è stata quella del C++23.}\\
 	\hline
 	\textbf{Strutture in C} & \textbf{Strutture in C++} \\
 	\hline
-	\textsf{\small Sono permessi solo membri dati, non funzioni.} & \textsf{\small Sono permessi sia dati sia funzioni membri.} \\
+	\textsf{\small Sono permessi solo membri dati, } & \textsf{\small Sono permessi sia dati } \\
+	\textsf{\small non funzioni.} & \textsf{\small sia funzioni membro.} \\
 	\hline
 	\textsf{\small Non può avere membri statici.} & \textsf{\small Può avere membri statici.} \\
 	\hline
 	\textsf{\small Non possiamo avere un costruttore.} & \textsf{\small Possiamo avere un costruttore.} \\
 	\hline
-	\textsf{\small L'inizializzazione diretta dei membri non è possibile.} & \textsf{\small L'inizializzazione diretta dei membri è possibile.} \\
+	\textsf{\small L'inizializzazione diretta dei membri } & \textsf{\small L'inizializzazione diretta dei membri } \\
+	\textsf{\small non è possibile.} & \textsf{\small è possibile.} \\
 	\hline
-	\textsf{\small È necessario usare la keyword struct } & \textsf{\small Non è necessario usare la keyword struct.} \\
-	\textsf{\small per dichiarare una variabile di tipo struct.} & \textsf{\small } \\
+	\textsf{\small È necessario usare la  } & \textsf{\small Non è necessario } \\
+	\textsf{\small keyword struct per dichiarare una } & \textsf{\small usare la keyword struct.} \\
+	\textsf{\small variabile di tipo struct.} & \textsf{\small } \\
 	\hline
 	\textsf{\small Non supporta access modifiers.} & \textsf{\small Supporta gli access modifiers. } \\
-	\textsf{\small } & \textsf{\small (public, private, protected, ecc..)} \\
+	\textsf{\small } & \textsf{\small (public, private, protected, ecc.)} \\
 	\hline
-	\textsf{\small Sono permessi soltanto i puntatori alle strutture.} & \textsf{\small Sono permessi sia i puntatori sia le references.} \\
+	\textsf{\small Sono permessi soltanto } & \textsf{\small Sono permessi sia i puntatori } \\
+	\textsf{\small i puntatori alle strutture.} & \textsf{\small sia le references.} \\
 	\hline
 	\textsf{\small L'operatore sizeof() genererà 0 } & \textsf{\small L'operatore sizeof() genererà 1 } \\
 	\textsf{\small per una struttura vuota.} & \textsf{\small per una struttura vuota.} \\
@@ -2423,13 +2468,13 @@ Mentre, l'ultima preview mostrata è stata quella del C++23.}\\
 
 \subsection{Costruttori e Distruttori nelle Strutture}
 
-\textsf{\small È possibile definire dei \textbf{costruttori} e dei \textbf{distruttori} nelle \textbf{structure}.} \\
+\textsf{\small È possibile definire dei \textbf{costruttori} e dei \textbf{distruttori} nelle \textbf{strutture}.} \\
 
 \textsf{\small I \textbf{costruttori} sono delle speciali funzioni con lo stesso nome della struttura che vengono invocate quando un'istanza della struttura viene creata.} \\
 
 \textsf{\small I \textbf{distruttori} sono delle speciali funzioni con lo stesso nome della struttura che servono per deallocare della memoria precedentemente allocata all'interno della struttura.} \\
 
-\textsf{\small Per indicare un \textbf{distruttore} mettiamo davanti al nome della struttura anche \textbf{~} (tilde).} \\
+\textsf{\small Per indicare un \textbf{distruttore} mettiamo davanti al nome della struttura anche \textbf{\textasciitilde} (tilde).} \\
 
 \begin{lstlisting}
 	#include <iostream>
@@ -2464,12 +2509,12 @@ Mentre, l'ultima preview mostrata è stata quella del C++23.}\\
 
 \section{Union}
 
-\textsf{\small \textbf{Definizione: } La \textbf{union} è un tipo di struttura dove l'ammontare di memoria è una fattore chiave.} \\
+\textsf{\small \textbf{Definizione: } La \textbf{union} è un tipo di struttura dove l'ammontare di memoria è un fattore chiave.} \\
 
 \begin{itemize}
 	\item \textsf{\small Come le strutture, le union possono contenere diversi tipologie di variabili.}
-	\item \textsf{\small Ogni qualvolta che una nuova variabile è inizializzata dall'union in C sovrascrive quella vecchia, ma in C++ usiamo quella locazione di memoria e non abbiamo bisogno di quella parola chiave.}
-	\item \textsf{\small È utile quando i dati passati ad una funzione sono sconosciuti, utilizzare una \textbf{union} che contiene tutti i possibili tipi può essere il rimedio a questo problema.}
+	\item \textsf{\small Ogni qualvolta che una nuova variabile è inizializzata dall'union in C sovrascrive quella vecchia, ma in C++ usiamo quella locazione di memoria e non abbiamo bisogno di quella parola chiave.} %TODO: da rivedere.
+	\item \textsf{\small È utile quando i dati passati a una funzione sono sconosciuti, utilizzare una \textbf{union} che contiene tutti i possibili tipi può essere il rimedio a questo problema.}
 	\item \textsf{\small Utilizziamo la keyword \textbf{union} per crearne una.}
 \end{itemize}
 
@@ -2511,15 +2556,17 @@ Mentre, l'ultima preview mostrata è stata quella del C++23.}\\
 	\hline
 	\textsf{\small Usa la keyword \textbf{struct}} & \textsf{\small Usa la keyword \textbf{union}}\\
 	\hline
-	\textsf{\small Quando una variabile è associata con una struttura} & \textsf{\small Quando una variabile è associata con } \\
-	\textsf{\small il compilatore alloca la memoria } & \textsf{\small una union il compilatore alloca memoria } \\
+	\textsf{\small Quando una variabile è associata } & \textsf{\small Quando una variabile è associata con } \\
+	\textsf{\small con una struttura,} & \textsf{\small una union, il} \\
+	\textsf{\small il compilatore alloca la memoria } & \textsf{\small  compilatore alloca memoria } \\
 	\textsf{\small per ogni membro.} & \textsf{\small considerando lo spazio occupato } \\
 	\textsf{\small Lo spazio occupato dalla struttura} & \textsf{\small dal membro più grande.} \\
 	\textsf{\small è maggiore o uguale alla somma} & \textsf{\small } \\
 	\textsf{\small dello spazio dei suoi membri.} & \textsf{\small } \\
 	\hline
 	\textsf{\small Per ogni membro della struttura} & \textsf{\small La memoria allocata} \\
-	\textsf{\small è assegnato uno spazio di allocazione unico.} & \textsf{\small è condivisa con i membri individuali dalla union.} \\
+	\textsf{\small è assegnato uno } & \textsf{\small è condivisa con i } \\
+	\textsf{\small spazio di allocazione unico.} & \textsf{\small membri individuali dalla union.} \\
 	\hline
 	\textsf{\small Modificare un membro della struttura} & \textsf{\small Modificare un membro della union} \\
 	\textsf{\small non modificherà gli altri membri.} & \textsf{\small modificherà gli altri membri.} \\
@@ -2532,19 +2579,21 @@ Mentre, l'ultima preview mostrata è stata quella del C++23.}\\
 	\hline
 \end{tabular}
 
+%\textsf{\small } & \textsf{\small } \\ %TODO: remove
+
 % -------------------------- SECTION: CLASSI -----------------------------------------
 
 \newpage
 
 \section{Classi}
 
-\textsf{\small \textbf{Definizione: } La \textbf{classe} è il concetto fondamentale, il pilastro, la trave portante, la pietra miliare della programmazione ad oggetti. È un tipo di dato definito dall'utente che contiene i propri membri dati e membri funzioni che possono essere acceduti creando un'istanza.} \\ %TODO: si dice la trave portante?
+\textsf{\small \textbf{Definizione: } La \textbf{classe} è il concetto fondamentale, il pilastro, la trave portante, la pietra miliare della programmazione ad oggetti. È un tipo di dato definito dall'utente che contiene i propri dati e funzioni membro che possono essere acceduti creando un'istanza.} \\ %TODO: si dice la trave portante?
 
 \textsf{\small Una classe è come uno stampino, un modello per creare oggetti. } \\
 
-\textsf{\small È la differenza sostanziale del C++ con il C, l'avere le classi rendendo il linguaggio: un linguaggio a programmazione di oggetti. } \\ %TODO: questa la portrei riscrivere meglio.
+\textsf{\small È la differenza sostanziale del C++ con il C, l'avere le classi, rendendo il linguaggio: un linguaggio a programmazione di oggetti. } \\ %TODO: questa la portrei riscrivere meglio.
 
-\textsf{\small Ogni classe rappresenta un oggetto che possiede degli attributi, delle caratteristiche (dati) e dei comportamenti stabiliti dalle funzioni che possiede. } \\
+\textsf{\small Ogni classe rappresenta un oggetto che possiede degli attributi, delle caratteristiche (dati) e dei comportamenti, stabiliti dalle funzioni che possiede. } \\
 
 \begin{figure}[ht]
 	\centering
@@ -2561,7 +2610,7 @@ Mentre, l'ultima preview mostrata è stata quella del C++23.}\\
 
 \subsubsection{Costruttori}
 
-\textsf{\small \textbf{Definizione: } Il \textbf{costruttore} è una speciale funzione membro (della classe) che inizializza gli oggetti di una classe. Il costruttore è chiamato automaticamente quando un'istanza della classe viene creata. È una funzione speciale perché non tipi di ritorno, o meglio il tipo di ritorno è la classe stessa. } \\ %Funzione membro o membra?
+\textsf{\small \textbf{Definizione: } Il \textbf{costruttore} è una speciale funzione membro (della classe) che inizializza gli oggetti di una classe. Il costruttore è chiamato automaticamente quando un'istanza della classe viene creata. È una funzione speciale perché non ha tipi di ritorno, o meglio il tipo di ritorno è la classe stessa. } \\ %Funzione membro o membra? Credo funzione membro
 
 \textsf{\small Il nome di questa funzione \textbf{costruttore} è identico al nome della classe stessa.} \\
 
@@ -2613,7 +2662,7 @@ Mentre, l'ultima preview mostrata è stata quella del C++23.}\\
 
 \textsf{\small \textbf{Definizione: } Il \textbf{distruttore}, come dice la parola, è una funzione membro della classe che viene invocata automaticamente quando un oggetto (istanza della classe) viene distrutto/eliminato. Il che significa che il distruttore è l'ultima funzione ad essere chiamata. } \\
 
-\textsf{\small Per definire un \textbf{distruttore} si crea una funzione con lo stesso nome della classe, ma prima del nome deve essere accompagnata dal simbolo \textbf{~} (tilde).} \\
+\textsf{\small Per definire un \textbf{distruttore} si crea una funzione con lo stesso nome della classe, ma prima del nome deve essere accompagnata dal simbolo \textbf{\textasciitilde} (tilde).} \\
 
 \subsubsection{Proprietà del distruttore}
 
@@ -2674,6 +2723,8 @@ Mentre, l'ultima preview mostrata è stata quella del C++23.}\\
 \textsf{\small \textbf{Definizione: } L'\textbf{incapsulamento} è un concetto di programmazione ad oggetti che mette assieme i dati e le funzioni che manipolano i dati per mantenerli sicuri da interferenze esterne e da un uso improprio.} \\
 
 \textsf{\small L'\textbf{incapsulamento} dei dati è un meccanismo di impacchetamento di dati e delle funzioni che li usano. } \\
+
+\textsf{\small I dati dovrebbero perciò essere posti come \textbf{private}, mentre le funzioni che manipolano o recuperano questi dati come \textbf{public}.} \\
 
 \textsf{\small La \textbf{Data abstraction} è un meccanismo che espone solo le interfacce e nasconde  i dettagli dell'implementazione dall'utente.} \break
 
@@ -2794,6 +2845,8 @@ int main(){
 
 \textsf{\small Per implementare l'ereditarietà usiamo l'operatore \textbf{:} quando andiamo a definire la classe derivata. Questa è chiamata la \textbf{initialization list} serve per chiamare la classe base e per inizializzare le variabili membri prima che il costruttore venga eseguito.} \\
 
+\textsf{\small Questo tipo di relazione è chiamata relazione \textbf{is-a} (è una).} \\
+
 \begin{lstlisting}
 	class nome_classe_derivata : modalità_di_accesso nome_classe_base {
 		// Corpo della subclass/ derived class
@@ -2902,11 +2955,11 @@ int main(){
 
 \subsubsection{this pointer}
 
-\textsf{\small \textbf{Definizione: } La keyword \textbf{this} serve per riferirsi all'oggetto in cui ci troviamo.} \\ %TODO: da rivedere, aggiungere esempio, ecc..
+\textsf{\small \textbf{Definizione: } La keyword \textbf{this} serve per riferirsi all'oggetto in cui ci troviamo.} \\ %TODO: da rivedere, aggiungere esempio, ecc.
 
 \subsection{Multi-Ereditarietà}
 
-\textsf{\small Il c++ permette l'\textbf{ereditarietà multipla}, quindi una classe può derivare da più classi base. Non è presente invece l'implementazione di interfacce.} \\
+\textsf{\small Il C++ permette l'\textbf{ereditarietà multipla}, quindi una classe può derivare da più classi base. Non è presente invece l'implementazione di interfacce.} \\
 
 \begin{lstlisting}
 	#include <iostream>
@@ -2941,9 +2994,9 @@ int main(){
 
 \subsection{Forward Declaration}
 
-\textsf{\small \textbf{Definizione: } La \textbf{forward declaration} è quando prima dichiariamo una funzione, una classe, eccetera.. con la premessa che da qualche parte nel codice più in là ci sarà una definizione di questa funzione, classe, eccetera..} \\
+\textsf{\small \textbf{Definizione: } La \textbf{forward declaration} è quando prima dichiariamo una funzione, una classe, ecc. con la premessa che da qualche parte nel codice più in là ci sarà una definizione di questa funzione, classe, eccetera.} \\
 
-\textsf{\small Può essere utile per aiutare il compilatore per assicurarsi che non ci sono stati errori di spelling o di numero sbagliato di argomenti da passare.} 
+\textsf{\small Può essere utile per aiutare il compilatore per assicurarsi che non ci siano stati errori di spelling o di numero sbagliato di argomenti da passare.} 
 
 \textsf{\small Può essere utile per ridurre il tempo di \emph{build} del programma.}
 
@@ -2951,7 +3004,7 @@ int main(){
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=1.2\textwidth, height=1.2\textheight, keepaspectratio]{./imgs/Forward_declaration.png}
+	\includegraphics[width=1\textwidth, height=1\textheight, keepaspectratio]{./imgs/Forward_declaration.png}
 	\caption{Forward Declaration}
 	\label{fig:forward_declaration}
 \end{figure}
@@ -2966,7 +3019,7 @@ int main(){
 
 \textsf{\small Un membro statico è condiviso da tutti gli oggetti della classe. Se non è presente un'inizializzazione al membro statico, il suo valore di default sarà 0.} \\ 
 
-\textsf{\small Per accedere a questa funzione statica o membro o altro \textbf{non} possiamo utilizzare l'operatore \textbf{.}, ma dobbiamo usufruire dell'operatore \textbf{::}.} \\
+\textsf{\small Per accedere a questa funzione statica o membro o altro \textbf{non} possiamo utilizzare l'operatore \textbf{.}, ma dobbiamo usufruire dell'operatore \textbf{::} (scope resolution operator) .} \\
 
 \begin{lstlisting}
 class MyClass {
@@ -2990,7 +3043,7 @@ int main(){
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=1.2\textwidth, height=1.2\textheight, keepaspectratio]{./imgs/Class__static_type2.png}
+	\includegraphics[width=1\textwidth, height=1\textheight, keepaspectratio]{./imgs/Class__static_type2.png}
 	\caption{Chiamata a membro statico}
 	\label{fig:class_static_type}
 \end{figure}
@@ -3007,7 +3060,7 @@ int main(){
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=1.2\textwidth, height=1.2\textheight, keepaspectratio]{./imgs/const_as_parameter.png}
+	\includegraphics[width=1\textwidth, height=1\textheight, keepaspectratio]{./imgs/const_as_parameter.png}
 	\caption{Const come parametro}
 	\label{fig:const_as_parameter}
 \end{figure}
@@ -3028,7 +3081,7 @@ int main(){
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=1.2\textwidth, height=1.2\textheight, keepaspectratio]{./imgs/const_function_class_members.png}
+	\includegraphics[width=1\textwidth, height=1\textheight, keepaspectratio]{./imgs/const_function_class_members.png}
 	\caption{Const function class members}
 	\label{fig:const_function_class_members}
 \end{figure}
@@ -3043,9 +3096,11 @@ int main(){
 	\hline
 	\textbf{Class} & \textbf{Struct} \\
 	\hline
-	\textsf{\small I membri della classe sono privati da default.} & \textsf{\small I membri di una struttura sono pubblici da default.} \\
+	\textsf{\small I membri della classe sono } & \textsf{\small I membri di una struttura sono } \\
+	\textsf{\small privati da default.} & \textsf{\small pubblici da default.} \\
 	\hline
-	\textsf{\small L'allocazione della memoria avviene nell'heap.} & \textsf{\small L'allocazione della memoria avviene sullo stack.} \\
+	\textsf{\small L'allocazione della memoria } & \textsf{\small L'allocazione della memoria } \\
+	\textsf{\small avviene nell'heap.} & \textsf{\small avviene sullo stack.} \\
 	\hline
 	\textsf{\small È un tipo di dato per referenza.} & \textsf{\small È un tipo di dato per valore.} \\
 	\hline
@@ -3064,215 +3119,439 @@ int main(){
 
 \textsf{\small Inoltre, sia il codice che i commenti dovrebbero essere in inglese a differenza di come ho fatto io in questa guida.} \\
 
-\textsf{\small Potete trovare tutte le convenzioni del linguaggio nelle \textbf{C++ Core Guidelines} : \href{https://github.com/isocpp/CppCoreGuidelines}{CppCoreGuidelines}} \\
+\textsf{\small Tratterò in primis le linee guida sui nomi e sul layout, presenti nella sezione di supporto: \emph{NL | Naming and Layout rules} delle \textbf{CppCoreGuidelines}.} \break
 
-\textsf{\small Qui anche una versione più corta (non ufficiale): \href{https://github.com/openbmc/docs/blob/master/cpp-style-and-conventions.md}{CppStyleAndConventions}} \\
+% -------------------- NL | NAMING AND LAYOUT RULES ----------------------------------
 
-\textsf{\small Comunque ne elencherò qualche d'una: } \break
+\subsection{NL | Naming and Layout rules}
 
-\subsection{Generale}
+\subsubsection{NL.1: Non dire nei commenti quello che può essere semplicemente affermato nel codice}
 
-\begin{itemize}
-	\item \textsf{\small Lunghezza della riga limitata a 80 caratteri}
-	\item \textsf{\small Indentazione con 4 spazi.}
-	\item \textsf{\small I files dovrebbero usare le newlines stile Unix $\backslash n$.}
-\end{itemize}
+\textsf{\small I compilatori non leggono i commenti. I commenti sono meno precisi del codice. I commenti non vengono sempre aggiornati in modo costante come il codice.} \\
 
-\subsection{Parentesi Graffe}
+\subsubsection{NL.2: Indica l'intento nei commenti}
 
-\textsf{\small Utilizzare \emph{Allman Style} brackets (parentesi). Le parentesi graffe sono sulla loro linea allo stesso livello con lo statement sopra.} \\
+\textsf{\small Il codice dice ciò che è stato fatto, non quello che dovrebbe essere fatto. Spesso l'intento può essere indicato più chiaramente e concisamente che l'implementazione. } \\
+
+\textsf{\small \textbf{Se i commenti e il codice sono in disaccordo, entrambi sono probabilmente errati}.} \\
+
+\subsubsection{NL.3: Mantieni i commenti nitidi}
+
+\textsf{\small La verbosità rallenta la comprensione e rende il codice più difficile da leggere diffondendolo nei sorgenti.} \\
+
+\textsf{\small \textbf{Nota}: Usa l'inglese. Anche se sei madre lingua in un'altra lingua, usa l'inglese in modo che tutti i programmatori possano capire.} \\
+
+\subsubsection{NL.4: Mantieni un'indentazione costante}
+
+\textsf{\small Per via della leggibilità. Per evitare "sciocchi errori".} \\
+
+\textsf{\small \textbf{Nota}: Sempre indentare dopo gli \textbf{if}, \textbf{for}, \textbf{while} è una buona idea.} \\
+
+\subsubsection{NL.5: Evita la codifica delle informazioni sui tipi dei nomi} %TODO: tradurre meglio.
+
+\textsf{\small Se i nomi riflettono i tipi rispetto alle funzionalità, diventerà difficile cambiare i tipi usati per fornire quella funzionalità. Inoltre, se il tipo di una variabile viene cambiato, il codice che la usa dovrà essere anch'esso modificato. Minimizza le conversioni non intenzionali.} \break
+
+\textsf{\small Il seguente è un esempio \textbf{\color{red} ERRATO}\normalcolor:} \\
+
+% frame=single, framexleftmargin=5mm, frame=shadowbox, rulesepcolor=\color{red}
+
+\begin{lstlisting}[frame=single, rulecolor=\color{red}]
+	void print_int(int i);
+	void print_double(double d);
+	void print_string(const char*);
+	
+	print_int(3);
+	print_double(3.69);
+	print_string("abc");
+\end{lstlisting}
+
+\textsf{\small Il seguente è un esempio \textbf{\color{ForestGreen} CORRETTO}\normalcolor:} \\
+
+\begin{lstlisting}[frame=single, rulecolor=\color{ForestGreen}]
+	void print(int i);
+	void print(double d);
+	void print(string_view);
+	
+	print(3);
+	print(3.69);
+	print("abc");
+\end{lstlisting}
+
+\textsf{\small \textbf{Nota}: I nomi con i tipi codificati al loro interno sono verbosi e criptici.} \\
 
 \begin{lstlisting}
-	if (condition)
-	{
+	printS  // print a std::string
+	prints  // print a C-style string
+	printi  // print an int
+\end{lstlisting}
+
+\textsf{\small Le tecniche come la \emph{notazione Ungherese} sono state usate nei linguaggi \emph{untyped} (senza tipi), ma è generalmente non necessario e persino dannoso in un linguaggio fortemente staticamente-tipizzato come il C++, perché le notazioni non vengono aggiornate e interferiscono con il buon uso del linguaggio.} \\
+
+\subsubsection{NL.7: Fai si che la lunghezza di un nome sia proporzionale alla lunghezza del suo scope (raggio)}
+
+\textsf{\small Più grande è lo scope (raggio), più grande è la possibilità di confusione e di "scontri" tra nomi.} \\
+
+\subsubsection{NL.8: Usa uno stile dei nomi in modo costante}
+
+\textsf{\small La costanza nei nomi e nel loro stile aumenta la leggibilità.} \\
+
+\textsf{\small \textbf{Nota}: Ci sono molti stili, non puoi seguirli tutti, scegline uno, ma lascia lo stile delle librerie importate con il loro stile originale.} \\
+
+\textsf{\small \textbf{Esempio}: Lo \emph{Standard ISO}, usa le lettere minuscole e le cifre, separando le parole con gli underscores (trattini bassi):}
+
+\begin{itemize}
+	\item \textsf{\small int}
+	\item \textsf{\small vector}
+	\item \textsf{\small my\_map}
+\end{itemize}
+
+\textsf{\small Evita i doppi trattini bassi: \_\_} \\
+
+\textsf{\small \textbf{Esempio}: Lo \emph{Stroustrup}: ISO Standard, ma con le lettere maiuscole usate per i tipi e i concetti definiti dall'utente. }
+
+\begin{itemize}
+	\item \textsf{\small int}
+	\item \textsf{\small vector}
+	\item \textsf{\small My\_map}
+\end{itemize}
+
+\textsf{\small \textbf{Esempio}:\emph{CamelCase}, capitalizza ogni parola in un identificatore multi-parola: }
+
+\begin{itemize}
+	\item \textsf{\small int}
+	\item \textsf{\small vector}
+	\item \textsf{\small MyMap}
+	\item \textsf{\small myMap}
+\end{itemize}
+
+\textsf{\small Alcune convenzioni capitalizzano la prima lettera, altre no.} \\
+
+\subsubsection{NL.9: Usa ALL\_CAPS (tutte maiuscole) solo per i nomi delle macro}
+
+\textsf{\small Per evitare di confondere le macro con i nomi che obbediscono allo scope (raggio) e regole del tipo.} \\
+
+\textsf{\small \textbf{Nota}: Questa regola si applica anche alle costanti non-macro.} \\
+
+\textsf{\small Applicazioni per assicurarci che venga rispettata: } 
+
+\begin{itemize}
+	\item \textsf{\small Segnalare tutte le macro con le lettere minuscole.}
+	\item \textsf{\small Segnala tutte le macro che non sono nella forma ALL\_CAPS.}
+\end{itemize}
+
+\subsubsection{NL.10: Preferire nomi con lo stile\_underscore (con i trattini bassi)}
+
+\textsf{\small L'utilizzo degli underscores (trattini bassi) per separare parti del nome è originale dello stile del C e del C++ nella \emph{Libreria Standard del C++}.} \\
+
+\textsf{\small \textbf{Nota}: Questa regola è un default soltanto se si ha la possibilità di scelta. Spesso, non si ha la possibilità di scelta e si deve seguire uno stile stabilito per coerenza. Il bisogno di costanza sconfigge il gusto personale.} \\
+
+\textsf{\small \textbf{Esempio} \emph{Stroustrup}: ISO Standard, ma con le lettere maiuscole per i propri tipi e per i concetti: }
+
+\begin{itemize}
+	\item \textsf{\small int}
+	\item \textsf{\small vector}
+	\item \textsf{\small My\_Map}
+\end{itemize}
+
+\subsubsection{NL.11: Rendi i letterali leggibili}
+
+\textsf{\small Per la leggibilità del codice.} \\
+
+\textsf{\small \textbf{Esempio} Usa i separatori nelle cifre per evitare lunghe stringhe di cifre.}
+
+\begin{lstlisting}
+	auto c = 299'792'458; // m/s2
+	auto q2 = 0b0000'1111'0000'0000;
+	auto ss_number = 123'456'7890;
+\end{lstlisting}
+
+\textsf{\small \textbf{Esempio} Usa suffissi letterali quando necessario per chiarificare.}
+
+\begin{lstlisting}
+	auto hello = "Hello!"s; // a std::string
+	auto world = "world";   // a C-style string
+	auto interval = 100ms;  // using <chrono>
+\end{lstlisting}
+
+\textsf{\small \textbf{Nota}: I letterali (literals) non dovrebbero essere sparsi per l'intero codice come "magic constants", ma è comunque una buona idea per renderli chiari quando sono definiti. È semplice fare un typo in una lunga stringa di interi.} \\
+
+\textsf{\small Il seguente è un esempio \textbf{\color{red}ERRATO}\normalcolor:}
+
+\begin{lstlisting}[frame=single, rulecolor=\color{red}]
+	#include < chrono >
 	
+	int main(int argc, char * argv [ ])
+	{
+		// ...
 	}
 \end{lstlisting}
 
-\textsf{\small Anche gli if con una sola linea dovrebbero avere le parentesi graffe.} \\
+\textsf{\small Il seguente è un esempio \textbf{\color{ForestGreen}CORRETTO}\normalcolor:}
 
-\subsection{Indentazione}
-
-\textsf{\small Il contenuto in un \textbf{namespace} dovrebbe essere allo stesso livello di indentazione del namespace stesso. } \\
-
-\textsf{\small Il contenuto in una \textbf{classe}, \textbf{struct}, \textbf{funzioni}, \textbf{if}, \textbf{loop}, \textbf{switch}, \textbf{cases} e \textbf{labels} (dei goto) dovrebbe essere indentato.} \\
-
-\subsection{Convenzioni sui nomi}
-
-\begin{itemize}
-	\item \textsf{\small Non c'è nè prefisso nè suffisso a nessun nome.}
-	\item \textsf{\small Gli acronimi dovrebbero essere dello stesso case.}
-\end{itemize}
-
-\begin{lstlisting}
-	// Correct.
-	SomeBMCType someBMCVariable = bmcFunction();
-\end{lstlisting}
-
-\subsection{Ordine Inclusione Header files}
-
-\textsf{\small Inclusione degli headers in un header file:} \\
-
-\begin{itemize}
-	\item \textsf{\small headers locali}
-	\item \textsf{\small librerie c}
-	\item \textsf{\small librerie cpp}
-\end{itemize}
-
-\textsf{\small Inclusione degli headers in un source file (.cpp):} \\
-
-\begin{itemize}
-	\item \textsf{\small source.hpp (se applicabile)}
-	\item \textsf{\small headers locali}
-	\item \textsf{\small librerie c}
-	\item \textsf{\small librerie cpp}
-\end{itemize}
-
-\textsf{\small In ordine alfabetico.} \\
-
-\subsubsection{Files}
-
-\begin{itemize}
-	\item \textsf{\small Gli headers C++ dovrebbero finire in \emph{.hpp}. Gli headers C dovrebbero finire in \emph{.h}.}
-	\item \textsf{\small I files dovrebbero essere chiamati nel modo (case) lower\_snake\_case.}
-\end{itemize}
-
-\subsection{Types}
-
-\begin{itemize}
-	\item \textsf{\small Preferire \emph{using} a \emph{typedef}.}
-	\item \textsf{\small Le strutture, classi, enums dovrebbero essere tutti in UpperCamelCase.}
-	\item \textsf{\small Preferire gli scope namespaces al posto di nomi con lunghi prefissi.}
-	\item \textsf{\small Un alias di una singola parola con una struct / class dovrebbe essere in minuscolo, ma un alias a più parole dovrebbe essere UpperCamelCase.}
-	\item \textsf{\small Eccezioni: Una libreria API potrebbe usare il modo lower\_snake\_case per accordarsi alle convenzioni STL o ad una libreria C. Application APIs dovrebbero tutte essere UpperCamelCase.}
-	\item \textsf{\small Eccezione: Per convenienza un tipo di una classe template potrebbe finire in \_t per accordarsi alle convenzioni STL.}
-	%\item \textsf{\small }
-\end{itemize}
-
-\subsection{Variabili}
-
-\textsf{\small Le variabili dovrebbero tutte essere lowerCamelCase, inclusi i membri delle classi, senza underscore (trattini bassi).} \\
-
-\subsection{Funzioni}
-
-\begin{itemize}
-	\item \textsf{\small Le funzioni dovrebbero essere lowerCamelCase.}
-	\item \textsf{\small Eccezione: Una libreria API potrebbe usare lower\_snake\_case in accordo con le convenzioni STL o di una sottostante libreria in C che sta astraendo. Application API dovrebbero tutte essere lowerCamelCase.}
-	%\item \textsf{\small }
-\end{itemize}
-
-\subsection{Costanti}
-
-\begin{itemize}
-	\item \textsf{\small Costanti e i membri delle enums dovrebbero essere chiamati come le variabili in lowerCamelCase.}
-\end{itemize}
-
-\subsection{Namespaces}
-
-\begin{itemize}
-	\item \textsf{\small I namespaces dovrebbero essere lower\_snake\_case.}
-	\item \textsf{\small Top-level namespace dovrebbe essere chiamato sulla base della repository che lo contiene.}
-	\item \textsf{\small Favorisci un namespace chiamato 'details' o 'internal' per indicare l'equivalente di un namespace 'private' in un header file e namespaces anonimi in un file C++.}
-\end{itemize}
-
-\subsection{Header Guards}
-
-\textsf{\small Preferire \textbf{\#pragma} allo stile \textbf{\#ifndef}.}\\
-
-\subsection{Spazi bianchi addizionali}
-
-\begin{itemize}
-	\item \textsf{\small Segui lo stile di dichiarazione del C++}
-\end{itemize}
-
-\begin{lstlisting}
-	foo(T& bar, const S* baz); // Correct.
-	foo(T &bar, const S *baz); // Incorrect.
-\end{lstlisting}
-
-\begin{itemize}
-	\item \textsf{\small Usa gli spazi bianchi moderatamente.}
-	\item \textsf{\small Inserisci uno spazio bianco prima e dopo if e loops.}
-\end{itemize}
-
-\begin{lstlisting}
-	if (...)
-	while (...)
-	for (...)
-\end{lstlisting}
-
-\begin{itemize}
-	\item \textsf{\small Aggiungi spazio bianco attorno agli operatori binari per leggibilità}
-\end{itemize}
-
-\begin{lstlisting}
-	foo((a-1)/b,c-2); /// Incorrect.
-	foo((a - 1) / b, c - 2); /// Correct.
-\end{lstlisting}
-
-\begin{itemize}
-	\item \textsf{\small Non inserire spazi bianchi dopo gli operatori unari.}
-\end{itemize}
-
-\begin{lstlisting}
-	a = * b;  /// Incorrect.
-	a = & b;  /// Incorrect.
-	a = b -> c;  /// Incorrect.
-	if (! a)  /// Incorrect.
-\end{lstlisting}
-
-\begin{itemize}
-	\item \textsf{\small Non inserire spazi bianchi nè prima nè dopo una chiamata a funzione e ai parametri.}
-\end{itemize}
-
-\begin{lstlisting}
-	foo(x, y); /// Correct.
-	foo ( x , y ); /// Incorrect.
+\begin{lstlisting}[frame=single, rulecolor=\color{ForestGreen}]
+	#include <chrono>
 	
-	do (...)
+	int main(int argc, char* argv[])
 	{
-	} while(0); /// 'while' qui è strutturato come una chiamata a funzione.
+		// ...
+	}
 \end{lstlisting}
 
+\textsf{\small Applicazioni per assicurare il rispetto della regola: }
+
 \begin{itemize}
-	\item \textsf{\small Preferire una linea a capo dopo gli operatori per mostrare la continuazione.}
+	\item \textsf{\small Segnalare le lunghe sequenze di cifre. Il problema è definire "lunghe"; forse 7.}
 \end{itemize}
+
+\subsubsection{NL.15: Usa gli spazi con moderazione}
+
+\textsf{\small Troppi spazi rendono il testo largo e distraente.} \\
+
+\textsf{\small \textbf{Nota}: Gli spazi bianchi ben piazzati sono un aiuto significativo per la leggibilità. Basta non esagerare.} \\
+
+\subsubsection{NL.16: Usa una convenzionale ordine di dichiarazione della classe}
+
+\textsf{\small Un ordine convenzionale di membri migliora la leggibilità.} \\
+
+\textsf{\small Quando dichiari una classe usa il seguente ordine: } \\
+
+\begin{itemize}
+	\item \textsf{\small tipi: classi, enums, aliases (using)}
+	\item \textsf{\small costruttori, assegnamenti, distruttore}
+	\item \textsf{\small funzioni}
+	\item \textsf{\small dati}
+\end{itemize}
+
+\textsf{\small Usa l'ordine: \textbf{public} prima di \textbf{protected} prima di \textbf{private}. } \\
 
 \begin{lstlisting}
-	if (this1 == that1 &&
-	this2 == that2) /// Correct.
-	
-	if (this1 == that1
-	&& this2 == that2) /// Incorrect.
+	class X {
+		public:
+		// interface
+		protected:
+		// unchecked function for use by derived class implementations
+		private:
+		// implementation details
+	};
 \end{lstlisting}
 
+\textsf{\small \textbf{Esempio} A volte, l'ordine di default dei membri va in conflitto con l'intenzione di separare l'interfaccia pubblica dai dettagli implementativi. In questi casi, i tipi privati e le funzioni possono essere piazzati con i dati privati.} \\
+
+\textsf{\small \textbf{Esempio ERRATO}: Evita di dichiarare molteplici blocchi di accesso dispersi tra blocchi di dichiarazioni con differenti accessi. Il seguente esempio è \textbf{\color{red}ERRATO}\normalcolor: } \\
+
+\begin{lstlisting}[frame=single, rulecolor=\color{red}]
+	class X {   // bad
+		public:
+		void f();
+		public:
+		int g();
+		// ...
+	};
+\end{lstlisting}
+
+\textsf{\small L'utilizzo di macro per dichiarare gruppi di membri spesso porta a violazioni nelle regole di ordinamento. Comunque, usare le macro oscura quello che è stato espresso. } \\
+
+\textsf{\small Applicazioni per il rispetto della regola: } 
+
 \begin{itemize}
-	\item \textsf{\small Le linee lunghe dovrebbero avere la continuazione che inizi allo stesso livello delle parentesi o tutti gli oggetti all'interno delle parentesi dovrebbero essere al secondo livello di indentazione.}
+	\item \textsf{\small Segnala le partenze dall'ordine suggerito.}
 \end{itemize}
+
+\subsubsection{NL.17: Usa il layout di K\&R }
+
+\textsf{\small Questo è il layout originale del C e C++. Preserva bene lo spazio verticale. Distingue bene i diversi costrutti del linguaggi (come le funzioni e le classi).} \\
+
+\textsf{\small \textbf{Nota}: Nel contesto del C++, questo stile è spesso chiamato \textbf{Stroustrup}.} \\
+
+\textsf{\small \textbf{Esempio}}
 
 \begin{lstlisting}
-	reallyLongFunctionCall(foo,
-	bar,
-	baz); // Correct.
+	struct Cable {
+		int x;
+		// ...
+	};
 	
-	reallyLongFunctionCall(
-	foo,
-	bar,
-	baz); // Also correct.
-	
-	reallyLongFunctionCall(
-	foo, bar, baz); // Similarly correct.
-	
-	reallyLongFunctionCall(foo,
-	bar,
-	baz); // Incorrect.
+	double foo(int x)
+	{
+		if (0 < x) {
+			// ...
+		}
+		
+		switch (x) {
+			case 0:
+			// ...
+			break;
+			case amazing:
+			// ...
+			break;
+			default:
+			// ...
+			break;
+		}
+		
+		if (0 < x)
+		++x;
+		
+		if (x < 0)
+		something();
+		else
+		something_else();
+		
+		return some_value;
+	}
 \end{lstlisting}
 
-\subsection{Linee Guida Miste}
+\textsf{\small Da notare lo spazio tra \textbf{if} e \textbf{$($}} \\
 
-\begin{itemize}
-	\item \textsf{\small  Usare sempre size\_t o ssize\_t per cose come contatori, pesi, ecc.. C'è bisogno di un forte motivo razionale per usare un tipo come uint8\_t quando size\_t può fare lo stesso lavoro.}
-	\item \textsf{\small Usa uint8\_t, int16\_t, uint32\_t, int64\_t quando è importante per l'interazione coll'hardware. Non usarli senza una buona motivazione, quando le interazioni coll'hardware non sono coinvolte; preferire size\_t o int piuttosto.}
-\end{itemize}
+\textsf{\small \textbf{Nota}: Usa linee separate per per ogni statement, le parentesi di un \textbf{if} e il corpo di un \textbf{for}.} \\
+
+\textsf{\small \textbf{Nota}: La \{ per una \textbf{class} e per una \textbf{struct} non è su una linea separata, ma la \{ per una funzione sì.} \\
+
+\textsf{\small \textbf{Nota}: Capitalizza il nome dei tipi definiti dall'utente per distinguerli dai tipi della libreria standard.} \\
+
+\textsf{\small \textbf{Nota}: Non capitalizzare i nomi delle funzioni.} \\
+
+\textsf{\small Per applicare questa regola, usa un IDE per la formattazione.} \\
+
+\subsubsection{NL.18: Usa il layout dei dichiaratori del C}
+
+\textsf{\small Lo stile di layout del C enfatizza l'uso nelle espressioni e nella grammatica, mentre lo stile del C++ enfatizza i tipi. Questo non vale per le references.} \\ %TODO: "Questo non vale per le references" forse da tradurre meglio.
+
+\textsf{\small \textbf{Esempio}} 
+
+\begin{lstlisting}
+	T& operator[](size_t);   // OK
+	T &operator[](size_t);   // semplicemente strano
+	T & operator[](size_t);   // indeciso
+\end{lstlisting}
+
+\subsubsection{NL.19: Evita nomi che possono essere facilmente fraintesi}
+
+\textsf{\small Per la leggibilità. Può capitare di confondere parole simili o errate.} \\
+
+\textsf{\small \textbf{Esempio}}
+
+\begin{lstlisting}
+	int oO01lL = 6; // male
+	
+	int splunk = 7;
+	int splonk = 8; // male: splunk e splonk possono essere facilmente confusi
+\end{lstlisting}
+
+\subsubsection{NL.20: Non piazzare due dichiarazioni sulla stessa riga}
+
+\textsf{\small Per via della leggibilità. È davvero semplice lasciarsi sfuggire una dichiarazione quando ce ne sono più di una in una linea.} \\
+
+\textsf{\small \textbf{Esempio}}
+
+\begin{lstlisting}
+	int x = 8; std::string s = "hello"; // non lo fare
+	int x = 8; f(x); ++x; // non lo fare
+\end{lstlisting}
+
+\subsubsection{NL.21: Dichiara un nome (solo) per dichiarazione}
+
+\textsf{\small Per la leggibilità. Per minimizzare la confusione con la sintassi.} \\ %sintassi del dichiarante/di dichiarazione.
+
+\textsf{\small \textbf{Nota}: Per i dettagli, guardare \textbf{ES.10} a pag.\textbf{\pageref{ES_10}}.} \\
+
+\subsubsection{NL.25: Non usare void come argomento}
+
+\textsf{\small È verboso, prolisso ed è necessario solo per questioni riguardanti la compatibilità col C.} \\
+
+\textsf{\small \textbf{Esempio}}
+
+\begin{lstlisting}
+	void f(void);   // male
+	
+	void f();       // meglio
+\end{lstlisting}
+
+\textsf{\small \textbf{Nota}: Persino Dennis Ritchie (creatore del C) considerava void f(void) un abominio. Lo si poteva fare in C e se lo si fosse vietato avrebbe causato grossi problemi, ma non lo si può usare nel 21° secolo e in C++. } \\
+
+\subsubsection{NL.26: Usa la convenzionale notazione const}
+
+\textsf{\small La notazione convenzionale è più familiare alla maggior parte dei programmatori. È importante per la coerenza nei grandi progetti, community} \\
+
+\textsf{\small \textbf{Esempio}}
+
+\begin{lstlisting}
+	const int x = 7;    // OK
+	int const y = 9;    // male
+	
+	const int *const p = nullptr;   // OK, constant pointer to constant int
+	int const *const p = nullptr;   // male, constant pointer to constant int
+\end{lstlisting}
+
+\textsf{\small \textbf{Nota}: Gli esempi marcati "male" potrebbero sembrare più logici, ma confondono anche più persone, specialmente i principianti.} \break
+
+\textsf{\small Come sempre, ricorda che lo scopo di queste regole di layout è la coerenza, la costanza e che l'estetica varia immensamente.} \\
+
+\begin{comment}
+	
+	\textsf{\small Elencherò alcune convenzioni che ho trovato ricercando su internet, visto che nelle \textbf{CppCoreGuidelines} non mi è sembrato chiaro che cosa usare: } \\
+	
+	\textsf{\small Alcune di queste le ho trovate su questa repo:  \href{https://github.com/cpp-best-practices/cppbestpractices/blob/master/03-Style.md}{cppbestpractices style}} \\
+	
+	\textsf{\small L'importante, di solito, è essere consistenti con ciò che abbiamo scelto di seguire.} \\
+	
+	\subsection{Stile}
+	
+	\begin{itemize}
+		\item \textsf{\small snake\_case : sembra essere il più usato (è anche usato nella Libreria Standard) (è preferito anche dalle Core Guidelines, a meno che non bisogna seguire lo stile del progetto in cui stiamo lavorando)}
+		\item \textsf{\small camelCase (lower camelCase) sembra essere più usato dagli sviluppatori che vengono dal Java}
+		\item \textsf{\small PascalCase}
+	\end{itemize}
+	
+	\textsf{\small La \emph{Libreria Standard} (e altre librerie molto conosciute come la libreria \href{https://www.boost.org/}{\textbf{Boost}}) usano queste linee guida: } \\
+	
+	\begin{itemize}
+		\item \textsf{\small Macro usano le maiuscole con gli underscores: INT\_MAX}
+		\item \textsf{\small I parametri dei templates usano CamelCase (quello upper, non lower): InputIterator}
+		\item \textsf{\small Tutti gli altri nomi usano lo snake\_case: unordered\_map}
+	\end{itemize}
+	
+	\subsection{Convenzioni sui nomi}
+	
+	\begin{itemize}
+		\item \textsf{\small \textbf{Classi} iniziano con la maiuscola: MyClass}
+		\item \textsf{\small \textbf{Funzioni} iniziano con la minuscola oppure con gli underscores (trattini bassi): myFunction o my\_function}
+		\item \textsf{\small Le \textbf{costanti} e le \textbf{macro} sono tutte in maiuscolo e separate da \_ (trattini bassi): const double PI = 3.14;  (UPPERCASE\_UNDERSCORE\_STYLE)}
+	\end{itemize}
+	
+	\subsection{Dati privati}
+	
+	\textsf{\small Li distinguiamo ponendo il prefisso \textbf{m\_}, questo sta per "member" (ovvero membro).} \\
+	
+	\subsection{Distinguere i parametri delle funzioni}
+	
+	\textsf{\small Si può aggiungere il prefisso \textbf{t\_} nel nome del parametro, questo starebbe per "the" (il/la). Questa linea guida è però controversa.} \\
+	
+	\subsection{Non iniziare un nome con \_}
+	
+	\textsf{\small Per evitare di rischiare di collidere con nomi riservati al compilatore e alla \emph{Libreria Standard}.} \\
+	
+	\subsection{Abilita la build fuori dalle source directories}
+	
+	\textsf{\small Fai in modo che i files generati vadano in una cartella di output separata dalla cartella dei source (sorgenti).} \\
+	
+	\subsection{Usa \textbf{nullptr}}
+	
+	\textsf{\small } \\
+	
+\end{comment}
+
+\newpage
+
+\textsf{\small Potete trovare tutte le linee guida del linguaggio nelle \textbf{C++ Core Guidelines} : \href{https://github.com/isocpp/CppCoreGuidelines}{CppCoreGuidelines}} \\
+
+%TODO: aggiungere l'immagine CppCoreGuidelines.png
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\textwidth, height=1\textheight, keepaspectratio]{./imgs/CppCoreGuidelines.png}
+	\caption{CppCoreGuidelines}
+	\label{fig:CppCoreGuidelines}
+\end{figure}
 
 % ------------------------------ FINE CAPITOLO ---------------------------------------

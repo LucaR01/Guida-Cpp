@@ -28,7 +28,7 @@
 
 \textsf{\small In questo capitolo "finale" tratterò argomenti un po' più complessi o che almeno non mi verrebbe da mettere negli altri due capitoli precedenti.} \\
 
-\textsf{\small Verranno trattati argomenti come gli smart pointers e quindi unique pointers, share pointers, weak pointers, le friend function, uniform real distribution e altri importanti concetti avanzati.} \\
+\textsf{\small Verranno trattati argomenti come gli smart pointers e quindi unique pointers, share pointers, weak pointers, le friend function e altri importanti concetti avanzati.} \\
 
 % -------------------------- SECTION: FRIEND KEYWORD ---------------------------------
 
@@ -108,7 +108,7 @@
 		width = w;
 	}
 
-	// printWidth non è una funzione membra di nessuna classe.
+	// printWidth non è una funzione membro di nessuna classe.
 	void printWidth( A a )
 	{
 		// Visto che la funzione printWidth è amica di A, può accedere direttamente a qualsiasi membro di A.
@@ -133,7 +133,7 @@
 
 \section{Smart Pointers}
 
-\textsf{\small \textbf{Definizione: } Gli \textbf{smart pointers} (puntatori intelligenti) sono dei puntatori che, in più rispetto ai normali puntatori, sono in grado deallocare la memoria automaticamente, senza che il programmatore debba occuparsene ed evitando \emph{memory leak}.} \\
+\textsf{\small \textbf{Definizione: } Gli \textbf{smart pointers} (puntatori intelligenti) sono dei puntatori che, in più rispetto ai normali puntatori, sono in grado di deallocare la memoria automaticamente, senza che il programmatore debba occuparsene ed evitando \emph{memory leak}.} \\
 
 \subsection{Differenze con i puntatori normali}
 
@@ -231,11 +231,13 @@
 
 \begin{lstlisting}
 	#include <iostream>
-	#include <memory> // Per gli unique pointers, ecc..
+	#include <memory> // Per gli unique pointers, ecc.
 	
 	// Per dichiarare un unique pointer
 	std::unique_ptr<int> p(new int(3));
 \end{lstlisting}
+
+\newpage %TODO: questo \newpage mi serviva per evitare gli spazi bianchi sopra alla subsection unique pointers
 
 \begin{figure}[H]
 	\centering
@@ -289,7 +291,7 @@
 \textsf{\small Ci sono varie ragioni per cui utilizzare \textbf{std::make\_unique} al posto di \textbf{std::unique\_ptr} con la new: } \\
 
 \begin{itemize}
-	\item \textsf{\small È sicuro nel caso si vogliano creare dei temporanei, mentre con la new ti devi ricordare la reogla: del non usare temporanei senza nome. } 
+	\item \textsf{\small È sicuro nel caso si vogliano creare dei temporanei, mentre con la new ti devi ricordare la regola: del non usare temporanei senza nome. } 
 	\item \textsf{\small Con l'utilizzo di \textbf{make\_unique} si può finalmente evitare di usare la \textbf{new}, a differenza della vecchia regola: mai usare la \textbf{new} tranne per gli \textbf{unique\_ptr}.} 
 	\item \textsf{\small Non richiede \emph{type usage} ridondante: \emph{unique\_ptr<T>(new T())} -> make\_unique<T>().} \\
 	\item \textsf{\small Così da non dover esplicitare gli argomenti dei \emph{template types}.}
@@ -354,7 +356,7 @@
 	\item \textsf{\small \textbf{.reset(new int())} : cancella il vecchio oggetto e ne crea uno nuovo (al posto di new int() avremmo potuto passare qualsiasi altro oggetto, era per fare un esempio).}
 	\item \textsf{\small \textbf{move} : trasferisce la proprietà del \textbf{unique\_ptr}.}
 	\item \textsf{\small \textbf{swap} : per scambiare due \textbf{unique pointers}.}
-	\item \textsf{\small \textbf{if(unique\_ptr)} : se passiamo uno \textbf{unique\_ptr} all'if restituisce falso se non è associato a nessun oggetto.}
+	\item \textsf{\small \textbf{if(unique\_ptr)} : se passiamo uno \textbf{unique\_ptr} all'if, questo restituisce falso se non è associato a nessun oggetto.}
 	%\item \textsf{\small \textbf{} : }
 \end{itemize}
 
@@ -373,7 +375,7 @@
 
 	void passUniquePtr(std::unique_ptr<A> a)
 	{
-		// Usciti dalla funzione lo unique\_ptr e il suo oggetto vengono cancellati, perché locali alla funzione.
+		// Usciti dalla funzione, lo unique\_ptr e il suo oggetto vengono cancellati, perché locali alla funzione.
 		std::cout << "Puntatore ricevuto" << '\n';
 		a->x = 5;
 		std::cout << "a.x: " << a->x << std::endl;
@@ -467,6 +469,8 @@
 	}
 \end{lstlisting}
 
+\newpage %TODO: questo \newpage mi serviva per evitare gli spazi bianchi sopra la subsection share pointers.
+
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=1\textwidth, height=1\textheight, keepaspectratio]{./imgs/shared_ptr3.png}
@@ -483,7 +487,7 @@
 \textsf{\small \textbf{shared\_ptr} si occupa di due entità: } \\
 
 \begin{itemize}
-	\item \textsf{\small Il blocco di controllo (\emph{control block}) che memorizza dei meta data come \emph{ref-counts} (contatore delle referenze all'oggetto), \emph{type-erased deleter}, ecc..}
+	\item \textsf{\small Il blocco di controllo (\emph{control block}) che memorizza dei metadati come \emph{ref-counts} (contatore delle referenze all'oggetto), \emph{type-erased deleter}, ecc.}
 	\item \textsf{\small l'oggetto stesso.}
 \end{itemize}
 
@@ -509,9 +513,11 @@
 
 \textsf{\small Lo \textbf{shared pointer} inoltre allo \emph{stored pointer}, possiede un secondo puntatore che punta ad un \textbf{control block}. Il \emph{control block} ha un \emph{reference counter} (contatore delle referenze) che memorizza il numero di \textbf{shared pointers} che puntano allo stesso oggetto.} \\
 
+\newpage %TODO: questo mi serviva per evitare gli spazi nell'itemize della subsubsection "Operazioni sui shared pointers".
+
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=1.2\textwidth, height=1.2\textheight, keepaspectratio]{./imgs/shared_ptr_structure.png}
+	\includegraphics[width=1\textwidth, height=1\textheight, keepaspectratio]{./imgs/shared_ptr_structure.png}
 	\caption{Shared ptr structure}
 	\label{fig:shared_ptr_structure}
 \end{figure}
@@ -522,7 +528,7 @@
 
 \textsf{\small Quando uno \textbf{shared pointer} viene distrutto, allora il \emph{control block} decrementerà il \emph{reference counter}.} \\
 
-\textsf{\small L'oggetto verrà eliminato quando l'ultimo \textbf{shared\_ptr} verrà eliminato.} \\
+\textsf{\small L'oggetto verrà eliminato quando l'ultimo \textbf{shared\_ptr} verrà eliminato. (e quindi quando il \emph{reference counter} arriverà a 0. )} \\
 
 \begin{lstlisting}
 	#include <iostream>
@@ -612,7 +618,7 @@
 	}
 \end{lstlisting}
 
-\textsf{\small Un problema col restituire uno \textbf{shared\_ptr}, se lo devi restituire al "mondo esterno", meglio restituirlo come \emph{reference}, perché altrimenti uno potrebbe chiamare la \textbf{.reset()} su quello \textbf{shared pointer}.} \break
+\textsf{\small Un problema col restituire uno \textbf{shared\_ptr}: se lo devi restituire al "mondo esterno", meglio restituirlo come \emph{reference}, perché altrimenti uno potrebbe chiamare la \textbf{.reset()} su quello \textbf{shared pointer}.} \break %TODO: ma non potrebbero comunque chiamarla la .reset() anche con la reference?
 
 \textsf{\small Un altro modo per restituire uno \textbf{shared\_ptr} è attraverso \emph{std::allocate\_shared}.} \\
 
@@ -686,7 +692,7 @@
 
 \subsubsection{enable\_shared\_from\_this}
 
-\textsf{\small \textbf{Definizione: } \textbf{std::enable\_shared\_from\_this} permette un oggetto \emph{t} che è gestito da uno \textbf{shared\_ptr} \emph{sp} di generare, in modo sicuro, degli \textbf{shared\_ptr} addizionali, istanze \emph{sp1}, \emph{sp2} che condividono tutti la proprietà dell'oggetto \emph{t} con \emph{sp}.} \break
+\textsf{\small \textbf{Definizione: } \textbf{std::enable\_shared\_from\_this} permette a un oggetto \emph{t} che è gestito da uno \textbf{shared\_ptr} \emph{sp} di generare, in modo sicuro, degli \textbf{shared\_ptr} addizionali, istanze \emph{sp1}, \emph{sp2} che condividono tutti la proprietà dell'oggetto \emph{t} con \emph{sp}.} \break
 
 \textsf{\small Ereditare da \textbf{std::enable\_shared\_from\_this} fornisce il tipo T con una funzione membro \emph{shared\_from\_this()}. Se un oggetto \emph{t} di tipo T è gestito da uno \textbf{shared\_ptr} \emph{sp}, allora chiamare \emph{shared\_from\_this()} restituirà un nuovo \textbf{shared\_ptr} che condivide la proprietà di \emph{t} con \emph{sp}. } \\
 
@@ -729,11 +735,12 @@
 
 \subsection{weak pointers}
 
-\textsf{\small \textbf{Definizione: } I \textbf{weak pointers} sono un tipo di \textbf{smart pointers} che non prende la proprietà dell'oggetto, ma agisce come un osservatore. Non partecipa al \emph{reference counter} (non viene contato) e non estende la \emph{lifetime} dell'oggetto. Sono usati, principalmente, per rompere la dipendenza circolare degli \textbf{shared pointers}.} \\
+\textsf{\small \textbf{Definizione: } Un \textbf{weak pointer} è un tipo di \textbf{smart pointer} che non prende la proprietà dell'oggetto, ma agisce come un osservatore. Non partecipa al \emph{reference counter} (non viene contato) e non estende la \emph{lifetime} dell'oggetto. } \break 
+\textsf{\small Sono usati, principalmente, per rompere la dipendenza circolare degli \textbf{shared pointers}.} \\
 
 \subsubsection{Problema della dipendenza ciclica}
 
-\textsf{\small \textbf{Definizione: } Mettiamo di avere due classi: A e B, se entrambe hanno un puntatore che punta all'altra, avremo un ciclo e il \emph{use\_count()} non arriverà mai a 0, il che crea un problema nella rimozione di questi due puntatori.} \\
+\textsf{\small \textbf{Definizione: } Mettiamo di avere due classi: A e B, se entrambe hanno un puntatore che punta all'altra, avremo un ciclo e il \emph{use\_count()} non arriverà mai a 0, il che creerebbe un problema nella rimozione di questi due puntatori.} \\
 
 \begin{figure}[H]
 	\centering
@@ -746,7 +753,7 @@
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=1.2\textwidth, height=1.2\textheight, keepaspectratio]{./imgs/shared_ptr_problem_cyclic_dependency2.jpg}
+	\includegraphics[width=1\textwidth, height=1\textheight, keepaspectratio]{./imgs/shared_ptr_problem_cyclic_dependency2.jpg}
 	\caption{Cyclic dependency}
 	\label{fig:shared_ptr_problem_cyclic_dependency2}
 \end{figure}
@@ -767,13 +774,13 @@
 
 \begin{itemize}
 	\item \textsf{\small \textbf{*} : dereferenza}
-	\item \textsf{\small \textbf{->} : dereferenza, accedere ai membri della classe/struct, ecc..}
+	\item \textsf{\small \textbf{->} : dereferenza, accedere ai membri della classe/struct, ecc.}
 	\item \textsf{\small \textbf{.lock()} : restituisce uno \textbf{shared\_ptr} con le informazioni preservate nel \textbf{weak\_ptr} se non è \emph{expired}. Se il \textbf{weak\_ptr} è \emph{expired} (scaduto), la funzione restituisce un \textbf{shared\_ptr} vuoto.}
 	%\item \textsf{\small \textbf{.get()} : }
 	\item \textsf{\small \textbf{.reset()} : cancella il vecchio oggetto e ne crea uno nuovo.}
 	\item \textsf{\small \textbf{.swap()} : scambia due \textbf{weak pointers}.}
 	\item \textsf{\small \textbf{.use\_count()} : restituisce il numero di \textbf{shared pointers} che puntano allo stesso oggetto.}
-	\item \textsf{\small \textbf{.expired()} : restituisce se il \textbf{weak\_ptr} è vuoto o non ci sono più \textbf{shared\_ptr} nel \emph{owner group}. I puntatori "scaduti" (\emph{expired}) sono come \textbf{weak pointers} vuoti quando \emph{locked}, e non possono quindi essere più usati.}
+	\item \textsf{\small \textbf{.expired()} : restituisce se il \textbf{weak\_ptr} è vuoto o non ci sono più \textbf{shared\_ptr} nell' \emph{owner group}. I puntatori "scaduti" (\emph{expired}) sono come \textbf{weak pointers} vuoti quando \emph{locked} e non possono quindi essere più usati.}
 	\item \textsf{\small \textbf{.owner-before()} : restituisce se l'oggetto deve andare prima del parametro. Se l'oggetto appartiene allo stesso \emph{owner group} del parametro, allora restituisce \emph{false}, anche se il valore memorizzato dai puntatori è diverso.}
 	%\item \textsf{\small \textbf{} : }
 \end{itemize}
@@ -807,6 +814,8 @@
 		return 0;
 	}
 \end{lstlisting}
+
+\newpage %TODO: questo \newpage mi serviva per gli spazi bianchi.
 
 \begin{figure}[H]
 	\centering
@@ -847,11 +856,11 @@
 		int *ptr;
 		public:
 		anyArrayClass(int s=0):size(s),
-		ptr(size? new int[size]:nullptr) {}
+		ptr(size ? new int[size]:nullptr) {}
 		
 		// Copy constructor
 		anyArrayClass(const anyArrayClass& obj):size(obj.size),
-		ptr(size? new int[size]:nullptr)
+		ptr(size ? new int[size]:nullptr)
 		{
 			memmove(ptr, obj.ptr, size*sizeof(int));
 		}
@@ -899,11 +908,11 @@
 \textsf{\small Una metodologia di base è questa: } \\
 
 \begin{itemize}
-	\item \textsf{\small Osserva il problema.}
-	\item \textsf{\small Identifica la natura del problema.}
-	\item \textsf{\small Identifica la condizione (o condizioni) che innesca il problema.}
-	\item \textsf{\small Identifica il meccanismo di guasto, fallimento.}
-	\item \textsf{\small Fixa il problema.}
+	\item \textsf{\small Osservare il problema.}
+	\item \textsf{\small Identificare la natura del problema.}
+	\item \textsf{\small Identificare la condizione (o condizioni) che innesca il problema.}
+	\item \textsf{\small Identificare il meccanismo di guasto, fallimento.}
+	\item \textsf{\small Fixare il problema.}
 	%\item \textsf{\small }
 \end{itemize}
 
@@ -1043,7 +1052,7 @@
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=1.2\textwidth, height=1.2\textheight, keepaspectratio]{./imgs/7-Advanced-C-programming-styles-and-idiom-examples-you-should-know.png}
+	\includegraphics[width=1\textwidth, height=1\textheight, keepaspectratio]{./imgs/7-Advanced-C-programming-styles-and-idiom-examples-you-should-know.png}
 	\caption{7 Concetti Avanzati}
 	\label{fig:7-Advanced-C-programming-styles-and-idiom-examples-you-should-know}
 \end{figure}
@@ -1196,12 +1205,12 @@
 
 \textsf{\small \textbf{Definizione: } \textbf{Type Erasure}, o anche conosciuto come \emph{Duck-typing} serve per generare dei container che possono gestire una varietà di tipi.} \\
 
-\textsf{\small Questo può essere implementato attraverso: \emph{void*}, \emph{templates}, \emph{polimorfismo}, \emph{union}, \emph{proxy class}, eccetera..} \break
+\textsf{\small Questo può essere implementato attraverso: \emph{void*}, \emph{templates}, \emph{polimorfismo}, \emph{union}, \emph{proxy class}, eccetera.} \break
 
 \begin{itemize}
-	\item \textsf{\small Il C++ è un linguaggio \emph{statically typed} con uno \emph{typing} forte. In questi tipi di linguaggio, la tipologia dell'oggetto è conosciuta a compile-time.} %TODO: magari spiegare meglio la parte del 'statically typed' con forte 'typing'
+	\item \textsf{\small Il C++ è un linguaggio \emph{statically typed} con uno \emph{typing} forte. In questi tipi di linguaggi, la tipologia dell'oggetto è conosciuta a compile-time.} %TODO: magari spiegare meglio la parte del 'statically typed' con forte 'typing'
 	\item \textsf{\small Quindi il tipo di un oggetto, dopo la compilazione, non cambia.}
-	\item \textsf{\small Per ovviare a questo esistono vari containers come: \emph{std::any} (C++17), \emph{std::variant} (C++17), \emph{std::function} (C++11), eccetera..}
+	\item \textsf{\small Per ovviare a questo esistono vari containers come: \emph{std::any} (C++17), \emph{std::variant} (C++17), \emph{std::function} (C++11), eccetera.}
 \end{itemize}
 
 \textsf{\small Quindi esistono varie tecniche per implementare questo: } \\
@@ -1212,7 +1221,7 @@
 	void qsort(void* base, size_t num, size_t size, int(*comapare)(const void*, const void*));
 \end{lstlisting}
 
-\textsf{\small Lo svantaggio è che non è sicuro e separa la funzione compare necessaria per ogni tipo.} \\
+\textsf{\small Lo svantaggio è che non è sicuro e separa la funzione `compare` necessaria per ogni tipo.} \\
 
 \subsubsection{Type erasure usando i templates}
 
@@ -1221,7 +1230,7 @@
 		void sort(RandomAccessIterator first, RandomAccessIterator last);
 \end{lstlisting}
 
-\textsf{\small Lo svantaggio: potrebbe portare all'instanzione di molte funzioni template e quindi di tempi di compilazione più lunghi. } \\
+\textsf{\small Lo svantaggio: potrebbe portare all'istanzione di molte funzioni template e quindi di tempi di compilazione più lunghi. } \\
 
 \subsubsection{Type erasure usando il polimorfismo}
 
@@ -1241,14 +1250,14 @@
 			void method() { cout << "classe D\n"; } 
 	};
 	
-	// Non vediamo un tipo concreto (viene cancellato) anche se lo si può dynamic\_cast.
+	// Non vediamo un tipo concreto (viene cancellato) anche se lo si può castare con il dynamic\_cast.
 	void call(Base* ptr) 
 	{ 
 		ptr->method(); 
 	};
 \end{lstlisting}
 
-\textsf{\small Lo svantaggio è che costa a livello di runtime (dynamic dispatch, indirection, vtable, eccetera..)} \\
+\textsf{\small Lo svantaggio è che costa a livello di runtime (dynamic dispatch, indirection, vtable, eccetera.)} \\
 
 \subsubsection{Type erasure usando le union}
 
@@ -1413,7 +1422,7 @@
 		return (static_cast<const derived&>(rhs)<static_cast<const derived&>(lhs));
 	}
 	
-	/*  Same goes with other operators
+	/*  Lo stesso vale per gli altri operatori
 	== :: returns !(lhs < rhs) and !(rhs < lhs)
 	!= :: returns !(lhs == rhs)
 	>= :: returns (rhs < lhs) or (rhs == lhs)
@@ -1649,7 +1658,7 @@
 	}
 \end{lstlisting}
 
-\textsf{\small Immagina di volere creare due insiemi (basati sui tipi primitivi e sui tipi definiti dall'utente separatamente) di una funzione che ha la stessa \emph{signature}? (tipo di ritorno, nome, parametri della funzione).} \\
+\textsf{\small Immagina di voler creare due insiemi (basati sui tipi primitivi e sui tipi definiti dall'utente separatamente) di una funzione che ha la stessa \emph{signature}? (tipo di ritorno, nome, parametri della funzione).} \\
 
 \textsf{\small Soluzione: } \\
 
@@ -1667,7 +1676,7 @@
 	}
 \end{lstlisting}
 
-\textsf{\small Il code snippet sopra è un esempio di come sfruttare \textbf{SFINAE} attraverso l'uso di \textbf{std::enable\_if}, nella quale l'istanze template diventeranno uguali a \emph{void func<(anonymous), void>((anonymous) * t)} e \emph{void func(int *t)}} \break
+\textsf{\small Il code snippet (frammento di codice) sopra è un esempio di come sfruttare \textbf{SFINAE} attraverso l'uso di \textbf{std::enable\_if}, nella quale le istanze template diventeranno uguali a \emph{void func<(anonymous), void>((anonymous) * t)} e \emph{void func(int *t)}} \break
 
 \textsf{\small Assieme con \textbf{std::enable\_if}, \textbf{SFINAE} è ampiamente usata nel \emph{template metaprogramming}.} \\
 
@@ -1694,8 +1703,9 @@
 	}
 \end{lstlisting}
 
-\textsf{\small Senza \textbf{SFINAE} avresti un errore dal compilatore, qualcosa del tipo: <<\emph{0 cannot be converted to member pointer for a non-class type int}>> visto che sia l'\emph{overload} di test differisce solo del tipo di ritorno.} \\
-\textsf{\small Visto che int non è una classe non può avere membro puntatore di tipo \emph{int int::*}.} \\
+\textsf{\small Senza \textbf{SFINAE} avresti un errore dal compilatore, qualcosa del tipo: <<\emph{0 cannot be converted to member pointer for a non-class type int}>> visto che l'\emph{overload} di test differisce solo del tipo di ritorno e visto che int non è una classe non può avere membro puntatore di tipo \emph{int int::*}.} \\
+
+\newpage %TODO: questo \newpage per via degli spazi bianchi sopra.
 
 \begin{figure}[H]
 	\centering
@@ -1710,7 +1720,7 @@
 
 \textsf{\small \textbf{Definizione: } Il \textbf{Proxy}, o anche conosciuto come \emph{operator[] (subscript) proxy}, \emph{double/twice operator overloading} è un \emph{design pattern} il cui intento è quello di ottenere funzionalità pratiche attraverso una classe \emph{middleware}.} \\
 
-\textsf{\small Quindi, il \textbf{Proxy} è una classe che fornisce un'interfaccia modificata ad un'altra classe ed è usata per implementare il \textbf{Proxy Patern}: nel quale un oggetto è un intermediatore per qualche altro oggetto.} \\
+\textsf{\small Quindi, il \textbf{Proxy} è una classe che fornisce un'interfaccia modificata ad un'altra classe ed è usata per implementare il \textbf{Proxy Patern}: nel quale un oggetto è un intermediario per qualche altro oggetto.} \\
 
 \textsf{\small Implementiamo questo attraverso una classe \emph{temporanea/proxy}.} \break
 
@@ -1750,11 +1760,13 @@
 	}
 \end{lstlisting}
 
-\textsf{\small Per creare delle funzionalità pratiche come \emph{double operator overloading}, \emph{std::any}, eccetera..} \\
+\textsf{\small Per creare delle funzionalità pratiche come \emph{double operator overloading}, \emph{std::any}, eccetera.} \\
+
+\newpage %TODO: questo \newpage per gli spazi bianchi.
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=1.2\textwidth, height=1.2\textheight, keepaspectratio]{./imgs/Design_Patterns/Proxy_Pattern.png}
+	\includegraphics[width=1\textwidth, height=1\textheight, keepaspectratio]{./imgs/Design_Patterns/Proxy_Pattern.png}
 	\caption{Proxy Pattern}
 	\label{fig:Proxy_Pattern}
 \end{figure}
