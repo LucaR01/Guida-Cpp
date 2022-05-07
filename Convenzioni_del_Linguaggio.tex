@@ -4,18 +4,15 @@
 
 % -------------------------- SECTION: INTRODUZIONE -----------------------------------
 
-\section{Introduzione} %TODO: uncomment CppCoreGuidelines non ufficiali del ISO Foundation C++
-% Ho trattato alcune, ma non tutte e non sempre con lo stesso livello di approfondimento, linee guida della CppCoreGuidelines. 
+\section{Introduzione}
 
-%TODO: Ce ne sono tante altre buono che non ho trattato.
-
-\textsf{\small In questo capitolo tratterò delle \textbf{CppCoreGuidelines} che sono delle linee guida del linguaggio, create dall'inventore del C++ \emph{Bjarne Stroustrup} e da \emph{Herb Sutter}.} \break
+\textsf{\small In questo capitolo tratterò delle \textbf{CppCoreGuidelines} che sono delle linee guida del linguaggio, create dall'inventore del C++ \emph{Bjarne Stroustrup} e da \emph{Herb Sutter}.} \\
 
 \textsf{\small Il \textbf{CppCoreGuidelines} non è uno standard ISO ufficiale.} \\
 
 \textsf{\small Tratterò qui alcune di queste linee guida, ma sarebbe molto difficile trattarle tutte, visto che queste sono veramente tante. (credo più di 500 se non molto di più)} \\
 
-\textsf{\small È difficile per me, trattare queste linee guida nello stesso modo esaustivo e con la stessa profondità delle \textbf{CppCoreGuidelines}, a volte elencherò solo i punti principali di una linea guida, comunque se volete controllare una specifica linea guida che ho trattato potete trovarla qui: \href{CppCoreGuidelines}{https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines}} \\
+\textsf{\small È difficile per me, trattare queste linee guida nello stesso modo esaustivo e con la stessa profondità delle \textbf{CppCoreGuidelines}, a volte elencherò solo i punti principali di una linea guida, comunque se volete controllare una specifica linea guida che ho trattato potete trovarla qui: \href{https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines}{CppCoreGuidelines}.} \\
 	
 \textsf{\small Ovviamente, ce ne sono tante altre buone che però non riuscirò a trattare.} 
 
@@ -920,8 +917,8 @@
 
 \begin{itemize}
 	\item \textsf{\small Un default constructor dovrebbe fare di più che semplicemente inizializzare le variabili membro con delle costanti.}
-	\item \textsf{\small }
-	\item \textsf{\small }
+	%\item \textsf{\small }
+	%\item \textsf{\small }
 \end{itemize}
 
 \paragraph{C.47: Definisci e inizializza le variabili membro nell'ordine della loro dichiarazione}
@@ -1766,8 +1763,8 @@ textsf{\small Un buon analizzatore riesce a rilevare tute le conversioni strette
 
 \begin{itemize}
 	\item \textsf{\small Un test dovrebbe identificare se le intestazioni a cui si fa riferimento tramite "" potrebbero essere referenziate con i <>.}
-	\item \textsf{\small }
-	\item \textsf{\small }
+	%\item \textsf{\small }
+	%\item \textsf{\small }
 \end{itemize}
 
 \break
@@ -1981,211 +1978,4 @@ textsf{\small Un buon analizzatore riesce a rilevare tute le conversioni strette
 \fleuron
 
 \textsf{\small Tutto quello citato sopra fa riferimento alla \textsc{Release 0.8} delle \textbf{CppCoreGuidelines}.} \\
-\textsf{\small L'ultimo commit, al momento in cui sto scrivendo, nel \emph{master branch} è del 6 Maggio 2022.} \\ %TODO: da ricontrollare.
-
-\begin{comment} %TODO: remove
-	\subsection{Generale}
-	
-	\begin{itemize}
-		\item \textsf{\small Lunghezza della riga limitata a 80 caratteri}
-		\item \textsf{\small Indentazione con 4 spazi.}
-		\item \textsf{\small I files dovrebbero usare le newlines stile Unix $\backslash n$.}
-	\end{itemize}
-	
-	\subsection{Parentesi Graffe}
-	
-	\textsf{\small Utilizzare \emph{Allman Style} brackets (parentesi). Le parentesi graffe sono sulla loro linea allo stesso livello con lo statement sopra.} \\
-	
-	\begin{lstlisting}
-		if (condition)
-		{
-			
-		}
-	\end{lstlisting}
-	
-	\textsf{\small Anche gli if con una sola linea dovrebbero avere le parentesi graffe.} \\
-	
-	\subsection{Indentazione}
-	
-	\textsf{\small Il contenuto in un \textbf{namespace} dovrebbe essere allo stesso livello di indentazione del namespace stesso. } \\
-	
-	\textsf{\small Il contenuto in una \textbf{classe}, \textbf{struct}, \textbf{funzioni}, \textbf{if}, \textbf{loop}, \textbf{switch}, \textbf{cases} e \textbf{labels} (dei goto) dovrebbe essere indentato.} \\
-	
-	\subsection{Convenzioni sui nomi}
-	
-	\begin{itemize}
-		\item \textsf{\small Non c'è nè prefisso nè suffisso a nessun nome.}
-		\item \textsf{\small Gli acronimi dovrebbero essere dello stesso case.}
-	\end{itemize}
-	
-	\begin{lstlisting}
-		// Correct.
-		SomeBMCType someBMCVariable = bmcFunction();
-	\end{lstlisting}
-	
-	\subsection{Ordine Inclusione Header files}
-	
-	\textsf{\small Inclusione degli headers in un header file:} \\
-	
-	\begin{itemize}
-		\item \textsf{\small headers locali}
-		\item \textsf{\small librerie c}
-		\item \textsf{\small librerie cpp}
-	\end{itemize}
-	
-	\textsf{\small Inclusione degli headers in un source file (.cpp):} \\
-	
-	\begin{itemize}
-		\item \textsf{\small source.hpp (se applicabile)}
-		\item \textsf{\small headers locali}
-		\item \textsf{\small librerie c}
-		\item \textsf{\small librerie cpp}
-	\end{itemize}
-	
-	\textsf{\small In ordine alfabetico.} \\
-	
-	\subsubsection{Files}
-	
-	\begin{itemize}
-		\item \textsf{\small Gli headers C++ dovrebbero finire in \emph{.hpp}. Gli headers C dovrebbero finire in \emph{.h}.}
-		\item \textsf{\small I files dovrebbero essere chiamati nel modo (case) lower\_snake\_case.}
-	\end{itemize}
-	
-	\subsection{Types}
-	
-	\begin{itemize}
-		\item \textsf{\small Preferire \emph{using} a \emph{typedef}.}
-		\item \textsf{\small Le strutture, classi, enums dovrebbero essere tutti in UpperCamelCase.}
-		\item \textsf{\small Preferire gli scope namespaces al posto di nomi con lunghi prefissi.}
-		\item \textsf{\small Un alias di una singola parola con una struct / class dovrebbe essere in minuscolo, ma un alias a più parole dovrebbe essere UpperCamelCase.}
-		\item \textsf{\small Eccezioni: Una libreria API potrebbe usare il modo lower\_snake\_case per accordarsi alle convenzioni STL o ad una libreria C. Application APIs dovrebbero tutte essere UpperCamelCase.}
-		\item \textsf{\small Eccezione: Per convenienza un tipo di una classe template potrebbe finire in \_t per accordarsi alle convenzioni STL.}
-		%\item \textsf{\small }
-	\end{itemize}
-	
-	\subsection{Variabili}
-	
-	\textsf{\small Le variabili dovrebbero tutte essere lowerCamelCase, inclusi i membri delle classi, senza underscore (trattini bassi).} \\
-	
-	\subsection{Funzioni}
-	
-	\begin{itemize}
-		\item \textsf{\small Le funzioni dovrebbero essere lowerCamelCase.}
-		\item \textsf{\small Eccezione: Una libreria API potrebbe usare lower\_snake\_case in accordo con le convenzioni STL o di una sottostante libreria in C che sta astraendo. Application API dovrebbero tutte essere lowerCamelCase.}
-		%\item \textsf{\small }
-	\end{itemize}
-	
-	\subsection{Costanti}
-	
-	\begin{itemize}
-		\item \textsf{\small Costanti e i membri delle enums dovrebbero essere chiamati come le variabili in lowerCamelCase.}
-	\end{itemize}
-	
-	\subsection{Namespaces}
-	
-	\begin{itemize}
-		\item \textsf{\small I namespaces dovrebbero essere lower\_snake\_case.}
-		\item \textsf{\small Top-level namespace dovrebbe essere chiamato sulla base della repository che lo contiene.}
-		\item \textsf{\small Favorisci un namespace chiamato 'details' o 'internal' per indicare l'equivalente di un namespace 'private' in un header file e namespaces anonimi in un file C++.}
-	\end{itemize}
-	
-	\subsection{Header Guards}
-	
-	\textsf{\small Preferire \textbf{\#pragma} allo stile \textbf{\#ifndef}.}\\
-	
-	\subsection{Spazi bianchi addizionali}
-	
-	\begin{itemize}
-		\item \textsf{\small Segui lo stile di dichiarazione del C++}
-	\end{itemize}
-	
-	\begin{lstlisting}
-		foo(T& bar, const S* baz); // Correct.
-		foo(T &bar, const S *baz); // Incorrect.
-	\end{lstlisting}
-	
-	\begin{itemize}
-		\item \textsf{\small Usa gli spazi bianchi moderatamente.}
-		\item \textsf{\small Inserisci uno spazio bianco prima e dopo if e loops.}
-	\end{itemize}
-	
-	\begin{lstlisting}
-		if (...)
-		while (...)
-		for (...)
-	\end{lstlisting}
-	
-	\begin{itemize}
-		\item \textsf{\small Aggiungi spazio bianco attorno agli operatori binari per leggibilità}
-	\end{itemize}
-	
-	\begin{lstlisting}
-		foo((a-1)/b,c-2); /// Incorrect.
-		foo((a - 1) / b, c - 2); /// Correct.
-	\end{lstlisting}
-	
-	\begin{itemize}
-		\item \textsf{\small Non inserire spazi bianchi dopo gli operatori unari.}
-	\end{itemize}
-	
-	\begin{lstlisting}
-		a = * b;  /// Incorrect.
-		a = & b;  /// Incorrect.
-		a = b -> c;  /// Incorrect.
-		if (! a)  /// Incorrect.
-	\end{lstlisting}
-	
-	\begin{itemize}
-		\item \textsf{\small Non inserire spazi bianchi nè prima nè dopo una chiamata a funzione e ai parametri.}
-	\end{itemize}
-	
-	\begin{lstlisting}
-		foo(x, y); /// Correct.
-		foo ( x , y ); /// Incorrect.
-		
-		do (...)
-		{
-		} while(0); /// 'while' qui è strutturato come una chiamata a funzione.
-	\end{lstlisting}
-	
-	\begin{itemize}
-		\item \textsf{\small Preferire una linea a capo dopo gli operatori per mostrare la continuazione.}
-	\end{itemize}
-	
-	\begin{lstlisting}
-		if (this1 == that1 &&
-		this2 == that2) /// Correct.
-		
-		if (this1 == that1
-		&& this2 == that2) /// Incorrect.
-	\end{lstlisting}
-	
-	\begin{itemize}
-		\item \textsf{\small Le linee lunghe dovrebbero avere la continuazione che inizi allo stesso livello delle parentesi o tutti gli oggetti all'interno delle parentesi dovrebbero essere al secondo livello di indentazione.}
-	\end{itemize}
-	
-	\begin{lstlisting}
-		reallyLongFunctionCall(foo,
-		bar,
-		baz); // Correct.
-		
-		reallyLongFunctionCall(
-		foo,
-		bar,
-		baz); // Also correct.
-		
-		reallyLongFunctionCall(
-		foo, bar, baz); // Similarly correct.
-		
-		reallyLongFunctionCall(foo,
-		bar,
-		baz); // Incorrect.
-	\end{lstlisting}
-	
-	\subsection{Linee Guida Miste}
-	
-	\begin{itemize}
-		\item \textsf{\small  Usare sempre size\_t o ssize\_t per cose come contatori, pesi, ecc. C'è bisogno di un forte motivo razionale per usare un tipo come uint8\_t quando size\_t può fare lo stesso lavoro.}
-		\item \textsf{\small Usa uint8\_t, int16\_t, uint32\_t, int64\_t quando è importante per l'interazione coll'hardware. Non usarli senza una buona motivazione, quando le interazioni coll'hardware non sono coinvolte; preferire size\_t o int piuttosto.}
-	\end{itemize}
-\end{comment}
+\textsf{\small L'ultimo commit, al momento in cui sto scrivendo, nel \emph{master branch} è del 5 Maggio 2022.} \\ %TODO: da ricontrollare.
