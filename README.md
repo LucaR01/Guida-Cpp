@@ -33,7 +33,7 @@ Questo capitolo tratta i concetti basilari del linguaggio, quali: variabili, cos
 <hr>
 
 ### Concetti Intermedi
-Qui si passa a concetti un po' più complicati e importanti per il linguaggio: templates, vector, iteratori, virtual, polimorfismo, tipi di casts, tipi di costruttori, move semantics, classi astratte e tante altre curiosità.
+Qui si passa a concetti un po' più complicati e importanti del linguaggio: templates, vector, iteratori, virtual, polimorfismo, tipi di casts, tipi di costruttori, move semantics, classi astratte e tante altre curiosità.
 
 <hr>
 
