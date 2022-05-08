@@ -18,11 +18,12 @@ Questa non è una narrazione è più una raccolta di frammenti di codice, brevi 
 
 ## Cosa presenta questa guida:
 
-Questa guida presenta 4 capitoli:
+Questa guida presenta 5 capitoli:
 - Basi del Linguaggio
 - Concetti Intermedi
 - Concetti Avanzati
 - Le gemme degli Algoritmi
+- Linee guida del Linguaggio
 
 ### Basi del Linguaggio
 Questo capitolo tratta i concetti basilari del linguaggio, quali: variabili, costanti, tipologie, operatori, costrutti, if else, loops, arrays, matrici, enums, caratteri e stringhe, funzioni, header files, namespaces, strutture, union, classi, convenzioni del linguaggio e tanto altro..
@@ -35,6 +36,9 @@ In questo capitolo vengono trattati argomenti più avanzati del linguaggio come:
 
 ### Le gemme degli Algoritmi
 Qui si va nelle viscere della Libreria degli Algoritmi trattando tutti i principali argomenti a riguardo, ovvero operazioni su: sequenze non modificabili, sequenze modificabili, partizioni, ordinamento, ricerca binaria, merge, insiemi, heap, min e max, comparazione, permutazioni, numeriche, memoria non inizializzata e anche argomenti non della libreria, ma comunque utili ed inerenti: optionals, execution policies e argomenti sul C++20: Ranges, ranges views, Concepts, Modules, Coroutines.
+
+### Linee guida del Linguaggio
+In questo capitolo vengono trattate le convenzioni, le linee guida del C++ in base alle [**CppCoreGuidelines**](https://github.com/isocpp/CppCoreGuidelines).
 
 ## Possibili capitoli che potrei aggiungere:
 - Multithreading
