@@ -23,6 +23,8 @@
 
 %TODO: Le direttive #include meglio mettere negli header .h o nei .cpp
 
+%TODO: extern keyword.
+
 % -------------------------- SECTION: INTRODUZIONE -----------------------------------
 
 \section{Introduzione}
@@ -1882,9 +1884,11 @@ Mentre, l'ultima preview mostrata è stata quella del C++23.}\\
 \textsf{\small Per includere le librerie standard usiamo \textbf{\#include <nomelibreria>} perché il compilatore sa dove si trovano queste librerie, mentre per le librerie definite dall'utente usiamo \textbf{\#include "nomelibreria.h"} e passiamo anche il percorso di dove si trova. (a meno che non si trova nella stessa cartella in cui si trova il nostro codice, in quel caso basta mettere il nome della libreria)} \\
 
 % \texorpdfstring % per inserire caratteri speciali nelle section, subsection, ecc.
-\subsection{Only Once Headers | pragma once | ifndef}
+\subsection{Only Once Headers | Header Guards | pragma once | ifndef}
 
-\textsf{\small \textbf{Definizione: } Se un file header viene incluso due volte, il compilatore processerà il suo contenuto due volte, il che risulterà in un errore. Per evitare questo c'è una procedura standard da scrivere all'interno del file di intestazione.}
+\label{header_guards}
+
+\textsf{\small \textbf{Definizione: } Se un file header viene incluso due volte, il compilatore processerà il suo contenuto due volte, il che risulterà in un errore. Per evitare questo c'è una procedura standard, chiamate \emph{Header Guards}, da scrivere all'interno del file di intestazione.}
 
 \begin{lstlisting}
 	#ifndef NOME_HEADER_FILE_H
@@ -2996,7 +3000,7 @@ int main(){
 
 \textsf{\small \textbf{Definizione: } La \textbf{forward declaration} è quando prima dichiariamo una funzione, una classe, ecc. con la premessa che da qualche parte nel codice più in là ci sarà una definizione di questa funzione, classe, eccetera.} \\
 
-\textsf{\small Può essere utile per aiutare il compilatore per assicurarsi che non ci siano stati errori di spelling o di numero sbagliato di argomenti da passare.} 
+\textsf{\small Può essere utile per aiutare il compilatore ad assicurarsi che non ci siano stati errori di spelling o di numero sbagliato di argomenti da passare.} 
 
 \textsf{\small Può essere utile per ridurre il tempo di \emph{build} del programma.}
 
@@ -3010,6 +3014,57 @@ int main(){
 \end{figure}
 
 %TODO: aggiungere il resto del codice dell'immagine potrebbe essere utile
+
+\textsf{\small Inoltre, potrebbe essere utile per evitare di includere molteplici headers in un header file.} \\
+
+\textsf{\small \textbf{Esempio}: } 
+
+\textsf{\small Abbiamo l'header A, l'header B, l'header C, l'header D: } \\
+
+\begin{itemize}
+	\item \textsf{\small Se nell'header A includiamo l'header B, questo prende spazio/aumenta il tempo di build.}
+	\item \textsf{\small Se poi, l'header C ha bisogno di certi oggetti della classe B, includendo l'header B; include, di conseguenza, anche l'header A, anche se non aveva bisogno dell'header A, ma solo dell'header B.}
+	\item \textsf{\small Se poi abbiamo l'header D che ha bisogno dell'header C e lo include, di conseguenza si prenderà anche l'header A e l'header B, prendendo ulteriore spazio/aumenta il tempo di build.}
+	\item \textsf{\small Quindi, essenzialmente creiamo una matriosca che occupa spazio/aumenta il tempo di build.}
+	\item \textsf{\small Ora, questo non dovrebbe essere un grosso problema se si includono le \emph{header guards} a pag.\pageref{header_guards} che impediscono che uno stesso header file venga incluso più di una volta, quando avviene la fase di linking.}
+	%\item \textsf{\small }
+\end{itemize}
+
+\textsf{\small Se invece al posto usiamo la \emph{Forward Declaration}, possiamo fare così: } 
+
+\textsf{\small Se nell'header A abbiamo bisogno di una classe B, al posto di includere l'header B, potremmo usare la \emph{Forward Declaration} in questo modo: } \\
+
+\begin{lstlisting}
+	// A.h
+	class A {
+		public:
+			A(){}
+			~A(){}
+			
+			int x;
+			int y;
+			class B* b; // Forward Declaration (al posto di fare \#include "B.h", mettiamo class B, indicando al compilatore che useremo una classe B, ma che non è importante, per ora, sapere come questa classe B è implementata)
+	};
+\end{lstlisting}
+
+\textsf{\small Quindi, nel nostro header A, inseriamo la dichiarazione della classe B, ma per l'implementazione di questa bisognerà andare nel file di implementazione (.cpp) dove verrà effettivamente incluso l'header B e quindi la definizione della classe B sarà presente.} \\
+
+\begin{lstlisting}
+	// A.cpp
+	#include "A.h"
+	#include "B.h"
+	
+	class A {
+		A(){}
+		~A(){}
+		
+		int x;
+		int y;
+		b = new B();
+	};
+\end{lstlisting}
+
+\textsf{\small Lo stesso possiamo fare per gli altri due headers C e D.} \\
 
 \subsection{Chiamata a funzione statica e a membro} 
 

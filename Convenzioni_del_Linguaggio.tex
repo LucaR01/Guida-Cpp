@@ -6,17 +6,17 @@
 
 \section{Introduzione}
 
-\textsf{\small In questo capitolo tratterò delle \textbf{CppCoreGuidelines} che sono delle linee guida del linguaggio, create dall'inventore del C++ \emph{Bjarne Stroustrup} e da \emph{Herb Sutter}.} \\
+\textsf{\small In questo capitolo tratterò delle \textbf{CppCoreGuidelines} che sono delle linee guida del linguaggio, create dall'inventore del C++ \emph{Bjarne Stroustrup} e da \emph{Herb Sutter}.} \break
 
 \textsf{\small Il \textbf{CppCoreGuidelines} non è uno standard ISO ufficiale.} \\
 
-\textsf{\small Tratterò qui alcune di queste linee guida, ma sarebbe molto difficile trattarle tutte, visto che queste sono veramente tante. (credo più di 500 se non molto di più)} \\
+\textsf{\small Tratterò qui alcune di queste linee guida, ma sarebbe molto difficile trattarle tutte, visto che queste sono veramente tante. (credo più di 500 se non molto di più)} \break
 
 \textsf{\small È difficile per me, trattare queste linee guida nello stesso modo esaustivo e con la stessa profondità delle \textbf{CppCoreGuidelines}, a volte elencherò solo i punti principali di una linea guida, comunque se volete controllare una specifica linea guida che ho trattato potete trovarla qui: \href{https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines}{CppCoreGuidelines}.} \\
 	
-\textsf{\small Ovviamente, ce ne sono tante altre buone che però non riuscirò a trattare.} 
+\textsf{\small Ovviamente, ce ne sono tante altre buone che però non riuscirò a trattare.} \\
 
-\break
+%\break %TODO: questo break rompe tutto!
 
 % -------------------------- SECTION: CONVENZIONI ------------------------------------
 
@@ -32,7 +32,7 @@
 
 % -------------------- NL | NAMING AND LAYOUT RULES ----------------------------------
 
-\subsection{NL | Naming and Layout rules}
+\subsection{NL | Naming and Layout suggestions}
 
 \subsubsection{NL.1: Non dire nei commenti quello che può essere semplicemente affermato nel codice}
 
@@ -396,65 +396,9 @@
 
 \textsf{\small Come sempre, ricorda che lo scopo di queste regole di layout è la coerenza, la costanza e che l'estetica varia immensamente.} \\
 
-\begin{comment}
-
-\textsf{\small Elencherò alcune convenzioni che ho trovato ricercando su internet, visto che nelle \textbf{CppCoreGuidelines} non mi è sembrato chiaro che cosa usare: } \\
-
-\textsf{\small Alcune di queste le ho trovate su questa repo:  \href{https://github.com/cpp-best-practices/cppbestpractices/blob/master/03-Style.md}{cppbestpractices style}} \\
-
-\textsf{\small L'importante, di solito, è essere consistenti con ciò che abbiamo scelto di seguire.} \\
-
-\subsection{Stile}
-
-\begin{itemize}
-	\item \textsf{\small snake\_case : sembra essere il più usato (è anche usato nella Libreria Standard) (è preferito anche dalle Core Guidelines, a meno che non bisogna seguire lo stile del progetto in cui stiamo lavorando)}
-	\item \textsf{\small camelCase (lower camelCase) sembra essere più usato dagli sviluppatori che vengono dal Java}
-	\item \textsf{\small PascalCase}
-\end{itemize}
-
-\textsf{\small La \emph{Libreria Standard} (e altre librerie molto conosciute come la libreria \href{https://www.boost.org/}{\textbf{Boost}}) usano queste linee guida: } \\
-
-\begin{itemize}
-	\item \textsf{\small Macro usano le maiuscole con gli underscores: INT\_MAX}
-	\item \textsf{\small I parametri dei templates usano CamelCase (quello upper, non lower): InputIterator}
-	\item \textsf{\small Tutti gli altri nomi usano lo snake\_case: unordered\_map}
-\end{itemize}
-
-\subsection{Convenzioni sui nomi}
-
-\begin{itemize}
-	\item \textsf{\small \textbf{Classi} iniziano con la maiuscola: MyClass}
-	\item \textsf{\small \textbf{Funzioni} iniziano con la minuscola oppure con gli underscores (trattini bassi): myFunction o my\_function}
-	\item \textsf{\small Le \textbf{costanti} e le \textbf{macro} sono tutte in maiuscolo e separate da \_ (trattini bassi): const double PI = 3.14;  (UPPERCASE\_UNDERSCORE\_STYLE)}
-\end{itemize}
-
-\subsection{Dati privati}
-
-\textsf{\small Li distinguiamo ponendo il prefisso \textbf{m\_}, questo sta per "member" (ovvero membro).} \\
-
-\subsection{Distinguere i parametri delle funzioni}
-
-\textsf{\small Si può aggiungere il prefisso \textbf{t\_} nel nome del parametro, questo starebbe per "the" (il/la). Questa linea guida è però controversa.} \\
-
-\subsection{Non iniziare un nome con \_}
-
-\textsf{\small Per evitare di rischiare di collidere con nomi riservati al compilatore e alla \emph{Libreria Standard}.} \\
-
-\subsection{Abilita la build fuori dalle source directories}
-
-\textsf{\small Fai in modo che i files generati vadano in una cartella di output separata dalla cartella dei source (sorgenti).} \\
-
-\subsection{Usa \textbf{nullptr}}
-
-\textsf{\small } \\
-
-\end{comment}
-
 \newpage
 
 \textsf{\small Potete trovare tutte le linee guida del linguaggio nelle \textbf{C++ Core Guidelines} : \href{https://github.com/isocpp/CppCoreGuidelines}{CppCoreGuidelines}} \\
-
-%TODO: aggiungere l'immagine CppCoreGuidelines.png
 
 \begin{figure}[H]
 	\centering
@@ -464,10 +408,6 @@
 \end{figure}
 
 \textsf{\small Comunque ne elencherò qualche d'una. } \\
-
-%TODO: guardarsi le guidelines ufficiali!
-
-%TODO: scrivere qualcosa del tipo: "Guidelines aggiornate al ... (giorno in cui ho scritto). release 0.8
 
 \subsection{Organizzazione} %TODO: oppure Struttura (però con qunado la si guarda nella toc struttura potrebbe confondersi con le strutture)
 
@@ -681,6 +621,8 @@
 
 % --------------------------------- I | INTERFACES -----------------------------------
 
+\newpage
+
 \subsubsection{I | Interfaces}
 
 \textsf{\small Un'interfaccia è un contratto tra due parti di un programma. Di cui, uno di questi è il \emph{supplier} (fornitore) del servizio e l'altro è l'utente del servizio. Affermando con precisione qual è il servizio che si prevede di fornire è essenziale.} \\
@@ -885,6 +827,8 @@
 
 % --------------------------------- F | Functions ------------------------------------
 
+\newpage
+
 \subsubsection{F | Functions}
 
 \paragraph{F.21: Per restituire molteplici "out" values, preferire il ritorno di una struttura o di una tupla}
@@ -906,6 +850,8 @@
 \textsf{\small L'utilizzo degli argomenti di default può evitare la replicazione del codice.} \\
 
 % ----------------------- C | Classes and class hierarchies --------------------------
+
+\newpage
 
 \subsubsection{C | Classes and class hierarchies}
 
@@ -963,6 +909,8 @@
 
 % ----------------------------- R | Resource Management ------------------------------
 
+\newpage
+
 \subsubsection{R | Resource Management}
 
 \paragraph{R.10: Evita la malloc() e la free()}
@@ -986,6 +934,8 @@
 \end{itemize}
 
 % ------------------------ ES | Expressions and Statements ---------------------------
+
+\newpage
 
 \subsubsection{ES | Expressions and Statements}
 
@@ -1077,6 +1027,8 @@ textsf{\small Un buon analizzatore riesce a rilevare tute le conversioni strette
 \end{itemize}
 
 % -------------------------------- Per | Performance ---------------------------------
+
+\newpage
 
 \subsubsection{Per | Performance}
 
@@ -1199,6 +1151,8 @@ textsf{\small Un buon analizzatore riesce a rilevare tute le conversioni strette
 
 % -------------------- CP | Concurrency and Parallelism ------------------------------
 
+\newpage
+
 \subsubsection{CP | Concurrency and Parallelism}
 
 \paragraph{CP.2: Evita le \emph{data races}}
@@ -1251,9 +1205,11 @@ textsf{\small Un buon analizzatore riesce a rilevare tute le conversioni strette
 
 \textsf{\small Guarda la \textbf{CP.200: Use volatile only to talk to non-C++ memory}.}
 
-\break
+%\break %TODO: questo break rompe tutto
 
 % -------------------------------- E | Error Handling --------------------------------
+
+\newpage
 
 \subsubsection{E | Error Handling}
 
@@ -1285,9 +1241,11 @@ textsf{\small Un buon analizzatore riesce a rilevare tute le conversioni strette
 
 \textsf{\small \textbf{Nota}: Non usare le tradizionali \emph{exception-specifications}, guarda \textbf{E.30: Don't use exception specification}.} \\
 
-\break
+%\break %TODO: questo break rompe tutti gli spazi bianchi
 
 % -------------------------------- Con | Constants and immutability ------------------
+
+\newpage
 
 \subsubsection{Con | Constants and immutability}
 
@@ -1335,9 +1293,11 @@ textsf{\small Un buon analizzatore riesce a rilevare tute le conversioni strette
 	%\item \textsf{\small }
 \end{itemize}
 
-\break
+%\break %TODO: questo break rompe tutti gli spazi bianchi
 
 % ------------ T | Templates and generic programming ---------------------------------
+
+\newpage
 
 \subsubsection{T | Templates and generic programming}
 
@@ -1462,9 +1422,11 @@ textsf{\small Un buon analizzatore riesce a rilevare tute le conversioni strette
 
 \textsf{\small \textbf{Nota}: Se senti il bisogno di nascondere il tuo \emph{template metaprogramming} in macros, allora sei andato troppo in là.} \\
 
-\break
+%\break %TODO: questo break rompe tutti gli spazi bianchi
 
 % ------------------------ CPL | C-style programming ---------------------------------
+
+\newpage
 
 \subsubsection{CPL | C-style programming}
 
@@ -1491,9 +1453,11 @@ textsf{\small Un buon analizzatore riesce a rilevare tute le conversioni strette
 	%\item \textsf{\small }
 \end{itemize}
 
-\break
+%\break %TODO: questo break rompe tutti gli spazi bianchi
 
 % -------------------------------- SF | Source Files ---------------------------------
+
+\newpage
 
 \subsubsection{SF | Source Files}
 
@@ -1767,9 +1731,11 @@ textsf{\small Un buon analizzatore riesce a rilevare tute le conversioni strette
 	%\item \textsf{\small }
 \end{itemize}
 
-\break
+%\break %TODO: questo break rompe tutto riguardo agli spazi bianchi!
 
 % ---------------------------- SL | The Standard Library -----------------------------
+
+\newpage
 
 \subsubsection{SL | The Standard Library}
 
@@ -1933,6 +1899,8 @@ textsf{\small Un buon analizzatore riesce a rilevare tute le conversioni strette
 
 % ------------------------------- SL.regex | Regex -----------------------------------
 
+\newpage
+
 \paragraph{SL.regex: Regex}
 
 \textsf{\small \textbf{<regex>} è la libreria di espressioni regolari standard del C++. Supporta una varietà di convenzioni di pattern di espressioni regolari.} \\
@@ -1973,9 +1941,9 @@ textsf{\small Un buon analizzatore riesce a rilevare tute le conversioni strette
 \end{itemize}
 \end{comment}
 
-\break
+%\break %TODO: questo break rompe tutti gli spazi bianchi
 
 \fleuron
 
 \textsf{\small Tutto quello citato sopra fa riferimento alla \textsc{Release 0.8} delle \textbf{CppCoreGuidelines}.} \\
-\textsf{\small L'ultimo commit, al momento in cui sto scrivendo, nel \emph{master branch} è del 5 Maggio 2022.} \\ %TODO: da ricontrollare.
+\textsf{\small L'ultimo commit, al momento in cui sto scrivendo, nel \emph{master branch} è del 8 Maggio 2022.} \\ %TODO: da ricontrollare.
