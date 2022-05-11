@@ -2,14 +2,14 @@
 Una semplice guida in italiano per programmare in C++.
 
 ![GitHub repo size](https://img.shields.io/github/repo-size/LucaR01/Guida-Cpp)
-![GitHub issues](https://img.shields.io/github/issues/LucaR01/Guida-Cpp)
+[![GitHub issues](https://img.shields.io/github/issues/LucaR01/Guida-Cpp)](https://github.com/LucaR01/Guida-Cpp/issues)
 [![Lines of code](https://img.shields.io/tokei/lines/github.com/LucaR01/Guida-Cpp)](https://github.com/LucaR01/Guida-Cpp/pulse)
 ![GitHub](https://img.shields.io/github/license/LucaR01/Guida-Cpp)
 ![GitHub Repo stars](https://img.shields.io/github/stars/LucaR01/Guida-Cpp?style=social)
 <!-- ![GitHub release (latest by date)](https://img.shields.io/github/v/release/LucaR01/Guida-Cpp) -->
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/LucaR01/Guida-Cpp)](https://github.com/LucaR01/Guida-Cpp/releases)
-![GitHub Release Date](https://img.shields.io/github/release-date/LucaR01/Guida-Cpp)
-![GitHub last commit](https://img.shields.io/github/last-commit/LucaR01/Guida-Cpp)
+[![GitHub Release Date](https://img.shields.io/github/release-date/LucaR01/Guida-Cpp)](https://github.com/LucaR01/Guida-Cpp/releases)
+[![GitHub last commit](https://img.shields.io/github/last-commit/LucaR01/Guida-Cpp)](https://github.com/LucaR01/Guida-Cpp/graphs/commit-activity)
 [![GitHub contributors](https://img.shields.io/github/contributors/LucaR01/Guida-Cpp)](https://github.com/LucaR01/Guida-Cpp/graphs/contributors)
 ![C++ Standard](https://img.shields.io/badge/C%2B%2B-11%7C14%7C17%7C20-blue.svg)
 <!-- ![GitHub top language](https://img.shields.io/github/languages/top/LucaR01/Guida-Cpp) -->
