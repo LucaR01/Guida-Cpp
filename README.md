@@ -4,7 +4,7 @@ Una semplice guida in italiano per programmare in C++.
 ![GitHub repo size](https://img.shields.io/github/repo-size/LucaR01/Guida-Cpp)
 [![GitHub issues](https://img.shields.io/github/issues/LucaR01/Guida-Cpp)](https://github.com/LucaR01/Guida-Cpp/issues)
 [![Lines of code](https://img.shields.io/tokei/lines/github.com/LucaR01/Guida-Cpp)](https://github.com/LucaR01/Guida-Cpp/pulse)
-![GitHub](https://img.shields.io/github/license/LucaR01/Guida-Cpp)
+[![GitHub License](https://img.shields.io/github/license/LucaR01/Guida-Cpp)](https://github.com/LucaR01/Guida-Cpp/blob/main/LICENSE)
 ![GitHub Repo stars](https://img.shields.io/github/stars/LucaR01/Guida-Cpp?style=social)
 <!-- ![GitHub release (latest by date)](https://img.shields.io/github/v/release/LucaR01/Guida-Cpp) -->
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/LucaR01/Guida-Cpp)](https://github.com/LucaR01/Guida-Cpp/releases)
