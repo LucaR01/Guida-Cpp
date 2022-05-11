@@ -7,9 +7,11 @@ Una semplice guida in italiano per programmare in C++.
 ![GitHub](https://img.shields.io/github/license/LucaR01/Guida-Cpp)
 ![GitHub Repo stars](https://img.shields.io/github/stars/LucaR01/Guida-Cpp?style=social)
 <!-- ![GitHub release (latest by date)](https://img.shields.io/github/v/release/LucaR01/Guida-Cpp) -->
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/LucaR01/Guida-Cpp)](https://github.com/LucaR01/Guida-Cpp/releases)
 ![GitHub Release Date](https://img.shields.io/github/release-date/LucaR01/Guida-Cpp)
 ![GitHub last commit](https://img.shields.io/github/last-commit/LucaR01/Guida-Cpp)
 ![GitHub contributors](https://img.shields.io/github/contributors/LucaR01/Guida-Cpp)
+![C++ Standard](https://img.shields.io/badge/C%2B%2B-11%7C14%7C17%7C20-blue.svg)
 
 ## Che cos'è questa guida?
 Questa è un piccola e semplice guida che ho voluto scrivere per ripassare, approfondire e imparare meglio a mia volta questo meraviglioso linguaggio che è **C++**.
