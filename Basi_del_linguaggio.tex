@@ -781,7 +781,84 @@ Mentre, l'ultima preview mostrata è stata quella del C++23.}\\
 
 \textsf{\small Un altro modo per fare un \emph{if statico} è quello di usare \emph{std::enable\_if}.} \\
 
-\textsf{\small Questa espressione sarà utile nel \emph{template metaprogramming}.} \\
+\textsf{\small Questa espressione sarà utile nel \emph{template metaprogramming}.} \\ %TODO: add ref? quando ci sarà il capitolo.
+
+\subsection{if vs if constexpr}
+
+%TODO: Da riguardare, fatta di fretta.
+\begin{comment} %TODO: remove
+\begin{tabular}{|c|c|}
+	\hline
+	\textbf{if} & \textbf{if constexpr} \\
+	\hline
+	\textsf{\small  viene valutato a \emph{runtime}.} & \textsf{\small  viene valutato a \emph{compile time}.} \\
+	\textsf{\small tutti i rami (branches) del if, } & \textsf{\small solo il ramo preso in considerazione deve essere corretto sintatticamente, } \\
+	\hline
+	\textsf{\small  anche quelli non valutati, devono essere corretti sintatticamente.} & \textsf{\small  gli altri vengono scartati.} \\
+	\textsf{\small } & \textsf{\small } \\
+	\hline
+	\textsf{\small } & \textsf{\small } \\
+	\hline
+	\textsf{\small } & \textsf{\small } \\
+	\hline
+	%\textsf{\small } & \textsf{\small } \\
+\end{tabular}
+\end{comment}
+
+\begin{comment} %TODO: remove
+\begin{tabular}{|c|c|c|}
+	\hline
+	\textbf{Feature} & \textbf{if} & \textbf{if constexpr} \\
+	\hline
+	Evaluation Time & Runtime & Compile Time \\
+	\hline
+	Syntax Validity & All branches must be syntactically correct & Only the taken branch needs to be correct \\
+	\hline
+	Branch Discarding & No; all branches are evaluated at runtime & Yes; non-taken branches are discarded \\
+	\hline
+	Use Case Example & Run-time conditions, e.g., user input & Compile-time conditions, e.g., template \\
+	\hline
+	Template Instantiation & All branches are instantiated & Only the taken branch is instantiated \\
+	\hline
+	Error Messages & May get runtime errors & Compile-time errors if non-taken branches \\
+	\hline
+	Performance & May incur runtime overhead & Potential for more efficient code \\
+	\hline
+	Code Clarity & May be less clear due to runtime aspect & Often clearer for compile-time conditions \\
+	\hline
+	Example & \texttt{if (std::is\_integral<T>::value) \{ ... \}} & \texttt{if constexpr (std::is\_integral<T>::value) \{ ... \}} \\
+	\hline
+\end{tabular}
+\end{comment}
+
+\begin{tabular}{|c|c|}
+	\hline
+	\textbf{if} & \textbf{if constexpr} \\
+	\hline
+	\textsf{\small \emph{Runtime}} & \textsf{\small \emph{Compile Time}} \\
+	\hline
+	\textsf{\small Tutti i rami (branches) devono essere } & \textsf{\small Solo il ramo (branch) selezionato} \\
+	\textsf{\small corretti sintatticamente} & \textsf{\small deve essere corretto} \\
+	\hline
+	\textsf{\small No; tutti i rami vengono valutati a runtime} & \textsf{\small Sì; i rami non selezionati vengono eliminati} \\
+	\hline
+	\textsf{\small Condizioni a runtime, ad esempio, } & \textsf{\small Condizioni a compile-time, ad esempio, } \\
+	\textsf{\small input utente} & \textsf{\small template} \\
+	\hline
+	\textsf{\small Tutti i rami vengono istanziati} & \textsf{\small Solo il ramo selezionato viene istanziato} \\
+	\hline
+	\textsf{\small Possibili errori a runtime} & \textsf{\small Errori di compilazione se i rami } \\
+	\textsf{\small } & \textsf{\small non selezionati contengono errori} \\
+	\hline
+	\textsf{\small Possibile overhead a runtime} & \textsf{\small Potenziale per codice più efficiente} \\
+	\hline
+	\textsf{\small Meno chiara a causa dell'aspetto runtime} & \textsf{\small Spesso più chiara per } \\
+	\textsf{\small } & \textsf{\small condizioni di compile-time} \\
+	\hline
+	%\textsf{\small \texttt{if (std::is\_integral<T>::value)}} & \textsf{\small \texttt{if constexpr (std::is\_integral<T>::value)}} \\
+	%\textsf{\small \texttt{\{ ... \}}} & \textsf{\small \texttt{\{ ... \}}} \\
+	%\hline
+\end{tabular}
 
 % -------------------------- SECTION: SWITCH -----------------------------------------
 

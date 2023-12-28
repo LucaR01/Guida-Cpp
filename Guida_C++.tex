@@ -12,7 +12,7 @@
 \usepackage[breaklinks]{hyperref}
 \usepackage{amsmath,amssymb,amsthm}
 
-%\usepackage{geometry} % [showframe] serve per mostrare il margine, è da rimuovere quando ho finito di controllare il margine. %TODO: remove showframe %TODO: sistemare margini se uso geometry.
+\usepackage{geometry}[showframe] % serve per mostrare il margine, è da rimuovere quando ho finito di controllare il margine. %TODO: remove showframe %TODO: sistemare margini se uso geometry.
 
 \usepackage[italian]{babel}
 
@@ -359,14 +359,14 @@
 		\hspace*{0.05\textwidth}%
 		\parbox[b]{0.75\textwidth}{
 			\vbox{%
-				\vspace{\drop}
+				\vspace{\drop} %TODO: Rename into "Una semplice guida al C++ Moderno" o simile %TODO: Prima era "A Simple Guide to\\ Modern C++"
 				{\noindent\HUGE\bfseries A Simple Guide to\\ Modern C++}\\[2\baselineskip]
-				{\Large\itshape Beginner}\\[0.5\baselineskip]
-				{\Large\itshape Intermediate}\\[0.5\baselineskip]
-				{\Large\itshape Advanced}\\[4\baselineskip]
+				{\Large\itshape Beginner}\\[0.5\baselineskip] %TODO: Principiante
+				{\Large\itshape Intermediate}\\[0.5\baselineskip] %TODO: Intermedio
+				{\Large\itshape Advanced}\\[4\baselineskip] %TODO: Avanzato
 				{\Large Luca Rengo}\par
 				\vspace{0.5\textheight}
-				{\noindent The Publisher}\\[\baselineskip]
+				{\noindent Novembre 2023 v1.1.1}\\[\baselineskip]
 			}% end of vbox
 		}% end of parbox
 	}% end of hbox
